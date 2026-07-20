@@ -2,7 +2,7 @@
 import { HomeBoard } from '../components/HomeBoard.tsx'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { fetchHomepageData } from '../lib/api'
-import { organizationJsonLd, websiteJsonLd } from '../lib/seo'
+import { faqJsonLd, organizationJsonLd, websiteJsonLd } from '../lib/seo'
 import { DEFAULT_DESCRIPTION } from '../lib/site'
 
 export const prerender = false
@@ -13,6 +13,7 @@ Astro.response.headers.set(
 )
 
 const data = await fetchHomepageData()
+const newsletterStatus = Astro.url.searchParams.get('newsletter')
 
 const splashPrefetch = [
   data.hero,
@@ -34,10 +35,30 @@ const prefetchPaths = [...new Set(splashPrefetch)]
   image={data.hero?.heroImage}
   lcpImage={data.hero?.heroImage}
   type="website"
-  jsonLd={[organizationJsonLd(), websiteJsonLd()]}
+  jsonLd={[
+    organizationJsonLd(),
+    websiteJsonLd(),
+    faqJsonLd([
+      {
+        question: 'What is Sonar Mag?',
+        answer:
+          'Sonar Mag is an independent online publication for essays, reporting, and cultural field notes across World, Business, and Lifestyle.',
+      },
+      {
+        question: 'How do I get the Sonar Mag newsletter?',
+        answer:
+          'Enter your email in the newsletter box on the homepage. You can unsubscribe at any time.',
+      },
+      {
+        question: 'Is Sonar Mag free to read?',
+        answer:
+          'Yes. Core reporting and essays are free to read on sonarmag.com. Optional membership supports the desk.',
+      },
+    ]),
+  ]}
   prefetchPaths={prefetchPaths}
 >
   <main>
-    <HomeBoard data={data} />
+    <HomeBoard data={data} newsletterStatus={newsletterStatus} />
   </main>
 </BaseLayout>

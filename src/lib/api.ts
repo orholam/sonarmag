@@ -176,6 +176,36 @@ export async function postComment(input: {
   return mapComment(data)
 }
 
+export type NewsletterSubscribeResult =
+  | { ok: true; duplicate: boolean }
+  | { ok: false; error: string }
+
+export async function subscribeToNewsletter(input: {
+  email: string
+  source?: string
+}): Promise<NewsletterSubscribeResult> {
+  const email = input.email.trim().toLowerCase()
+  const source = (input.source ?? 'homepage').trim() || 'homepage'
+
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    return { ok: false, error: 'Enter a valid email address.' }
+  }
+
+  const { error } = await supabase.from('newsletter_subscribers').insert({
+    email,
+    source,
+  })
+
+  if (error) {
+    if (error.code === '23505') {
+      return { ok: true, duplicate: true }
+    }
+    return { ok: false, error: error.message || 'Could not subscribe.' }
+  }
+
+  return { ok: true, duplicate: false }
+}
+
 export async function fetchArticleBySlug(slug: string): Promise<Article | null> {
   const { data, error } = await supabase
     .from('articles')

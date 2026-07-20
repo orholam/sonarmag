@@ -4,7 +4,7 @@ import type { Article } from './types'
 export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'NewsMediaOrganization',
+    '@type': ['NewsMediaOrganization', 'Organization'],
     name: SITE_NAME,
     url: SITE_URL,
     logo: absoluteUrl('/favicon.svg'),
@@ -21,10 +21,27 @@ export function websiteJsonLd() {
     url: SITE_URL,
     description: DEFAULT_DESCRIPTION,
     publisher: {
-      '@type': 'NewsMediaOrganization',
+      '@type': ['NewsMediaOrganization', 'Organization'],
       name: SITE_NAME,
       url: SITE_URL,
     },
+  }
+}
+
+export function faqJsonLd(
+  faqs: Array<{ question: string; answer: string }>,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
   }
 }
 
@@ -46,7 +63,7 @@ export function articleJsonLd(article: Article) {
       name: article.author,
     },
     publisher: {
-      '@type': 'NewsMediaOrganization',
+      '@type': ['NewsMediaOrganization', 'Organization'],
       name: SITE_NAME,
       url: SITE_URL,
       logo: {

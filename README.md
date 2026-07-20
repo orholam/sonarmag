@@ -43,9 +43,15 @@ Public tables (read via anon key + RLS):
 - `authors`, `categories`, `articles`
 - `pages`, `podcast_episodes`, `market_tickers`, `site_settings`
 - `comments` — public read + insert; `articles.comments_count` stays in sync via trigger
-- `newsletter_subscribers` (insert-only)
+- `newsletter_subscribers` — insert-only (`email`, `source`, `created_at`); homepage collector posts to `/api/newsletter`
 
 Schema reference: `supabase/migrations/`.
+
+AI / crawler surfaces:
+
+- `/llms.txt` — brand brief for LLM crawlers
+- `/robots.txt` — allows major AI bots + sitemap
+- JSON-LD: Organization, WebSite, FAQPage (home/about), NewsArticle (stories)
 
 Homepage:
 

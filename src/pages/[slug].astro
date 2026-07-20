@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { fetchStaticPage } from '../lib/api'
-import { breadcrumbJsonLd } from '../lib/seo'
+import { breadcrumbJsonLd, faqJsonLd } from '../lib/seo'
 
 export const prerender = false
 
@@ -46,10 +46,33 @@ if (!page) {
     description={page.paragraphs[0] || undefined}
     path={`/${page.slug}`}
     type="website"
-    jsonLd={breadcrumbJsonLd([
-      { name: 'Home', path: '/' },
-      { name: page.title, path: `/${page.slug}` },
-    ])}
+    jsonLd={[
+      breadcrumbJsonLd([
+        { name: 'Home', path: '/' },
+        { name: page.title, path: `/${page.slug}` },
+      ]),
+      ...(page.slug === 'about'
+        ? [
+            faqJsonLd([
+              {
+                question: 'What does Sonar Mag cover?',
+                answer:
+                  'World, Business, and Lifestyle — with a preference for clear writing, careful editing, and intentional discovery.',
+              },
+              {
+                question: 'How can I contact the desk?',
+                answer:
+                  'Send editorial tips, corrections, and partnership notes to desk@sonarmag.com.',
+              },
+              {
+                question: 'How do I subscribe to the newsletter?',
+                answer:
+                  'Use the newsletter form on the homepage, or visit the Subscribe page for membership options.',
+              },
+            ]),
+          ]
+        : []),
+    ]}
   >
     <main class="static-page">
       {page.eyebrow ? <p class="static-eyebrow">{page.eyebrow}</p> : null}

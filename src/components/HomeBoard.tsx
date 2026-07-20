@@ -174,9 +174,17 @@ function renderTitle(article: Article): ReactNode {
   )
 }
 
-export function HomeBoard({ data }: { data: HomepageData }) {
+export function HomeBoard({
+  data,
+  newsletterStatus = null,
+}: {
+  data: HomepageData
+  newsletterStatus?: string | null
+}) {
   const { hero, secondary, opinion, privacyCard, latest, popular, markets, podcast } =
     data
+  const subscribed =
+    newsletterStatus === 'ok' || newsletterStatus === 'exists'
 
   return (
     <>
@@ -408,17 +416,55 @@ export function HomeBoard({ data }: { data: HomepageData }) {
           </div>
 
           <aside className="card print-card" id="subscribe">
-            <div>
-              <h3>Get Print Edition</h3>
-              <p>For an authentic tactile experience</p>
-            </div>
-            <a
-              className="print-btn"
-              href="/subscribe"
-              aria-label="Get print edition"
-            >
-              <IconArrowUpRight />
-            </a>
+            {subscribed ? (
+              <>
+                <div>
+                  <h3>You&apos;re on the list</h3>
+                  <p>
+                    {newsletterStatus === 'exists'
+                      ? 'That address is already subscribed.'
+                      : 'Watch for the next Sonar Brief in your inbox.'}
+                  </p>
+                </div>
+                <span className="print-btn print-btn-done" aria-hidden="true">
+                  <IconArrowUpRight />
+                </span>
+              </>
+            ) : (
+              <form
+                className="newsletter-form"
+                method="post"
+                action="/api/newsletter"
+              >
+                <input type="hidden" name="source" value="homepage" />
+                <div className="newsletter-copy">
+                  <h3>Get the newsletter</h3>
+                  <label className="visually-hidden" htmlFor="newsletter-email">
+                    Email address
+                  </label>
+                  <input
+                    id="newsletter-email"
+                    className="newsletter-input"
+                    type="email"
+                    name="email"
+                    required
+                    autoComplete="email"
+                    placeholder="Email address"
+                    maxLength={254}
+                  />
+                  {newsletterStatus === 'error' ? (
+                    <p className="newsletter-error">Could not subscribe. Try again.</p>
+                  ) : null}
+                </div>
+                <button
+                  className="print-btn"
+                  type="submit"
+                  aria-label="Subscribe to the newsletter"
+                >
+                  <IconArrowUpRight />
+                </button>
+              </form>
+            )}
           </aside>
         </div>
       </div>
@@ -438,11 +484,11 @@ export function HomeBoard({ data }: { data: HomepageData }) {
             />
             <div>
               <p>
-                Support independent reporting with digital access and the print
-                edition.
+                Signal in your inbox — essays, reporting, and field notes from
+                the Sonar desk.
               </p>
-              <a className="magazine-cta" href="/subscribe">
-                Subscribe
+              <a className="magazine-cta" href="#subscribe">
+                Get the newsletter
               </a>
             </div>
           </div>

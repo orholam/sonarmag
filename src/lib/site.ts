@@ -8,7 +8,7 @@ export const SITE_URL = (
 export const SITE_NAME = 'Sonar Mag'
 
 export const DEFAULT_DESCRIPTION =
-  'Sonar Mag — independent journalism, culture, and markets.'
+  'Sonar Mag is an independent online publication for essays, reporting, and cultural field notes across world, business, and lifestyle.'
 
 export const DEFAULT_OG_IMAGE =
   'https://images.unsplash.com/photo-1520986606214-8b456906c813?auto=format&fit=crop&w=1200&q=80'
@@ -20,6 +20,8 @@ export function absoluteUrl(path: string): string {
 }
 
 export function pageTitle(title?: string): string {
-  if (!title || title === SITE_NAME) return SITE_NAME
+  if (!title || title === SITE_NAME) {
+    return 'Sonar Mag — Independent Journalism, Culture & Markets'
+  }
   return `${title} — ${SITE_NAME}`
 }

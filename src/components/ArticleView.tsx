@@ -136,9 +136,9 @@ export function ArticleView({ article }: ArticleViewProps) {
               )}
             </div>
             <div>
-              <p className="article-comments">{article.comments} comments</p>
+              <p className="article-comments">{article.comments} letters</p>
               <a className="article-discuss" href="#comments">
-                Join the discussion
+                Read the letters
               </a>
             </div>
             <div>
