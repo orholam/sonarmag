@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { heroSrcSet, thumbSrcSet, unsplashUrl } from '../lib/images'
 import type { Article, HomepageData } from '../lib/types'
 
 function IconPlay() {
@@ -185,8 +186,14 @@ export function HomeBoard({ data }: { data: HomepageData }) {
             <a className="feature-link" href={`/article/${hero.slug}`}>
               <img
                 className="feature-image"
-                src={hero.heroImage}
+                src={unsplashUrl(hero.heroImage, { width: 1400, quality: 72 })}
+                srcSet={heroSrcSet(hero.heroImage)}
+                sizes="(max-width: 900px) 100vw, 55vw"
                 alt={hero.heroAlt}
+                width={1400}
+                height={1750}
+                decoding="async"
+                fetchPriority="high"
               />
               <div className="meta-row">
                 <span>{hero.author}</span>
@@ -218,8 +225,14 @@ export function HomeBoard({ data }: { data: HomepageData }) {
               <a className="story-link-cover" href={`/article/${secondary.slug}`}>
                 <img
                   className="story-image"
-                  src={secondary.heroImage}
+                  src={unsplashUrl(secondary.heroImage, { width: 800, quality: 72 })}
+                  srcSet={heroSrcSet(secondary.heroImage)}
+                  sizes="(max-width: 900px) 100vw, 28vw"
                   alt={secondary.heroAlt}
+                  width={800}
+                  height={1000}
+                  decoding="async"
+                  loading="lazy"
                 />
                 <div className="meta-row">
                   <span>{secondary.author}</span>
@@ -306,8 +319,14 @@ export function HomeBoard({ data }: { data: HomepageData }) {
               <a className="dark-card-link" href={`/article/${privacyCard.slug}`}>
                 <img
                   className="dark-image"
-                  src={privacyCard.heroImage}
+                  src={unsplashUrl(privacyCard.heroImage, { width: 720, quality: 70 })}
+                  srcSet={thumbSrcSet(privacyCard.heroImage)}
+                  sizes="(max-width: 900px) 100vw, 28vw"
                   alt={privacyCard.heroAlt}
+                  width={720}
+                  height={480}
+                  decoding="async"
+                  loading="lazy"
                 />
                 <h3>{privacyCard.title}</h3>
                 <span className="dark-stat">
@@ -324,11 +343,16 @@ export function HomeBoard({ data }: { data: HomepageData }) {
               <div className="author-row">
                 <div className="author">
                   <img
-                    src={
+                    src={unsplashUrl(
                       opinion.authorAvatar ??
-                      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80'
-                    }
+                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
+                      { width: 96, quality: 70 },
+                    )}
                     alt=""
+                    width={48}
+                    height={48}
+                    decoding="async"
+                    loading="lazy"
                   />
                   <span>{opinion.author}</span>
                   <span className="flame">
@@ -403,8 +427,14 @@ export function HomeBoard({ data }: { data: HomepageData }) {
         <aside className="rail-side">
           <div className="magazine-box">
             <img
-              src={data.magazineCover.image}
+              src={unsplashUrl(data.magazineCover.image, { width: 480, quality: 70 })}
+              srcSet={thumbSrcSet(data.magazineCover.image)}
+              sizes="180px"
               alt={data.magazineCover.alt}
+              width={360}
+              height={480}
+              decoding="async"
+              loading="lazy"
             />
             <div>
               <p>
@@ -425,8 +455,14 @@ export function HomeBoard({ data }: { data: HomepageData }) {
             {podcast ? (
               <article className="podcast-feature" id="podcasts">
                 <img
-                  src={podcast.imageUrl}
+                  src={unsplashUrl(podcast.imageUrl, { width: 640, quality: 70 })}
+                  srcSet={thumbSrcSet(podcast.imageUrl)}
+                  sizes="(max-width: 900px) 100vw, 280px"
                   alt={`Microphone for ${podcast.showName} podcast`}
+                  width={640}
+                  height={400}
+                  decoding="async"
+                  loading="lazy"
                 />
                 <p className="podcast-meta">
                   <span>{podcast.showName}</span> · Episode {podcast.episodeNumber}
@@ -449,7 +485,19 @@ export function HomeBoard({ data }: { data: HomepageData }) {
               <li key={article.slug}>
                 <a className="feed-item" href={`/article/${article.slug}`}>
                   <div className="feed-thumb">
-                    <img src={article.thumbImage ?? article.heroImage} alt="" />
+                    <img
+                      src={unsplashUrl(article.thumbImage ?? article.heroImage, {
+                        width: 320,
+                        quality: 70,
+                      })}
+                      srcSet={thumbSrcSet(article.thumbImage ?? article.heroImage)}
+                      sizes="120px"
+                      alt=""
+                      width={240}
+                      height={160}
+                      decoding="async"
+                      loading="lazy"
+                    />
                     {article.badge ? (
                       <span className="feed-badge">{article.badge}</span>
                     ) : null}

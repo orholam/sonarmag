@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { postComment } from '../lib/api'
+import { postCommentViaRest } from '../lib/comments-client'
 import type { Comment } from '../lib/types'
 
 function formatCommentDate(iso: string): string {
@@ -41,7 +41,7 @@ export function CommentsSection({ articleId, initialComments }: CommentsSectionP
 
     setSubmitting(true)
     try {
-      const comment = await postComment({
+      const comment = await postCommentViaRest({
         articleId,
         authorName: trimmedName,
         body: trimmedBody,

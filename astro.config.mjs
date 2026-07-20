@@ -8,9 +8,9 @@ export default defineConfig({
   adapter: vercel(),
   integrations: [react()],
   prefetch: {
+    // Hover/tap-intent only — avoid competing with LCP bandwidth on load.
+    // Splash articles still get explicit <link rel="prefetch"> from the layout.
     prefetchAll: true,
-    // Warm article routes as soon as the homepage finishes loading
-    // so splash / latest clicks feel instant.
-    defaultStrategy: 'load',
+    defaultStrategy: 'hover',
   },
 })

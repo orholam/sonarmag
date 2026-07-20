@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { heroSrcSet, unsplashUrl } from '../lib/images'
 import { categoryPath } from '../lib/seo'
 import type { Article } from '../lib/types'
 
@@ -155,10 +156,12 @@ export function ArticleView({ article }: ArticleViewProps) {
 
         <figure className="article-figure">
           <img
-            src={article.heroImage}
+            src={unsplashUrl(article.heroImage, { width: 1200, quality: 72 })}
+            srcSet={heroSrcSet(article.heroImage)}
+            sizes="(max-width: 720px) 100vw, 42rem"
             alt={article.heroAlt}
             width={1600}
-            height={900}
+            height={1000}
             decoding="async"
             fetchPriority="high"
           />

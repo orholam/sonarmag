@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions'
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
+import { unsplashUrl } from '../lib/images'
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_OG_IMAGE,
@@ -9,6 +10,7 @@ import {
   absoluteUrl,
   pageTitle,
 } from '../lib/site'
+import '../styles/fonts.css'
 import '../styles/global.css'
 
 type Props = {
@@ -24,6 +26,8 @@ type Props = {
   jsonLd?: object | object[] | null
   /** Extra same-origin paths to warm immediately (e.g. splash articles). */
   prefetchPaths?: string[]
+  /** When set, preload this as the likely LCP image. */
+  lcpImage?: string | null
 }
 
 const {
@@ -38,6 +42,7 @@ const {
   section,
   jsonLd,
   prefetchPaths = [],
+  lcpImage = null,
 } = Astro.props
 
 const fullTitle = pageTitle(title)
@@ -45,6 +50,9 @@ const canonical = absoluteUrl(path)
 const imageUrl = absoluteUrl(image || DEFAULT_OG_IMAGE)
 const desc = description.trim() || DEFAULT_DESCRIPTION
 const ogType = type === 'article' ? 'article' : 'website'
+const lcpHref = lcpImage
+  ? unsplashUrl(lcpImage, { width: type === 'article' ? 1200 : 1400, quality: 72 })
+  : null
 ---
 
 <!doctype html>
@@ -82,12 +90,17 @@ const ogType = type === 'article' ? 'article' : 'website'
     <meta name="twitter:description" content={desc} />
     <meta name="twitter:image" content={imageUrl} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
+    {lcpHref && (
+      <link
+        rel="preload"
+        as="image"
+        href={lcpHref}
+        fetchpriority="high"
+      />
+    )}
 
     {prefetchPaths.map((prefetchPath) => (
       <link rel="prefetch" href={prefetchPath} as="document" />
@@ -100,7 +113,7 @@ const ogType = type === 'article' ? 'article' : 'website'
     <ClientRouter />
   </head>
   <body>
-    <div class="page" transition:animate="fade">
+    <div class="page">
       <SiteHeader />
       <slot />
       <SiteFooter />

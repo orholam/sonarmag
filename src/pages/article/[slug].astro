@@ -44,6 +44,7 @@ if (!article) {
     description={article.excerpt || article.paragraphs[0] || undefined}
     path={`/article/${article.slug}`}
     image={article.heroImage}
+    lcpImage={article.heroImage}
     type="article"
     publishedAt={article.publishedAt}
     author={article.author}
@@ -64,7 +65,7 @@ if (!article) {
       <div class="article-shell">
         <div class="article-main article-main-continue">
           <CommentsSection
-            client:load
+            client:visible
             articleId={article.id}
             initialComments={comments}
           />

@@ -32,6 +32,7 @@ const prefetchPaths = [...new Set(splashPrefetch)]
   description={DEFAULT_DESCRIPTION}
   path="/"
   image={data.hero?.heroImage}
+  lcpImage={data.hero?.heroImage}
   type="website"
   jsonLd={[organizationJsonLd(), websiteJsonLd()]}
   prefetchPaths={prefetchPaths}

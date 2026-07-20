@@ -8,7 +8,8 @@
   --red: #e11d2e;
   --tan: #e7d7c1;
   --radius: 22px;
-  --font: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font: 'Playfair Display Variable', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
 }
 
 *,
@@ -685,6 +686,8 @@ a.print-btn {
   padding: 1.75rem 1.85rem 2rem;
   border-radius: var(--radius);
   background: var(--surface);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1200px;
 }
 
 .rail-heading {
@@ -706,7 +709,7 @@ a.print-btn {
 }
 
 .rail-heading a {
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -744,7 +747,7 @@ a.print-btn {
   padding: 0.45rem 0.9rem;
   background: #111;
   color: #fff;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -762,7 +765,7 @@ a.print-btn {
 
 .podcast-meta {
   margin: 0 0 0.4rem;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -790,7 +793,7 @@ a.print-btn {
 .byline,
 .timestamp {
   margin: 0;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -857,7 +860,7 @@ a.print-btn {
   padding: 0.35rem 0.1rem;
   background: var(--red);
   color: #fff;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.55rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -951,7 +954,7 @@ a.print-btn {
 
 .footer-group h2 {
   margin: 0 0 0.75rem;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -983,7 +986,7 @@ a.print-btn {
   gap: 0.75rem 1.25rem;
   padding: 1.1rem 0 0.35rem;
   border-top: 1px solid rgba(23, 23, 23, 0.1);
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.86rem;
   color: #555;
 }
@@ -1014,7 +1017,7 @@ a.print-btn {
 
 .static-eyebrow {
   margin: 0 0 0.55rem;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1042,7 +1045,7 @@ a.print-btn {
 
 .static-back {
   margin: 2rem 0 0;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.92rem;
   font-weight: 600;
 }
@@ -1074,7 +1077,7 @@ a.print-btn {
 
 .comments-count {
   margin: 0;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.86rem;
   color: var(--muted);
 }
@@ -1086,7 +1089,7 @@ a.print-btn {
 }
 
 .comments-label {
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -1101,7 +1104,7 @@ a.print-btn {
   border-radius: 12px;
   background: #fff;
   color: var(--ink);
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.45;
   padding: 0.75rem 0.9rem;
@@ -1125,7 +1128,7 @@ a.print-btn {
   border-radius: 999px;
   background: var(--ink);
   color: #fff;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.92rem;
   font-weight: 700;
   padding: 0.7rem 1.2rem;
@@ -1145,7 +1148,7 @@ a.print-btn {
 .comments-success,
 .comments-empty {
   margin: 0.25rem 0 0;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.9rem;
 }
 
@@ -1184,7 +1187,7 @@ a.print-btn {
   flex-wrap: wrap;
   gap: 0.45rem 0.85rem;
   margin-bottom: 0.45rem;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.86rem;
 }
 
@@ -1268,7 +1271,7 @@ a.icon-chip {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -1323,7 +1326,7 @@ a.icon-chip {
   border: 1px solid rgba(23, 23, 23, 0.16);
   border-radius: 999px;
   background: var(--surface);
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.86rem;
   font-weight: 600;
 }
@@ -1342,7 +1345,7 @@ a.icon-chip {
 
 .article-author {
   margin: 0;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -1351,7 +1354,7 @@ a.icon-chip {
 .article-comments,
 .article-category-label {
   margin: 0.25rem 0 0;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.78rem;
   color: #555;
 }
@@ -1373,7 +1376,7 @@ a.icon-chip {
 .article-discuss {
   display: inline-block;
   margin-top: 0.2rem;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.78rem;
   font-weight: 600;
   text-decoration: underline;
@@ -1382,7 +1385,7 @@ a.icon-chip {
 
 .article-category {
   margin: 0;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -1399,7 +1402,7 @@ a.icon-chip {
   align-items: center;
   gap: 1.1rem;
   margin: 0.35rem 0 0;
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.88rem;
   font-weight: 600;
   color: #333;
@@ -1446,7 +1449,7 @@ a.icon-chip {
 }
 
 .article-missing a {
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-weight: 700;
   text-decoration: underline;
 }
