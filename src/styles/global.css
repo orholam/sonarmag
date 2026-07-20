@@ -71,6 +71,12 @@ img {
   width: 100%;
 }
 
+.page > main.static-page,
+.page > main.article-missing {
+  width: min(40rem, 100%);
+  margin-inline: auto;
+}
+
 .page > .site-footer {
   flex-shrink: 0;
   margin-top: auto;
@@ -1003,9 +1009,7 @@ a.print-btn {
 }
 
 .static-page {
-  width: min(42rem, 100%);
-  margin: 0 auto;
-  padding: 1.5rem 0 2rem;
+  padding: 2rem 0 3rem;
 }
 
 .static-eyebrow {
@@ -1024,6 +1028,10 @@ a.print-btn {
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.12;
+}
+
+.static-body {
+  max-width: 38rem;
 }
 
 .static-body p {
