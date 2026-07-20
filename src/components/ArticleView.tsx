@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import type { Article } from '../data/articles'
+import { categoryPath } from '../lib/seo'
+import type { Article } from '../lib/types'
 
 function IconPlay() {
   return (
@@ -73,13 +74,14 @@ function renderTitle(article: Article): ReactNode {
   )
 }
 
-type ArticlePageProps = {
+type ArticleViewProps = {
   article: Article
 }
 
-export function ArticlePage({ article }: ArticlePageProps) {
+export function ArticleView({ article }: ArticleViewProps) {
   const intro = article.paragraphs.slice(0, 2)
   const rest = article.paragraphs.slice(2)
+  const sectionHref = categoryPath(article.category)
 
   return (
     <article className="article-page">
@@ -124,7 +126,13 @@ export function ArticlePage({ article }: ArticlePageProps) {
           <aside className="article-meta">
             <div>
               <p className="article-author">{article.author}</p>
-              <p className="article-date">{article.publishedLabel}</p>
+              {article.publishedAt ? (
+                <time className="article-date" dateTime={article.publishedAt}>
+                  {article.publishedLabel}
+                </time>
+              ) : (
+                <p className="article-date">{article.publishedLabel}</p>
+              )}
             </div>
             <div>
               <p className="article-comments">{article.comments} comments</p>
@@ -133,14 +141,27 @@ export function ArticlePage({ article }: ArticlePageProps) {
               </a>
             </div>
             <div>
-              <p className="article-category">{article.category}</p>
+              {sectionHref ? (
+                <p className="article-category">
+                  <a href={sectionHref}>{article.category}</a>
+                </p>
+              ) : (
+                <p className="article-category">{article.category}</p>
+              )}
               <p className="article-category-label">Category</p>
             </div>
           </aside>
         </div>
 
         <figure className="article-figure">
-          <img src={article.heroImage} alt={article.heroAlt} />
+          <img
+            src={article.heroImage}
+            alt={article.heroAlt}
+            width={1600}
+            height={900}
+            decoding="async"
+            fetchPriority="high"
+          />
         </figure>
 
         <div className="article-main article-main-continue">

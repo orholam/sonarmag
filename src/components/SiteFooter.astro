@@ -1,0 +1,71 @@
+---
+const footerGroups = [
+  {
+    title: 'Sections',
+    links: [
+      { href: '/world', label: 'World' },
+      { href: '/business', label: 'Business' },
+      { href: '/lifestyle', label: 'Lifestyle' },
+      { href: '/podcasts', label: 'Podcasts' },
+    ],
+  },
+  {
+    title: 'Explore',
+    links: [
+      { href: '/latest', label: 'Latest' },
+      { href: '/popular', label: 'Popular' },
+      { href: '/subscribe', label: 'Subscribe' },
+      { href: '/about', label: 'About' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '/contact', label: 'Contact' },
+      { href: '/privacy', label: 'Privacy' },
+      { href: '/terms', label: 'Terms' },
+    ],
+  },
+]
+
+const year = new Date().getFullYear()
+---
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand-block">
+      <a class="footer-brand" href="/">
+        <strong>Sonar</strong> Mag
+      </a>
+      <p class="footer-tagline">
+        Signals from the deep web of culture.
+      </p>
+    </div>
+
+    <div class="footer-menus">
+      {
+        footerGroups.map((group) => (
+          <div class="footer-group">
+            <h2>{group.title}</h2>
+            <ul>
+              {group.links.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© {year} Sonar Mag</p>
+    <div class="footer-legal">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+</footer>

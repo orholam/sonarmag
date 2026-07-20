@@ -1,0 +1,64 @@
+---
+import { ArticleView } from '../../components/ArticleView.tsx'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { fetchArticleBySlug } from '../../lib/api'
+import { articleJsonLd, breadcrumbJsonLd, categoryPath } from '../../lib/seo'
+
+export const prerender = false
+
+const { slug } = Astro.params
+if (!slug) {
+  return Astro.redirect('/')
+}
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=60, stale-while-revalidate=300',
+)
+
+const article = await fetchArticleBySlug(slug)
+
+if (!article) {
+  Astro.response.status = 404
+}
+---
+
+{!article ? (
+  <BaseLayout
+    title="Article not found"
+    description="That story may have moved or never existed."
+    path={`/article/${slug}`}
+    noIndex
+  >
+    <main class="article-missing">
+      <h1>Article not found</h1>
+      <p>That story may have moved or never existed.</p>
+      <a href="/">Back to Sonar Mag</a>
+    </main>
+  </BaseLayout>
+) : (
+  <BaseLayout
+    title={article.title}
+    description={article.excerpt || article.paragraphs[0] || undefined}
+    path={`/article/${article.slug}`}
+    image={article.heroImage}
+    type="article"
+    publishedAt={article.publishedAt}
+    author={article.author}
+    section={article.category}
+    jsonLd={[
+      articleJsonLd(article),
+      breadcrumbJsonLd([
+        { name: 'Home', path: '/' },
+        ...(categoryPath(article.category)
+          ? [{ name: article.category, path: categoryPath(article.category)! }]
+          : []),
+        { name: article.title, path: `/article/${article.slug}` },
+      ]),
+    ]}
+  >
+    <main>
+      <ArticleView article={article} />
+    </main>
+  </BaseLayout>
+)}

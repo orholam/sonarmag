@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { fetchStaticPage } from '../lib/api'
+import { breadcrumbJsonLd } from '../lib/seo'
+
+export const prerender = false
+
+const { slug } = Astro.params
+if (!slug) {
+  return Astro.redirect('/')
+}
+
+// Reserved for the article namespace
+if (slug === 'article') {
+  return Astro.redirect('/')
+}
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=60, stale-while-revalidate=300',
+)
+
+const page = await fetchStaticPage(slug)
+
+if (!page) {
+  Astro.response.status = 404
+}
+---
+
+{!page ? (
+  <BaseLayout
+    title="Page not found"
+    description="That page may have moved."
+    path={`/${slug}`}
+    noIndex
+  >
+    <main class="static-page">
+      <h1>Page not found</h1>
+      <p>That page may have moved.</p>
+      <a href="/">Back to Sonar Mag</a>
+    </main>
+  </BaseLayout>
+) : (
+  <BaseLayout
+    title={page.title}
+    description={page.paragraphs[0] || undefined}
+    path={`/${page.slug}`}
+    type="website"
+    jsonLd={breadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: page.title, path: `/${page.slug}` },
+    ])}
+  >
+    <main class="static-page">
+      {page.eyebrow ? <p class="static-eyebrow">{page.eyebrow}</p> : null}
+      <h1>{page.title}</h1>
+      <div class="static-body">
+        {page.paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+      <p class="static-back">
+        <a href="/">← Back to homepage</a>
+      </p>
+    </main>
+  </BaseLayout>
+)}

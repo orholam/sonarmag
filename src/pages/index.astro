@@ -1,0 +1,29 @@
+---
+import { HomeBoard } from '../components/HomeBoard.tsx'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { fetchHomepageData } from '../lib/api'
+import { organizationJsonLd, websiteJsonLd } from '../lib/seo'
+import { DEFAULT_DESCRIPTION } from '../lib/site'
+
+export const prerender = false
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=60, stale-while-revalidate=300',
+)
+
+const data = await fetchHomepageData()
+---
+
+<BaseLayout
+  title="Sonar Mag"
+  description={DEFAULT_DESCRIPTION}
+  path="/"
+  image={data.hero?.heroImage}
+  type="website"
+  jsonLd={[organizationJsonLd(), websiteJsonLd()]}
+>
+  <main>
+    <HomeBoard data={data} />
+  </main>
+</BaseLayout>
