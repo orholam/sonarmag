@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
+import { TweetEmbed } from './TweetEmbed'
 import { heroSrcSet, unsplashUrl } from '../lib/images'
 import { categoryPath } from '../lib/seo'
-import type { Article } from '../lib/types'
+import { isTweetBlock, type Article, type ArticleBlock } from '../lib/types'
 
 function IconPlay() {
   return (
@@ -75,13 +76,40 @@ function renderTitle(article: Article): ReactNode {
   )
 }
 
+function renderBlock(block: ArticleBlock, key: string) {
+  if (isTweetBlock(block)) {
+    return <TweetEmbed key={key} tweet={block} />
+  }
+  return <p key={key}>{block}</p>
+}
+
+/** First two prose paragraphs before the figure; remaining blocks (incl. tweets) after. */
+function splitBody(blocks: ArticleBlock[]): {
+  intro: ArticleBlock[]
+  rest: ArticleBlock[]
+} {
+  const intro: ArticleBlock[] = []
+  const rest: ArticleBlock[] = []
+  let proseSeen = 0
+
+  for (const block of blocks) {
+    if (typeof block === 'string' && proseSeen < 2) {
+      intro.push(block)
+      proseSeen += 1
+    } else {
+      rest.push(block)
+    }
+  }
+
+  return { intro, rest }
+}
+
 type ArticleViewProps = {
   article: Article
 }
 
 export function ArticleView({ article }: ArticleViewProps) {
-  const intro = article.paragraphs.slice(0, 2)
-  const rest = article.paragraphs.slice(2)
+  const { intro, rest } = splitBody(article.paragraphs)
   const sectionHref = categoryPath(article.category)
 
   return (
@@ -106,9 +134,7 @@ export function ArticleView({ article }: ArticleViewProps) {
             </header>
 
             <div className="article-body">
-              {intro.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
+              {intro.map((block, index) => renderBlock(block, `intro-${index}`))}
 
               <div className="article-actions">
                 <button type="button">
@@ -169,9 +195,7 @@ export function ArticleView({ article }: ArticleViewProps) {
 
         <div className="article-main article-main-continue">
           <div className="article-body">
-            {rest.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
+            {rest.map((block, index) => renderBlock(block, `rest-${index}`))}
           </div>
         </div>
       </div>

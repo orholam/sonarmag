@@ -1,11 +1,13 @@
 import { supabase } from './supabase'
 import type {
   Article,
+  ArticleBlock,
   Comment,
   HomepageData,
   MarketTicker,
   PodcastEpisode,
   StaticPage,
+  TweetBlock,
 } from './types'
 
 type AuthorEmbed = { name: string; avatar_url: string | null }
@@ -94,6 +96,36 @@ function asParagraphs(value: unknown): string[] {
   return value.filter((item): item is string => typeof item === 'string')
 }
 
+function asArticleBlocks(value: unknown): ArticleBlock[] {
+  if (!Array.isArray(value)) return []
+
+  const blocks: ArticleBlock[] = []
+  for (const item of value) {
+    if (typeof item === 'string') {
+      blocks.push(item)
+      continue
+    }
+    if (
+      item &&
+      typeof item === 'object' &&
+      (item as { type?: unknown }).type === 'tweet' &&
+      typeof (item as { url?: unknown }).url === 'string'
+    ) {
+      const raw = item as Record<string, unknown>
+      const tweet: TweetBlock = {
+        type: 'tweet',
+        url: raw.url as string,
+      }
+      if (typeof raw.authorName === 'string') tweet.authorName = raw.authorName
+      if (typeof raw.authorHandle === 'string') tweet.authorHandle = raw.authorHandle
+      if (typeof raw.text === 'string') tweet.text = raw.text
+      if (typeof raw.postedAt === 'string') tweet.postedAt = raw.postedAt
+      blocks.push(tweet)
+    }
+  }
+  return blocks
+}
+
 function one<T>(value: T | T[] | null | undefined): T | null {
   if (value == null) return null
   return Array.isArray(value) ? (value[0] ?? null) : value
@@ -123,7 +155,7 @@ function mapArticle(row: ArticleRow): Article {
     ticker: row.ticker ?? '',
     excerpt: row.excerpt,
     badge: row.badge,
-    paragraphs: asParagraphs(row.paragraphs),
+    paragraphs: asArticleBlocks(row.paragraphs),
     featuredSlot: row.featured_slot,
     popularRank: row.popular_rank,
     publishedAt: row.published_at,

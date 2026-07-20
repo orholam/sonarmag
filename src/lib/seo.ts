@@ -1,5 +1,5 @@
 import { absoluteUrl, DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from './site'
-import type { Article } from './types'
+import { textBlocks, type Article } from './types'
 
 export function organizationJsonLd() {
   return {
@@ -48,7 +48,7 @@ export function faqJsonLd(
 export function articleJsonLd(article: Article) {
   const url = absoluteUrl(`/article/${article.slug}`)
   const description =
-    article.excerpt?.trim() || article.paragraphs[0] || DEFAULT_DESCRIPTION
+    article.excerpt?.trim() || textBlocks(article.paragraphs)[0] || DEFAULT_DESCRIPTION
 
   return {
     '@context': 'https://schema.org',
@@ -76,7 +76,7 @@ export function articleJsonLd(article: Article) {
       '@id': url,
     },
     articleSection: article.category || undefined,
-    wordCount: article.paragraphs.join(' ').split(/\s+/).filter(Boolean).length,
+    wordCount: textBlocks(article.paragraphs).join(' ').split(/\s+/).filter(Boolean).length,
     timeRequired: `PT${Math.max(1, article.readMinutes)}M`,
     url,
   }

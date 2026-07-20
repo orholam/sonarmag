@@ -1,0 +1,48 @@
+---
+description: How to write and publish Sonar Mag articles, including tweet embeds
+alwaysApply: true
+---
+
+# Writing Sonar Mag articles
+
+Articles live in Supabase `articles` (not in the repo). Add or edit a row → it goes live via Astro SSR.
+
+## Content model
+
+`paragraphs` is jsonb: an ordered array of **blocks**.
+
+- **Prose:** a plain string (one paragraph).
+- **Tweet embed:** an object:
+
+```json
+{
+  "type": "tweet",
+  "url": "https://x.com/Handle/status/123",
+  "authorName": "Display Name",
+  "authorHandle": "Handle",
+  "text": "Full tweet text…",
+  "postedAt": "2026-07-20T10:56:59.000Z"
+}
+```
+
+Always store `type`, `url`, and the fetched `text` / author fields so embeds render without client JS. Do **not** load Twitter `widgets.js` (hurts Core Web Vitals). The site renders a Sonar-styled card via `TweetEmbed`.
+
+### Fetching tweet data
+
+When given an X/Twitter URL, fetch text via syndication or fxtwitter (X HTML often 403s), then write the rich tweet block into `paragraphs`. Place the embed where it belongs in the narrative (usually after 2–3 setup paragraphs).
+
+## Voice & structure
+
+- Original Sonar Mag copy — do not paste the source essay wholesale.
+- Frame the tweet, quote or embed it, then analyze / contextualize.
+- Prefer 5–9 prose paragraphs + embeds as needed.
+- Set `excerpt`, `ticker`, `hero_image` / `hero_alt`, `read_minutes`, `listen_minutes`, `category_id`, `author_id`.
+- Homepage placement: `featured_slot` (`hero` | `secondary` | `opinion`) or leave null for Latest.
+
+## Checklist before insert
+
+1. Unique `slug`
+2. `status = 'published'`
+3. Tweet blocks include full text (not URL-only)
+4. Link out to primary sources in prose when relevant
+5. Confirm the article URL `/article/{slug}` after deploy/cache

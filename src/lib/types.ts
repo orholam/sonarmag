@@ -1,3 +1,15 @@
+export type TweetBlock = {
+  type: 'tweet'
+  url: string
+  authorName?: string
+  authorHandle?: string
+  text?: string
+  postedAt?: string
+}
+
+/** Body blocks stored in articles.paragraphs jsonb. */
+export type ArticleBlock = string | TweetBlock
+
 export type Article = {
   id: string
   slug: string
@@ -19,7 +31,7 @@ export type Article = {
   ticker: string
   excerpt?: string | null
   badge?: string | null
-  paragraphs: string[]
+  paragraphs: ArticleBlock[]
   featuredSlot?: 'hero' | 'secondary' | 'opinion' | null
   popularRank?: number | null
   publishedAt?: string
@@ -69,4 +81,12 @@ export type HomepageData = {
   promoStats: { articles: number; authors: number }
   player: { time: string; views: number }
   magazineCover: { image: string; alt: string }
+}
+
+export function isTweetBlock(block: ArticleBlock): block is TweetBlock {
+  return typeof block === 'object' && block !== null && block.type === 'tweet'
+}
+
+export function textBlocks(blocks: ArticleBlock[]): string[] {
+  return blocks.filter((block): block is string => typeof block === 'string')
 }

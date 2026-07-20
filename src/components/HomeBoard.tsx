@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { heroSrcSet, thumbSrcSet, unsplashUrl } from '../lib/images'
-import type { Article, HomepageData } from '../lib/types'
+import { textBlocks, type Article, type HomepageData } from '../lib/types'
 
 function IconPlay() {
   return (
@@ -210,7 +210,7 @@ export function HomeBoard({
               <div className="feature-content">
                 <h1>{renderTitle(hero)}</h1>
                 <div className="feature-copy">
-                  {hero.paragraphs.slice(0, 2).map((paragraph) => (
+                  {textBlocks(hero.paragraphs).slice(0, 2).map((paragraph) => (
                     <p key={paragraph}>{paragraph}</p>
                   ))}
                 </div>
@@ -379,7 +379,7 @@ export function HomeBoard({
                 <a href={`/article/${opinion.slug}`}>{renderTitle(opinion)}</a>
               </h2>
               <div className="feature-copy">
-                {opinion.paragraphs.slice(0, 2).map((paragraph) => (
+                {textBlocks(opinion.paragraphs).slice(0, 2).map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
               </div>

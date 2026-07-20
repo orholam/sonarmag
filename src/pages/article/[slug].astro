@@ -4,6 +4,7 @@ import { CommentsSection } from '../../components/CommentsSection.tsx'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { fetchArticleBySlug, fetchCommentsForArticle } from '../../lib/api'
 import { articleJsonLd, breadcrumbJsonLd, categoryPath } from '../../lib/seo'
+import { textBlocks } from '../../lib/types'
 
 export const prerender = false
 
@@ -41,7 +42,7 @@ if (!article) {
 ) : (
   <BaseLayout
     title={article.title}
-    description={article.excerpt || article.paragraphs[0] || undefined}
+    description={article.excerpt || textBlocks(article.paragraphs)[0] || undefined}
     path={`/article/${article.slug}`}
     image={article.heroImage}
     lcpImage={article.heroImage}
