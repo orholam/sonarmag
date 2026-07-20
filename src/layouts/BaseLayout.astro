@@ -65,6 +65,12 @@ const lcpHref = lcpImage
     <meta name="description" content={desc} />
     <meta name="author" content={author?.trim() || SITE_NAME} />
     <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
+    {path === '/' && (
+      <meta
+        name="google-site-verification"
+        content="eM9bCqO1j2wDh7vMGwyndgoATwoG-wd57NrSWB7iaTQ"
+      />
+    )}
     <link rel="canonical" href={canonical} />
 
     <meta property="og:site_name" content={SITE_NAME} />
