@@ -272,13 +272,14 @@ img {
   position: relative;
   z-index: 2;
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   flex-direction: column;
   justify-content: flex-end;
   width: 100%;
   margin-top: auto;
-  padding: 1.35rem 1.5rem 1.4rem;
-  background: #fff;
+  min-height: 100%;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: transparent;
 }
 
 .feature-card h1,
@@ -291,9 +292,8 @@ img {
 }
 
 .feature-card h1 {
-  max-width: 16ch;
-  font-size: clamp(2.2rem, 3.2vw, 3.2rem);
-  color: var(--ink);
+  max-width: 12ch;
+  font-size: clamp(2.4rem, 3.6vw, 3.55rem);
 }
 
 .story-card {
@@ -1342,13 +1342,12 @@ button.print-btn:hover {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Keep photo readable; title/dek sit on solid white panel below. */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 55%,
-    rgba(255, 255, 255, 0.35) 78%,
-    rgba(255, 255, 255, 0.75) 92%,
+    rgba(255, 255, 255, 0.05) 35%,
+    rgba(255, 255, 255, 0.7) 62%,
+    rgba(255, 255, 255, 0.94) 82%,
     #fff 100%
   );
 }
