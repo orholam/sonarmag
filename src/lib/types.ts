@@ -1,4 +1,5 @@
 export type Article = {
+  id: string
   slug: string
   title: string
   highlight?: {
@@ -22,6 +23,14 @@ export type Article = {
   featuredSlot?: 'hero' | 'secondary' | 'opinion' | null
   popularRank?: number | null
   publishedAt?: string
+}
+
+export type Comment = {
+  id: string
+  articleId: string
+  authorName: string
+  body: string
+  createdAt: string
 }
 
 export type StaticPage = {

@@ -42,6 +42,7 @@ Public tables (read via anon key + RLS):
 
 - `authors`, `categories`, `articles`
 - `pages`, `podcast_episodes`, `market_tickers`, `site_settings`
+- `comments` — public read + insert; `articles.comments_count` stays in sync via trigger
 - `newsletter_subscribers` (insert-only)
 
 Schema reference: `supabase/migrations/`.

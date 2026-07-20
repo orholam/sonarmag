@@ -1,7 +1,8 @@
 ---
 import { ArticleView } from '../../components/ArticleView.tsx'
+import { CommentsSection } from '../../components/CommentsSection.tsx'
 import BaseLayout from '../../layouts/BaseLayout.astro'
-import { fetchArticleBySlug } from '../../lib/api'
+import { fetchArticleBySlug, fetchCommentsForArticle } from '../../lib/api'
 import { articleJsonLd, breadcrumbJsonLd, categoryPath } from '../../lib/seo'
 
 export const prerender = false
@@ -13,10 +14,11 @@ if (!slug) {
 
 Astro.response.headers.set(
   'Cache-Control',
-  'public, s-maxage=300, stale-while-revalidate=600',
+  'public, s-maxage=30, stale-while-revalidate=120',
 )
 
 const article = await fetchArticleBySlug(slug)
+const comments = article ? await fetchCommentsForArticle(article.id) : []
 
 if (!article) {
   Astro.response.status = 404
@@ -59,6 +61,15 @@ if (!article) {
   >
     <main>
       <ArticleView article={article} />
+      <div class="article-shell">
+        <div class="article-main article-main-continue">
+          <CommentsSection
+            client:load
+            articleId={article.id}
+            initialComments={comments}
+          />
+        </div>
+      </div>
     </main>
   </BaseLayout>
 )}

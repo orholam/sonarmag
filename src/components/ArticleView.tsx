@@ -136,7 +136,7 @@ export function ArticleView({ article }: ArticleViewProps) {
             </div>
             <div>
               <p className="article-comments">{article.comments} comments</p>
-              <a className="article-discuss" href="#discussion">
+              <a className="article-discuss" href="#comments">
                 Join the discussion
               </a>
             </div>
@@ -165,7 +165,7 @@ export function ArticleView({ article }: ArticleViewProps) {
         </figure>
 
         <div className="article-main article-main-continue">
-          <div className="article-body" id="discussion">
+          <div className="article-body">
             {rest.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}

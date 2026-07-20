@@ -1,6 +1,7 @@
 import { supabase } from './supabase'
 import type {
   Article,
+  Comment,
   HomepageData,
   MarketTicker,
   PodcastEpisode,
@@ -11,6 +12,7 @@ type AuthorEmbed = { name: string; avatar_url: string | null }
 type CategoryEmbed = { name: string }
 
 type ArticleRow = {
+  id: string
   slug: string
   title: string
   highlight_word: string | null
@@ -64,6 +66,7 @@ type SettingRow = {
 }
 
 const articleSelect = `
+  id,
   slug,
   title,
   highlight_word,
@@ -100,6 +103,7 @@ function mapArticle(row: ArticleRow): Article {
   const author = one(row.authors)
   const category = one(row.categories)
   return {
+    id: row.id,
     slug: row.slug,
     title: row.title,
     highlight:
@@ -124,6 +128,52 @@ function mapArticle(row: ArticleRow): Article {
     popularRank: row.popular_rank,
     publishedAt: row.published_at,
   }
+}
+
+function mapComment(row: {
+  id: string
+  article_id: string
+  author_name: string
+  body: string
+  created_at: string
+}): Comment {
+  return {
+    id: row.id,
+    articleId: row.article_id,
+    authorName: row.author_name,
+    body: row.body,
+    createdAt: row.created_at,
+  }
+}
+
+export async function fetchCommentsForArticle(articleId: string): Promise<Comment[]> {
+  const { data, error } = await supabase
+    .from('comments')
+    .select('id, article_id, author_name, body, created_at')
+    .eq('article_id', articleId)
+    .order('created_at', { ascending: true })
+
+  if (error) throw error
+  return (data ?? []).map(mapComment)
+}
+
+export async function postComment(input: {
+  articleId: string
+  authorName: string
+  body: string
+}): Promise<Comment> {
+  const { data, error } = await supabase
+    .from('comments')
+    .insert({
+      article_id: input.articleId,
+      author_name: input.authorName.trim(),
+      body: input.body.trim(),
+    })
+    .select('id, article_id, author_name, body, created_at')
+    .single()
+
+  if (error) throw error
+  return mapComment(data)
 }
 
 export async function fetchArticleBySlug(slug: string): Promise<Article | null> {
