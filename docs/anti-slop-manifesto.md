@@ -111,7 +111,7 @@ These are not afterthoughts. They are the piece in miniature.
 - Contains the claim or the tension, not a bland summary.
 - Must not repeat the title verbatim.
 - Must stand alone on a card without the body.
-- **Homepage splash and opinion cards show the excerpt only** (clamped) — never dump body paragraphs onto the board. Write the excerpt as the card.
+- **Homepage splash and opinion cards** show the first two body paragraphs in a two-column grid (each column line-clamped). Write those openings as card copy: denser than a one-line dek, shorter than a full lede dump.
 
 **Weak:** "Young women are dating less and experts are concerned."  
 **Stronger:** "Brad Wilcox calls it heteropessimism: a practiced shrug at men, marriage, and the trouble of hoping."

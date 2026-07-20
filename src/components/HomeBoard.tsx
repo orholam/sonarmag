@@ -1,6 +1,12 @@
 import type { ReactNode } from 'react'
 import { heroSrcSet, thumbSrcSet, unsplashUrl } from '../lib/images'
-import { type Article, type HomepageData } from '../lib/types'
+import { textBlocks, type Article, type HomepageData } from '../lib/types'
+
+function cardTeasers(article: Article): string[] {
+  const paras = textBlocks(article.paragraphs).slice(0, 2)
+  if (paras.length > 0) return paras
+  return article.excerpt?.trim() ? [article.excerpt.trim()] : []
+}
 
 function IconPlay() {
   return (
@@ -185,6 +191,8 @@ export function HomeBoard({
     data
   const subscribed =
     newsletterStatus === 'ok' || newsletterStatus === 'exists'
+  const heroTeasers = hero ? cardTeasers(hero) : []
+  const opinionTeasers = opinion ? cardTeasers(opinion) : []
 
   return (
     <>
@@ -209,8 +217,12 @@ export function HomeBoard({
               </div>
               <div className="feature-content">
                 <h1>{renderTitle(hero)}</h1>
-                {hero.excerpt ? (
-                  <p className="feature-dek">{hero.excerpt}</p>
+                {heroTeasers.length > 0 ? (
+                  <div className="feature-copy">
+                    {heroTeasers.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </div>
                 ) : null}
                 <div className="stat-row">
                   <span>
@@ -376,8 +388,12 @@ export function HomeBoard({
               <h2>
                 <a href={`/article/${opinion.slug}`}>{renderTitle(opinion)}</a>
               </h2>
-              {opinion.excerpt ? (
-                <p className="opinion-dek">{opinion.excerpt}</p>
+              {opinionTeasers.length > 0 ? (
+                <div className="feature-copy">
+                  {opinionTeasers.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
               ) : null}
               <div className="stat-row with-share">
                 <span>
