@@ -78,12 +78,14 @@ A good title is closer to a caption under a photograph than to a folder name on 
 - No question marks that are fake curiosity (*Is Dating Dead?*) unless the piece truly investigates
 - No title that could sit on any outlet unchanged after a find-replace of the proper nouns
 - No title longer than it needs to be — cut throat-clearing (*A Closer Look at…*, *Exploring the…*)
+- **No slogan titles that oversell the paper.** If the study found that ~half of certain gene-expression differences were absent in trained older adults, do not title the piece as if half of aging itself were a consumer choice (*Half of Muscle Aging Is Optional*). Match the claim's scope.
 
 ### Title ↔ body contract
 
 - If the title promises a canoeist, the canoeist must appear early and matter.
 - If the title asks a question, the piece must attempt an answer (even a partial, honest one).
 - If the title needles a person, the needle must be earned by evidence, not vibes.
+- If the title implies a percentage or binary (*optional*, *solved*, *over*), the body must defend that exact scope — or the title must shrink.
 
 ### Title test
 
@@ -105,16 +107,24 @@ If you set `highlight_word` / `highlight_tone`, the marked phrase must already a
 
 These are not afterthoughts. They are the piece in miniature.
 
-### Excerpt
+### Excerpt (homepage card copy)
 
-- One or two sentences.
-- Contains the claim or the tension, not a bland summary.
+Splash and opinion cards show **the excerpt as one continuous text block** laid out in two CSS columns. The reader finishes the left column and continues into the right — the same way a newspaper column works.
+
+That means:
+
+- Write one flowing dek of roughly **70–110 words** (long enough to fill two short columns; short enough not to become a second article).
+- It must read as a single argument if you ignore the column break.
+- **Never** put body paragraph 1 in column A and body paragraph 2 in column B. That is not a two-column layout; it is two truncated ledes glued side by side, and the jump at the column break will not make sense.
+- **Never** line-clamp two separate paragraphs independently for the card. Truncation mid-sentence in column one, then a fresh paragraph in column two, is unreadable.
 - Must not repeat the title verbatim.
-- Must stand alone on a card without the body.
-- **Homepage splash and opinion cards** show the first two body paragraphs in a two-column grid (each column line-clamped). Write those openings as card copy: denser than a one-line dek, shorter than a full lede dump.
+- Contains the claim or the tension, not a bland summary.
 
-**Weak:** "Young women are dating less and experts are concerned."  
-**Stronger:** "Brad Wilcox calls it heteropessimism: a practiced shrug at men, marriage, and the trouble of hoping."
+**Weak card dek:** two body paras dumped into a grid.  
+**Stronger:** one continuous excerpt that names the study, the comparison, and the finding without a billboard ending.
+
+**Weak one-liner:** "Young women are dating less and experts are concerned."  
+**Stronger continuous dek:** "Brad Wilcox calls it heteropessimism: a practiced shrug at men, marriage, and the trouble of hoping. The dating recession is not only fewer dates; it is a generation rehearsing contempt before the first coffee."
 
 ### Ticker
 
@@ -244,6 +254,9 @@ Write like a confident magazine essayist: dry, concrete, willing to bruise a sac
 - Pretending Sonar invented the underlying reporting — credit the source, then add the frame
 - Hot-take voice that confuses cruelty with clarity
 - Academic throat-clear (*It is worth noting that the literature suggests…*)
+- **Billboard science:** "the sentence the industry will not put on a billboard," "longevity aisle," "wellness content can't stand," "half is a choice." Rhetoric that sells the finding harder than the paper does. If you need a billboard sentence, the claim is probably overfit.
+- **Omics laundry lists** as atmosphere: dumping gene symbols, pathway names, and assay counts to sound authoritative. One concrete finding in a moving sentence beats a paragraph of NDUFS1 / COX5A / IL6 / TNF.
+- **Unreadable density:** a card or lede that a sharp non-specialist cannot paraphrase after one pass. If they can't, rewrite.
 
 ### Register
 
@@ -299,6 +312,17 @@ Fairness is representing the other side accurately enough that they would recogn
 ### Data honesty
 
 If the data are thin, say so. "One survey" is not "Americans believe." "Wilcox reports" is not "science has spoken."
+
+### Science and study pieces
+
+- Name the paper, the groups, and the comparison early. Do not open on a vibe about "aging" and smuggle the design in later.
+- Keep the claim inside the measurement. Gene-expression differences absent in a trained group ≠ "half of aging is optional."
+- Prefer *associated with*, *absent in*, *preserved relative to* when the design is cross-sectional. Do not smuggle causation the authors did not claim.
+- One strong number in a readable sentence beats a cascade of percentages, gene names, and assay tallies.
+- End on the useful distinction the study actually drew — not a slogan that could headline a supplement ad.
+
+**Failed (clickbait + unreadable):** title oversells; body stacks metaphor, gene lists, and industry sneers.  
+**Pass:** title names the comparison; body walks design → finding → limit; excerpt could be explained to a friend.
 
 ---
 
@@ -379,6 +403,8 @@ Technical format lives in `.cursor/rules/writing-articles.mdc`. Store full tweet
 - Copying source essays wholesale
 - Engagement bait
 - Fake both-sides that refuse a claim
+- Dual body-paragraph homepage cards (para 1 in left column, para 2 in right) — see §3; use one continuous excerpt with CSS columns instead
+- Study pieces that climax in a consumer slogan instead of the paper's actual distinction
 
 ---
 
@@ -467,9 +493,10 @@ When stuck, force the title into one of the pattern rows in §2 before drafting 
 5. Does the opening paragraph contain a claim or comparison, not a throat-clear?
 6. Does each paragraph advance fact, judgment, complication, or setup?
 7. Does the ending land (no "time will tell")?
-8. Does the excerpt work as a standalone card?
+8. Does the excerpt work as a standalone continuous card dek (~70–110 words), readable across a CSS column break?
 9. If there is an embed: is it earned, placed, and judged afterward?
 10. Would you publish this under your own name?
+11. If this is a study piece: does the title's scope match the measurement, and can a non-specialist paraphrase the finding after one read?
 
 ---
 
@@ -479,6 +506,7 @@ When stuck, force the title into one of the pattern rows in §2 before drafting 
 
 - **2026-07-20** — Initial house style: titles (Atlantic-shaped), voice (claim + particular), bans, embeds, pair rule.
 - **2026-07-20** — Expanded into living manifesto scaffold: ledes, architecture, endings, numbers, sourcing, revision order, title repairs, chrome fields.
+- **2026-07-20** — Card chrome: excerpt is one continuous ~70–110 word dek for CSS columns; ban dumping two body paragraphs into a grid with independent clamps. Titles must not slogan-oversell study claims (*Half of Muscle Aging Is Optional*). Science voice: no billboard rhetoric, no omics laundry lists, keep claims inside the measurement, prioritize readability.
 
 <!-- Future seeds to grow into full sections:
 - Photo / hero image direction

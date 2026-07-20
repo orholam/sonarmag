@@ -2,10 +2,11 @@ import type { ReactNode } from 'react'
 import { heroSrcSet, thumbSrcSet, unsplashUrl } from '../lib/images'
 import { textBlocks, type Article, type HomepageData } from '../lib/types'
 
-function cardTeasers(article: Article): string[] {
-  const paras = textBlocks(article.paragraphs).slice(0, 2)
-  if (paras.length > 0) return paras
-  return article.excerpt?.trim() ? [article.excerpt.trim()] : []
+/** Continuous card dek — one flowing block for CSS columns, never two clipped body paras. */
+function cardCopy(article: Article): string | null {
+  const excerpt = article.excerpt?.trim()
+  if (excerpt) return excerpt
+  return textBlocks(article.paragraphs)[0]?.trim() || null
 }
 
 function IconPlay() {
@@ -191,8 +192,8 @@ export function HomeBoard({
     data
   const subscribed =
     newsletterStatus === 'ok' || newsletterStatus === 'exists'
-  const heroTeasers = hero ? cardTeasers(hero) : []
-  const opinionTeasers = opinion ? cardTeasers(opinion) : []
+  const heroCopy = hero ? cardCopy(hero) : null
+  const opinionCopy = opinion ? cardCopy(opinion) : null
 
   return (
     <>
@@ -217,11 +218,9 @@ export function HomeBoard({
               </div>
               <div className="feature-content">
                 <h1>{renderTitle(hero)}</h1>
-                {heroTeasers.length > 0 ? (
+                {heroCopy ? (
                   <div className="feature-copy">
-                    {heroTeasers.map((paragraph) => (
-                      <p key={paragraph}>{paragraph}</p>
-                    ))}
+                    <p>{heroCopy}</p>
                   </div>
                 ) : null}
                 <div className="stat-row">
@@ -388,11 +387,9 @@ export function HomeBoard({
               <h2>
                 <a href={`/article/${opinion.slug}`}>{renderTitle(opinion)}</a>
               </h2>
-              {opinionTeasers.length > 0 ? (
+              {opinionCopy ? (
                 <div className="feature-copy">
-                  {opinionTeasers.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
+                  <p>{opinionCopy}</p>
                 </div>
               ) : null}
               <div className="stat-row with-share">

@@ -25,8 +25,8 @@ You do **not** set `featured_slot` for splash layout anymore.
 ## Row fields to set
 
 - `slug` (unique), `title`, `excerpt`, `ticker`
-  - Splash/opinion cards show the first two body paragraphs in two columns (line-clamped). Write those openings for the card.
-  - Titles must pass the manifesto clarity test: clever tone without a clear case still fails.
+  - `excerpt` is the homepage card dek: one continuous ~70–110 word block (CSS columns). Never rely on body paragraphs for card layout.
+  - Titles must pass the manifesto clarity test: clever tone without a clear case still fails; study titles must not slogan-oversell.
 - `author_id`, `category_id`
 - `hero_image`, `hero_alt`, `thumb_image`
 - `read_minutes`, `listen_minutes`, `published_at`, `published_label`

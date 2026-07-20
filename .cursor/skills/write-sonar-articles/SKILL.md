@@ -51,8 +51,8 @@ Via Supabase MCP (`execute_sql` on project `igrhfqirkbvxbvilfoca` / sonarmag) or
 
 For each article set:
 
-- **Title first** — pass the manifesto title test (specific case / verdict / real question; no colon-SEO or topic tags). Clever tone without a clear referent fails.
-- **Opening paras as card copy** — splash/opinion boards show the first two paragraphs in two columns (line-clamped). Write those openings denser than a one-line dek, shorter than a full lede dump.
+- **Title first** — pass the manifesto title test (specific case / verdict / real question; no colon-SEO, topic tags, or slogan-oversells of study claims). Clever tone without a clear referent fails.
+- **Excerpt as continuous card dek** — splash/opinion boards show the excerpt in two CSS columns as one flowing text (~70–110 words). Do not dump body paras into a side-by-side grid.
 - Excerpt, ticker, hero/thumb images + alts
 - `read_minutes` / `listen_minutes`, `published_label` (e.g. `Today`)
 - `paragraphs` jsonb (5–9 prose strings in manifesto voice; tweet objects if the brief includes X URLs)
