@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { heroSrcSet, thumbSrcSet, unsplashUrl } from '../lib/images'
-import { textBlocks, type Article, type HomepageData } from '../lib/types'
+import { type Article, type HomepageData } from '../lib/types'
 
 function IconPlay() {
   return (
@@ -209,11 +209,9 @@ export function HomeBoard({
               </div>
               <div className="feature-content">
                 <h1>{renderTitle(hero)}</h1>
-                <div className="feature-copy">
-                  {textBlocks(hero.paragraphs).slice(0, 2).map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                </div>
+                {hero.excerpt ? (
+                  <p className="feature-dek">{hero.excerpt}</p>
+                ) : null}
                 <div className="stat-row">
                   <span>
                     <IconComment /> {hero.comments}
@@ -378,11 +376,9 @@ export function HomeBoard({
               <h2>
                 <a href={`/article/${opinion.slug}`}>{renderTitle(opinion)}</a>
               </h2>
-              <div className="feature-copy">
-                {textBlocks(opinion.paragraphs).slice(0, 2).map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </div>
+              {opinion.excerpt ? (
+                <p className="opinion-dek">{opinion.excerpt}</p>
+              ) : null}
               <div className="stat-row with-share">
                 <span>
                   <IconComment /> {opinion.comments}

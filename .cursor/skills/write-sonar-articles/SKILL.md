@@ -51,12 +51,15 @@ Via Supabase MCP (`execute_sql` on project `igrhfqirkbvxbvilfoca` / sonarmag) or
 
 For each article set:
 
-- Title, excerpt, ticker, hero/thumb images + alts
+- **Title first** — pass the manifesto title test (specific case / verdict / real question; no colon-SEO or topic tags). Clever tone without a clear referent fails.
+- **Excerpt as card copy** — splash/opinion boards show excerpt only (clamped), never body paragraphs. Write the excerpt for that job.
+- Excerpt, ticker, hero/thumb images + alts
 - `read_minutes` / `listen_minutes`, `published_label` (e.g. `Today`)
-- `paragraphs` jsonb (5–9 prose strings; tweet objects if the brief includes X URLs)
-- Optional title `highlight_word` / `highlight_tone`
+- `paragraphs` jsonb (5–9 prose strings in manifesto voice; tweet objects if the brief includes X URLs)
+- Optional title `highlight_word` / `highlight_tone` (mark a phrase that already appears in the title)
 
 Fetch tweet text before embedding. Do not invent stats.
+Open with a claim or sharp comparison; keep particulars denser than abstractions.
 
 ### 3. Insert
 
