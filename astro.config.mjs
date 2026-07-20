@@ -7,4 +7,10 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   integrations: [react()],
+  prefetch: {
+    prefetchAll: true,
+    // Warm article routes as soon as the homepage finishes loading
+    // so splash / latest clicks feel instant.
+    defaultStrategy: 'load',
+  },
 })

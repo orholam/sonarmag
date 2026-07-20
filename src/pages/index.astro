@@ -13,6 +13,18 @@ Astro.response.headers.set(
 )
 
 const data = await fetchHomepageData()
+
+const splashPrefetch = [
+  data.hero,
+  data.secondary,
+  data.opinion,
+  data.privacyCard,
+  ...data.latest.slice(0, 4),
+  ...data.popular.slice(0, 3),
+]
+  .filter(Boolean)
+  .map((article) => `/article/${article!.slug}`)
+const prefetchPaths = [...new Set(splashPrefetch)]
 ---
 
 <BaseLayout
@@ -22,6 +34,7 @@ const data = await fetchHomepageData()
   image={data.hero?.heroImage}
   type="website"
   jsonLd={[organizationJsonLd(), websiteJsonLd()]}
+  prefetchPaths={prefetchPaths}
 >
   <main>
     <HomeBoard data={data} />
