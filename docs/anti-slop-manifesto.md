@@ -8,7 +8,7 @@ Read the whole thing before writing any Sonar Mag article. Prefer silence over f
 
 ## 0. How to use this document
 
-1. Read **Titles** and **Voice** every time.
+1. Read **Titles**, **Voice**, and **LLM tells (§8a)** every time.
 2. Skim **Hard bans**, **Ledes**, **Endings**, and **Checklist** every time.
 3. Read the rest when relevant (data pieces → Numbers; tweet briefs → Embeds; pairs → Two-article rule).
 4. When you break a rule on purpose, you must know which rule and why. Accidental breakage is slop.
@@ -257,6 +257,7 @@ Write like a confident magazine essayist: dry, concrete, willing to bruise a sac
 - **Billboard science:** "the sentence the industry will not put on a billboard," "longevity aisle," "wellness content can't stand," "half is a choice." Rhetoric that sells the finding harder than the paper does. If you need a billboard sentence, the claim is probably overfit.
 - **Omics laundry lists** as atmosphere: dumping gene symbols, pathway names, and assay counts to sound authoritative. One concrete finding in a moving sentence beats a paragraph of NDUFS1 / COX5A / IL6 / TNF.
 - **Unreadable density:** a card or lede that a sharp non-specialist cannot paraphrase after one pass. If they can't, rewrite.
+- **LLM syntactic tells** — see §8a. If a paragraph would survive a "detect ChatGPT" highlighter, rewrite it.
 
 ### Register
 
@@ -279,6 +280,55 @@ Over:
 Humor is a precision tool. It should reveal a mismatch (OED vs. not knowing *cathartic*; Muppets vs. Spain's midfield). If the joke can be removed without loss of meaning, it was decoration — cut it or make it load-bearing.
 
 Never punch down at private grief. Public figures, public texts, and public rituals are fair game when the evidence is there.
+
+---
+
+## 8a. LLM tells (hard mechanical bans)
+
+These are not style preferences. They are fingerprints. Readers now spot them in one glance. Ban them on sight.
+
+### Em dashes
+
+- **Default: no em dashes (—).** Prefer commas, periods, parentheses, or a short second sentence.
+- At most **one** em dash in an entire piece, and only when a comma would truly muddy the grammar.
+- Two em dashes in one sentence (parenthetical aside: *On OpenRouter—a routing layer…—Chinese models…*) is an automatic fail. Recast.
+- Do not use spaced hyphens as fake em dashes either (` - ` as a pause).
+
+**Fail:** "On OpenRouter—a routing layer where developers pick among models—Chinese systems now…"  
+**Pass:** "On OpenRouter, a routing layer where developers pick among models, Chinese systems now…"  
+**Better:** "OpenRouter lets developers pick among labs on one bill. Chinese systems now…"
+
+### The "not X, but Y" machine
+
+Ban the antithesis template that models default to when they want to sound wise:
+
+- *not X, but Y*
+- *not X. It's Y*
+- *It's not about X. It's about Y*
+- *not merely X, but actually Y*
+- *X isn't the story. Y is.*
+
+Also ban the soft cousins: *rather than*, *instead of* used as fake profundity when you could just state Y.
+
+**Fail:** "not benchmarks on a lab slide, but tokens a company actually pays to run"  
+**Pass:** "The useful scoreboard is tokens a company pays to run, not a lab slide." (still one contrast — better:)  
+**Pass:** "Track the tokens firms pay to run. Lab slides flatter. Invoices don't."
+
+State the thing. If you need a contrast, put it in a second sentence with concrete nouns, not a balanced *not/but* seesaw.
+
+### Other high-frequency model tics (non-exhaustive)
+
+- *actually* / *literally* / *importantly* as fake emphasis
+- *In a world where…* / *At its core…* / *The reality is…*
+- *This raises important questions…*
+- *a testament to…* / *speaks volumes* / *only time will tell*
+- Triadic lists of abstractions (*innovation, resilience, and community*)
+- Starting three paragraphs in a row with *The* + abstract noun
+- *Quietly* / *increasingly* / *notably* stacked as atmospheric adverbs
+
+### Tell test
+
+Read the lede aloud. If it sounds like a LinkedIn thought-leader or a model performing Insight, rewrite until it sounds like a reporter who has a fact and a clock.
 
 ---
 
@@ -405,6 +455,8 @@ Technical format lives in `.cursor/rules/writing-articles.mdc`. Store full tweet
 - Fake both-sides that refuse a claim
 - Dual body-paragraph homepage cards (para 1 in left column, para 2 in right) — see §3; use one continuous excerpt with CSS columns instead
 - Study pieces that climax in a consumer slogan instead of the paper's actual distinction
+- Em-dash parentheticals and *not X, but Y* profundity — see §8a
+- *actually* as fake emphasis (*tokens a company actually pays*)
 
 ---
 
@@ -497,6 +549,7 @@ When stuck, force the title into one of the pattern rows in §2 before drafting 
 9. If there is an embed: is it earned, placed, and judged afterward?
 10. Would you publish this under your own name?
 11. If this is a study piece: does the title's scope match the measurement, and can a non-specialist paraphrase the finding after one read?
+12. LLM tells (§8a): zero em-dash pairs, no *not X, but Y*, no *actually* as fake emphasis?
 
 ---
 
@@ -507,6 +560,7 @@ When stuck, force the title into one of the pattern rows in §2 before drafting 
 - **2026-07-20** — Initial house style: titles (Atlantic-shaped), voice (claim + particular), bans, embeds, pair rule.
 - **2026-07-20** — Expanded into living manifesto scaffold: ledes, architecture, endings, numbers, sourcing, revision order, title repairs, chrome fields.
 - **2026-07-20** — Card chrome: excerpt is one continuous ~70–110 word dek for CSS columns; ban dumping two body paragraphs into a grid with independent clamps. Titles must not slogan-oversell study claims (*Half of Muscle Aging Is Optional*). Science voice: no billboard rhetoric, no omics laundry lists, keep claims inside the measurement, prioritize readability.
+- **2026-07-20** — §8a LLM tells: default ban em dashes (especially paired parentheticals); ban *not X, but Y* / *not X, but actually Y*; ban *actually* as fake emphasis and related model tics. Add checklist item 12.
 
 <!-- Future seeds to grow into full sections:
 - Photo / hero image direction

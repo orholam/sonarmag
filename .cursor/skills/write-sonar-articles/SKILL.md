@@ -60,6 +60,7 @@ For each article set:
 
 Fetch tweet text before embedding. Do not invent stats.
 Open with a claim or sharp comparison; keep particulars denser than abstractions.
+Before insert, run §8a: strip em-dash pairs, *not X but Y*, and *actually*-as-emphasis.
 
 ### 3. Insert
 
