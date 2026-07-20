@@ -32,6 +32,8 @@ export type Article = {
   excerpt?: string | null
   badge?: string | null
   paragraphs: ArticleBlock[]
+  /** When true, eligible for the large homepage splash hero (newest wins). */
+  isHighlighted?: boolean
   featuredSlot?: 'hero' | 'secondary' | 'opinion' | null
   popularRank?: number | null
   publishedAt?: string

@@ -31,6 +31,7 @@ type ArticleRow = {
   excerpt: string | null
   badge: string | null
   paragraphs: unknown
+  is_highlighted: boolean
   featured_slot: 'hero' | 'secondary' | 'opinion' | null
   popular_rank: number | null
   authors: AuthorEmbed | AuthorEmbed[] | null
@@ -85,6 +86,7 @@ const articleSelect = `
   excerpt,
   badge,
   paragraphs,
+  is_highlighted,
   featured_slot,
   popular_rank,
   authors ( name, avatar_url ),
@@ -156,6 +158,7 @@ function mapArticle(row: ArticleRow): Article {
     excerpt: row.excerpt,
     badge: row.badge,
     paragraphs: asArticleBlocks(row.paragraphs),
+    isHighlighted: row.is_highlighted,
     featuredSlot: row.featured_slot,
     popularRank: row.popular_rank,
     publishedAt: row.published_at,
@@ -304,71 +307,54 @@ export async function fetchSitemapEntries(): Promise<
 }
 
 export async function fetchHomepageData(): Promise<HomepageData> {
-  const [
-    featuredResult,
-    latestResult,
-    popularResult,
-    marketsResult,
-    podcastResult,
-    settingsResult,
-    privacyResult,
-  ] = await Promise.all([
-    supabase
-      .from('articles')
-      .select(articleSelect)
-      .eq('status', 'published')
-      .not('featured_slot', 'is', null),
-    supabase
-      .from('articles')
-      .select(articleSelect)
-      .eq('status', 'published')
-      .is('featured_slot', null)
-      .neq('slug', 'privacy-new-age-ai')
-      .order('published_at', { ascending: false })
-      .limit(6),
-    supabase
-      .from('articles')
-      .select(articleSelect)
-      .eq('status', 'published')
-      .not('popular_rank', 'is', null)
-      .order('popular_rank', { ascending: true })
-      .limit(5),
-    supabase
-      .from('market_tickers')
-      .select('pair, change_pct, value, is_up, sort_order')
-      .order('sort_order', { ascending: true }),
-    supabase
-      .from('podcast_episodes')
-      .select('show_name, episode_number, title, dek, host, image_url, slug')
-      .order('published_at', { ascending: false })
-      .limit(1)
-      .maybeSingle(),
-    supabase.from('site_settings').select('key, value'),
-    supabase
-      .from('articles')
-      .select(articleSelect)
-      .eq('slug', 'privacy-new-age-ai')
-      .eq('status', 'published')
-      .maybeSingle(),
-  ])
+  const [boardResult, popularResult, marketsResult, podcastResult, settingsResult] =
+    await Promise.all([
+      // One recent pool — splash slots fill automatically; is_highlighted → hero.
+      supabase
+        .from('articles')
+        .select(articleSelect)
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .limit(24),
+      supabase
+        .from('articles')
+        .select(articleSelect)
+        .eq('status', 'published')
+        .not('popular_rank', 'is', null)
+        .order('popular_rank', { ascending: true })
+        .limit(5),
+      supabase
+        .from('market_tickers')
+        .select('pair, change_pct, value, is_up, sort_order')
+        .order('sort_order', { ascending: true }),
+      supabase
+        .from('podcast_episodes')
+        .select('show_name, episode_number, title, dek, host, image_url, slug')
+        .order('published_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase.from('site_settings').select('key, value'),
+    ])
 
   for (const result of [
-    featuredResult,
-    latestResult,
+    boardResult,
     popularResult,
     marketsResult,
     podcastResult,
     settingsResult,
-    privacyResult,
   ]) {
     if (result.error) throw result.error
   }
 
-  const featured =
-    (featuredResult.data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? []
-  const bySlot = Object.fromEntries(
-    featured.map((article) => [article.featuredSlot, article]),
-  ) as Record<string, Article>
+  const recent =
+    (boardResult.data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? []
+
+  const hero =
+    recent.find((article) => article.isHighlighted) ?? recent[0] ?? null
+
+  const remainder = recent.filter((article) => article.id !== hero?.id)
+  const [secondary = null, opinion = null, privacyCard = null, ...rest] = remainder
+  const latest = rest.slice(0, 6)
 
   const settings = Object.fromEntries(
     ((settingsResult.data as unknown as SettingRow[] | null) ?? []).map((row) => [
@@ -413,14 +399,11 @@ export async function fetchHomepageData(): Promise<HomepageData> {
     : null
 
   return {
-    hero: bySlot.hero ?? null,
-    secondary: bySlot.secondary ?? null,
-    opinion: bySlot.opinion ?? null,
-    privacyCard: privacyResult.data
-      ? mapArticle(privacyResult.data as unknown as ArticleRow)
-      : null,
-    latest:
-      (latestResult.data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? [],
+    hero,
+    secondary,
+    opinion,
+    privacyCard,
+    latest,
     popular:
       (popularResult.data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? [],
     markets,

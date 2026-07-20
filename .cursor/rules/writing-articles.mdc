@@ -1,18 +1,38 @@
 ---
-description: How to write and publish Sonar Mag articles, including tweet embeds
+description: How to publish Sonar Mag articles via Supabase (splash highlight + tweet embeds)
 alwaysApply: true
 ---
 
-# Writing Sonar Mag articles
+# Publishing Sonar Mag articles
 
-Articles live in Supabase `articles` (not in the repo). Add or edit a row → it goes live via Astro SSR.
+Content is **Supabase rows only** — insert/update `articles` and the live Astro site picks it up (short CDN cache). No redeploy for copy.
 
-## Content model
+## Required read
 
-`paragraphs` is jsonb: an ordered array of **blocks**.
+Before writing prose, open and follow [docs/anti-slop-manifesto.md](docs/anti-slop-manifesto.md).
 
-- **Prose:** a plain string (one paragraph).
-- **Tweet embed:** an object:
+## Homepage (automatic)
+
+| Field | Effect |
+| --- | --- |
+| `status = 'published'` | Eligible for the board |
+| `is_highlighted = true` | Eligible for the **large splash hero** (newest highlighted wins) |
+| everything else | Fills secondary → opinion → dark card → Latest by `published_at` |
+| `popular_rank` | Optional Popular rail (1 = top) |
+
+You do **not** set `featured_slot` for splash layout anymore.
+
+## Row fields to set
+
+- `slug` (unique), `title`, `excerpt`, `ticker`
+- `author_id`, `category_id`
+- `hero_image`, `hero_alt`, `thumb_image`
+- `read_minutes`, `listen_minutes`, `published_at`, `published_label`
+- `paragraphs` jsonb blocks (strings and optional `{ type: "tweet", ... }`)
+- `is_highlighted` boolean
+- optional: `highlight_word` + `highlight_tone` (`red` \| `tan`) for title mark
+
+## Tweet embeds
 
 ```json
 {
@@ -25,24 +45,8 @@ Articles live in Supabase `articles` (not in the repo). Add or edit a row → it
 }
 ```
 
-Always store `type`, `url`, and the fetched `text` / author fields so embeds render without client JS. Do **not** load Twitter `widgets.js` (hurts Core Web Vitals). The site renders a Sonar-styled card via `TweetEmbed`.
+Fetch via syndication/fxtwitter when X HTML 403s. Never load Twitter widgets.js.
 
-### Fetching tweet data
+## Skill
 
-When given an X/Twitter URL, fetch text via syndication or fxtwitter (X HTML often 403s), then write the rich tweet block into `paragraphs`. Place the embed where it belongs in the narrative (usually after 2–3 setup paragraphs).
-
-## Voice & structure
-
-- Original Sonar Mag copy — do not paste the source essay wholesale.
-- Frame the tweet, quote or embed it, then analyze / contextualize.
-- Prefer 5–9 prose paragraphs + embeds as needed.
-- Set `excerpt`, `ticker`, `hero_image` / `hero_alt`, `read_minutes`, `listen_minutes`, `category_id`, `author_id`.
-- Homepage placement: `featured_slot` (`hero` | `secondary` | `opinion`) or leave null for Latest.
-
-## Checklist before insert
-
-1. Unique `slug`
-2. `status = 'published'`
-3. Tweet blocks include full text (not URL-only)
-4. Link out to primary sources in prose when relevant
-5. Confirm the article URL `/article/{slug}` after deploy/cache
+For a two-article batch (one highlighted), use the project skill `write-sonar-articles`.

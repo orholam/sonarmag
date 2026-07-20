@@ -55,9 +55,10 @@ AI / crawler surfaces:
 
 Homepage:
 
-- Featured board: `featured_slot` ∈ `hero` | `secondary` | `opinion`
-- Latest: recent published without a featured slot
-- Popular: `popular_rank` ascending
+- Insert a published row → it appears on the board automatically
+- `is_highlighted = true` → large splash hero (newest highlighted wins)
+- Secondary, opinion, dark card, and Latest fill from remaining recent stories
+- Popular: optional `popular_rank` ascending
 
 ## SEO
 
