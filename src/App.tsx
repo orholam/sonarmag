@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import ArticleRoute from './pages/ArticleRoute'
 import HomePage from './pages/HomePage'
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/:slug" element={<StaticPageRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Analytics />
     </BrowserRouter>
   )
 }
