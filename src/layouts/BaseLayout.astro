@@ -66,10 +66,13 @@ const lcpHref = lcpImage
     <meta name="author" content={author?.trim() || SITE_NAME} />
     <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
     {path === '/' && (
-      <meta
-        name="google-site-verification"
-        content="eM9bCqO1j2wDh7vMGwyndgoATwoG-wd57NrSWB7iaTQ"
-      />
+      <>
+        <meta
+          name="google-site-verification"
+          content="eM9bCqO1j2wDh7vMGwyndgoATwoG-wd57NrSWB7iaTQ"
+        />
+        <meta name="msvalidate.01" content="6B195C765FFFFC2D543E6620FF46D191" />
+      </>
     )}
     <link rel="canonical" href={canonical} />
     <link
