@@ -9,7 +9,7 @@ Read the whole thing before writing any Sonar Mag article. Prefer silence over f
 ## 0. How to use this document
 
 1. Read **Titles**, **Voice**, and **LLM tells (§8a)** every time.
-2. Skim **Hard bans**, **Ledes**, **Endings**, and **Checklist** every time.
+2. Skim **Hard bans**, **Ledes**, **Endings**, **Images**, and **Checklist** every time.
 3. Read the rest when relevant (data pieces → Numbers; tweet briefs → Embeds; pairs → Two-article rule).
 4. When you break a rule on purpose, you must know which rule and why. Accidental breakage is slop.
 
@@ -46,21 +46,23 @@ A good title is closer to a caption under a photograph than to a folder name on 
 
 ### Aim for this shape (Atlantic-adjacent)
 
-| Pattern | Example |
-| --- | --- |
-| Specific noun + charged verb/claim | *The Canoeist Accused of Destroying the Reflecting Pool* |
-| Direct address / needling | *Pete Hegseth, You Call That a Pull-Up?* |
-| Counterintuitive outcome | *The World Cup Could Not Be Americanized* |
-| Genuine question with stakes | *What's Behind the Rise in Mild Autism?* |
-| Institutional or cultural failure | *The Crisis That Novelists Can't Handle* |
-| System broken | *The System for Addressing Gambling Harm Is Broken* |
-| Named person + unexpected angle | *J.D. Vance's New Book Wasn't Meant to Be Read* |
-| Process with a hook | *Inside Trump's Rush Job to Build His Arch* |
-| Odd coalition or ambition | *The Researchers Who Want Dads-to-Be to Stop Drinking* |
-| Portrait in a phrase | *The Anti-Populist* |
-| Argument title | *The Humanities Were Never Neutral* |
-| Policy with a twist | *States Are Learning the Wrong Lesson from the 'Mississippi Miracle'* |
-| Intimate + surprising scale | *Reading a 3,000-Year-Old Poem to a 3-Year-Old Boy* |
+
+| Pattern                            | Example                                                               |
+| ---------------------------------- | --------------------------------------------------------------------- |
+| Specific noun + charged verb/claim | *The Canoeist Accused of Destroying the Reflecting Pool*              |
+| Direct address / needling          | *Pete Hegseth, You Call That a Pull-Up?*                              |
+| Counterintuitive outcome           | *The World Cup Could Not Be Americanized*                             |
+| Genuine question with stakes       | *What's Behind the Rise in Mild Autism?*                              |
+| Institutional or cultural failure  | *The Crisis That Novelists Can't Handle*                              |
+| System broken                      | *The System for Addressing Gambling Harm Is Broken*                   |
+| Named person + unexpected angle    | *J.D. Vance's New Book Wasn't Meant to Be Read*                       |
+| Process with a hook                | *Inside Trump's Rush Job to Build His Arch*                           |
+| Odd coalition or ambition          | *The Researchers Who Want Dads-to-Be to Stop Drinking*                |
+| Portrait in a phrase               | *The Anti-Populist*                                                   |
+| Argument title                     | *The Humanities Were Never Neutral*                                   |
+| Policy with a twist                | *States Are Learning the Wrong Lesson from the 'Mississippi Miracle'* |
+| Intimate + surprising scale        | *Reading a 3,000-Year-Old Poem to a 3-Year-Old Boy*                   |
+
 
 ### More patterns worth stealing (structure, not wording)
 
@@ -292,7 +294,7 @@ These are not style preferences. They are fingerprints. Readers now spot them in
 - **Default: no em dashes (—).** Prefer commas, periods, parentheses, or a short second sentence.
 - At most **one** em dash in an entire piece, and only when a comma would truly muddy the grammar.
 - Two em dashes in one sentence (parenthetical aside: *On OpenRouter—a routing layer…—Chinese models…*) is an automatic fail. Recast.
-- Do not use spaced hyphens as fake em dashes either (` - ` as a pause).
+- Do not use spaced hyphens as fake em dashes either (`-` as a pause).
 
 **Fail:** "On OpenRouter—a routing layer where developers pick among models—Chinese systems now…"  
 **Pass:** "On OpenRouter, a routing layer where developers pick among models, Chinese systems now…"  
@@ -426,6 +428,33 @@ Technical format lives in `.cursor/rules/writing-articles.mdc`. Store full tweet
 
 ---
 
+## 12a. Images (heroes and thumbs)
+
+Hero and thumb images should feel like they belong to *this* piece. Generic stock is visual slop — same crime as a topic-tag title.
+
+These are **defaults and deprioritizations**, not absolute bans. Use a human, an office, or a laptop when that photograph is specific, documentary, or clearly earned by the story. Skip them when they are interchangeable wallpaper.
+
+### Prefer
+
+- Objects, materials, and artifacts tied to the case (a filing, a product surface, a tool, a document, a place with character)
+- Documentary or archival frames with a real referent
+- Spaces that are *somewhere*, not a catalog of "modern workplace"
+- Diagrams or data visuals only when they are specific to the beat — not default "neural net glow"
+
+### Deprioritize (stock tropes)
+
+**People (especially casting-call stock):** interviews across a table, handshakes, "diverse team at a laptop," chin-on-fist thinkers, smiling professionals in soft light. Humans are allowed — prefer real context, silhouettes, hands-at-work, or a portrait that could not illustrate five unrelated stories.
+
+**Offices and computers:** empty glass conference rooms, open-plan desks, MacBook flat-lays, code-blur screens, server racks as mood, headset-on-monitor setups. Same test: if swapping the article title would not make the photo wrong, keep looking.
+
+### Craft
+
+- Same source URL pattern for `hero_image` and `thumb_image` is fine; write `hero_alt` as a concrete scene description, not a vibe caption.
+- If the first Unsplash hit is a stock person, office, or laptop farm, search again before settling.
+- Do not invent photojournalism. Better a slightly abstract but specific object than a fake "reporter in the field" render.
+
+---
+
 ## 13. Hard bans (body) — expanded
 
 ### Dead phrases (non-exhaustive; add more in Amendments)
@@ -478,10 +507,12 @@ Short sentences earn long ones. After a long sentence, land on something short. 
 
 When publishing a pair:
 
-| Piece | Role |
-| --- | --- |
-| **A — highlighted** | The splash claim; sharpest title; fullest spine |
-| **B — companion** | A different angle on the same territory (mechanism, dissent, scene, second order effect) — not a rewrite |
+
+| Piece               | Role                                                                                                     |
+| ------------------- | -------------------------------------------------------------------------------------------------------- |
+| **A — highlighted** | The splash claim; sharpest title; fullest spine                                                          |
+| **B — companion**   | A different angle on the same territory (mechanism, dissent, scene, second order effect) — not a rewrite |
+
 
 Do not:
 
@@ -512,13 +543,15 @@ If time is short, do 1, 2, 4, 6. Never ship with only 5.
 
 These are structural repairs, not sacred wording:
 
-| Slop | Closer to Sonar |
-| --- | --- |
-| *Heteropessimism: Why Young Women Are Giving Up on Men* | *The Dating Recession Young Women Won't Name* |
-| *The Future of the World Cup in America* | *The World Cup Could Not Be Americanized* |
-| *Thoughts on J.D. Vance's New Book* | *J.D. Vance's New Book Wasn't Meant to Be Read* |
-| *3 Lessons From Family Studies Research* | *The Researchers Who Want Dads-to-Be to Stop Drinking* |
-| *Exploring Mild Autism Rates* | *What's Behind the Rise in Mild Autism?* |
+
+| Slop                                                    | Closer to Sonar                                        |
+| ------------------------------------------------------- | ------------------------------------------------------ |
+| *Heteropessimism: Why Young Women Are Giving Up on Men* | *The Dating Recession Young Women Won't Name*          |
+| *The Future of the World Cup in America*                | *The World Cup Could Not Be Americanized*              |
+| *Thoughts on J.D. Vance's New Book*                     | *J.D. Vance's New Book Wasn't Meant to Be Read*        |
+| *3 Lessons From Family Studies Research*                | *The Researchers Who Want Dads-to-Be to Stop Drinking* |
+| *Exploring Mild Autism Rates*                           | *What's Behind the Rise in Mild Autism?*               |
+
 
 When stuck, force the title into one of the pattern rows in §2 before drafting the body.
 
@@ -550,6 +583,7 @@ When stuck, force the title into one of the pattern rows in §2 before drafting 
 10. Would you publish this under your own name?
 11. If this is a study piece: does the title's scope match the measurement, and can a non-specialist paraphrase the finding after one read?
 12. LLM tells (§8a): zero em-dash pairs, no *not X, but Y*, no *actually* as fake emphasis?
+13. Images (§12a): is the hero specific to the piece — not stock people / office / laptop wallpaper unless earned?
 
 ---
 
@@ -561,12 +595,5 @@ When stuck, force the title into one of the pattern rows in §2 before drafting 
 - **2026-07-20** — Expanded into living manifesto scaffold: ledes, architecture, endings, numbers, sourcing, revision order, title repairs, chrome fields.
 - **2026-07-20** — Card chrome: excerpt is one continuous ~70–110 word dek for CSS columns; ban dumping two body paragraphs into a grid with independent clamps. Titles must not slogan-oversell study claims (*Half of Muscle Aging Is Optional*). Science voice: no billboard rhetoric, no omics laundry lists, keep claims inside the measurement, prioritize readability.
 - **2026-07-20** — §8a LLM tells: default ban em dashes (especially paired parentheticals); ban *not X, but Y* / *not X, but actually Y*; ban *actually* as fake emphasis and related model tics. Add checklist item 12.
+- **2026-07-21** — §12a Images: deprioritize (not ban) casting-call stock people, and also generic offices / computers / laptop flat-lays; prefer case-specific objects, places, and documentary frames. Checklist item 13.
 
-<!-- Future seeds to grow into full sections:
-- Photo / hero image direction
-- Section voice differences (World vs Lifestyle vs Business)
-- Corrections policy
-- Satire vs straight essay boundary
-- Interview / Q&A format (if ever)
-- Political coverage fairness addendum
--->

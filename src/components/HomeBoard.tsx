@@ -188,7 +188,7 @@ export function HomeBoard({
   data: HomepageData
   newsletterStatus?: string | null
 }) {
-  const { hero, secondary, opinion, privacyCard, latest, popular, markets, podcast } =
+  const { hero, secondary, opinion, privacyCard, latest, popular, markets, aiRace } =
     data
   const subscribed =
     newsletterStatus === 'ok' || newsletterStatus === 'exists'
@@ -504,29 +504,55 @@ export function HomeBoard({
 
           <div className="rail-block">
             <div className="rail-heading">
-              <h2>Podcasts</h2>
-              <a href="/podcasts">See All</a>
+              <h2 id="ai-race-heading">AI Race</h2>
+              <a
+                href="https://openrouter.ai/rankings"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Sources
+              </a>
             </div>
-            {podcast ? (
-              <article className="podcast-feature" id="podcasts">
-                <img
-                  src={unsplashUrl(podcast.imageUrl, { width: 640, quality: 70 })}
-                  srcSet={thumbSrcSet(podcast.imageUrl)}
-                  sizes="(max-width: 900px) 100vw, 280px"
-                  alt={`Microphone for ${podcast.showName} podcast`}
-                  width={640}
-                  height={400}
-                  decoding="async"
-                  loading="lazy"
-                />
-                <p className="podcast-meta">
-                  <span>{podcast.showName}</span> · Episode {podcast.episodeNumber}
+            {aiRace.boards.length ? (
+              <div className="ai-race" id="ai-race" aria-labelledby="ai-race-heading">
+                {aiRace.boards.map((board) => (
+                  <section className="ai-race-board" key={board.id}>
+                    <div className="ai-race-board-head">
+                      <h3>
+                        <a
+                          href={board.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {board.title}
+                        </a>
+                      </h3>
+                      <p>{board.subtitle}</p>
+                    </div>
+                    <ol className="ai-race-list">
+                      {board.entries.map((entry) => (
+                        <li key={`${board.id}-${entry.rank}-${entry.name}`}>
+                          <span className="ai-race-rank">{entry.rank}</span>
+                          <span className="ai-race-copy">
+                            <span className="ai-race-name">{entry.name}</span>
+                            <span className="ai-race-detail">
+                              {entry.vendor ? `${entry.vendor} · ` : null}
+                              {entry.detail}
+                            </span>
+                          </span>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                ))}
+                <p className="ai-race-footnote">
+                  Arena Elo is human preference. OpenRouter ranks public API
+                  token volume for the latest day.
                 </p>
-                <h3>{podcast.title}</h3>
-                <p className="podcast-dek">{podcast.dek}</p>
-                <p className="byline">Hosted by {podcast.host}</p>
-              </article>
-            ) : null}
+              </div>
+            ) : (
+              <p className="ai-race-empty">Leaderboards unavailable right now.</p>
+            )}
           </div>
         </aside>
 

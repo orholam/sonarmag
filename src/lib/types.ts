@@ -1,3 +1,7 @@
+import type { AiRaceData } from './ai-race'
+
+export type { AiRaceBoard, AiRaceData, AiRaceEntry } from './ai-race'
+
 export type TweetBlock = {
   type: 'tweet'
   url: string
@@ -80,6 +84,7 @@ export type HomepageData = {
   popular: Article[]
   markets: MarketTicker[]
   podcast: PodcastEpisode | null
+  aiRace: AiRaceData
   promoStats: { articles: number; authors: number }
   player: { time: string; views: number }
   magazineCover: { image: string; alt: string }

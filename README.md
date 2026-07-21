@@ -26,6 +26,7 @@ Copy `.env.example` → `.env.local`:
 PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
 PUBLIC_SUPABASE_ANON_KEY=<anon-or-publishable-key>
 PUBLIC_SITE_URL=https://www.sonarmag.com
+OPENROUTER_API_KEY=<server-only-openrouter-key>
 ```
 
 | Variable | Purpose |
@@ -33,8 +34,9 @@ PUBLIC_SITE_URL=https://www.sonarmag.com
 | `PUBLIC_SUPABASE_URL` | Supabase API URL |
 | `PUBLIC_SUPABASE_ANON_KEY` | Public anon/publishable key (RLS-protected reads) |
 | `PUBLIC_SITE_URL` | Canonical origin for meta, sitemap, robots |
+| `OPENROUTER_API_KEY` | Server-only key for OpenRouter usage rankings on the homepage AI Race rail |
 
-Also set these on Vercel for **Production** (and Preview). The code still accepts legacy `VITE_*` names as fallbacks.
+Also set these on Vercel for **Production** (and Preview). The code still accepts legacy `VITE_*` names as fallbacks. Never prefix `OPENROUTER_API_KEY` with `PUBLIC_`.
 
 ## Supabase schema
 
@@ -42,6 +44,7 @@ Public tables (read via anon key + RLS):
 
 - `authors`, `categories`, `articles`
 - `pages`, `podcast_episodes`, `market_tickers`, `site_settings`
+- `ai_race_boards` — cached Arena + OpenRouter leaderboards (refreshed ~daily)
 - `comments` — public read + insert; `articles.comments_count` stays in sync via trigger
 - `newsletter_subscribers` — insert-only (`email`, `source`, `created_at`); homepage collector posts to `/api/newsletter`
 

@@ -858,6 +858,92 @@ button.print-btn:hover {
   line-height: 1.45;
 }
 
+.ai-race {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.ai-race-board-head h3 {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ai-race-board-head h3 a {
+  color: inherit;
+}
+
+.ai-race-board-head p {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: #666;
+}
+
+.ai-race-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ai-race-list li {
+  display: grid;
+  grid-template-columns: 1.35rem minmax(0, 1fr);
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #e4e4e4;
+  align-items: start;
+}
+
+.ai-race-list li:last-child {
+  border-bottom: 0;
+}
+
+.ai-race-rank {
+  color: var(--red);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.ai-race-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.ai-race-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  word-break: break-word;
+}
+
+.ai-race-detail {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.ai-race-footnote,
+.ai-race-empty {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: #666;
+}
+
 .byline,
 .timestamp {
   margin: 0;

@@ -83,7 +83,7 @@ For each article set:
 
 - **Title first** — pass the manifesto title test (specific case / verdict / real question; no colon-SEO, topic tags, or slogan-oversells of study claims). Clever tone without a clear referent fails.
 - **Excerpt as continuous card dek** — splash/opinion boards show the excerpt in two CSS columns as one flowing text (~70–110 words). Do not dump body paras into a side-by-side grid.
-- Excerpt, ticker, hero/thumb images + alts
+- Excerpt, ticker, hero/thumb images + alts (see **Images** below)
 - `read_minutes` / `listen_minutes`, `published_label` (e.g. `Today`)
 - `paragraphs` jsonb (5–9 prose strings in manifesto voice; tweet objects if the brief includes X URLs)
 - Optional title `highlight_word` / `highlight_tone` (mark a phrase that already appears in the title)
@@ -91,6 +91,12 @@ For each article set:
 Fetch tweet text before embedding. Do not invent stats.
 Open with a claim or sharp comparison; keep particulars denser than abstractions.
 Before insert, run §8a: strip em-dash pairs, *not X but Y*, and *actually*-as-emphasis.
+
+### Images (hero + thumb)
+
+Follow manifesto **§12a**. Short version: prefer case-specific objects, places, and documentary frames. **Deprioritize** (do not absolute-ban) casting-call stock people *and* generic offices / computers / laptop flat-lays / server-rack wallpaper. Humans, desks, and screens are fine when the photo is specific and earned.
+
+Same Unsplash (or equivalent) URL pattern for `hero_image` and `thumb_image`; write `hero_alt` as a concrete scene, not a vibe caption. If the first hit is interchangeable stock, search again.
 
 ### 3. Insert
 
@@ -112,3 +118,4 @@ Do not set `featured_slot` for layout.
 - Topicless runs that skip research and invent evergreen philosophy
 - Topicless runs that chase pure gadget news with no idea at stake (or pure theory with no news peg)
 - Re-covering a slug/case already on the board without a new development
+- Defaulting to stock people, empty offices, or laptop flat-lays when a more specific image exists (see manifesto §12a)

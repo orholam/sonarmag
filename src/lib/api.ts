@@ -1,3 +1,4 @@
+import { fetchAiRaceData } from './ai-race'
 import { supabase } from './supabase'
 import type {
   Article,
@@ -319,8 +320,14 @@ export async function fetchRssArticles(limit = 30): Promise<Article[]> {
 }
 
 export async function fetchHomepageData(): Promise<HomepageData> {
-  const [boardResult, popularResult, marketsResult, podcastResult, settingsResult] =
-    await Promise.all([
+  const [
+    boardResult,
+    popularResult,
+    marketsResult,
+    podcastResult,
+    settingsResult,
+    aiRace,
+  ] = await Promise.all([
       // One recent pool — splash slots fill automatically; is_highlighted → hero.
       supabase
         .from('articles')
@@ -346,6 +353,7 @@ export async function fetchHomepageData(): Promise<HomepageData> {
         .limit(1)
         .maybeSingle(),
       supabase.from('site_settings').select('key, value'),
+      fetchAiRaceData(5),
     ])
 
   for (const result of [
@@ -420,6 +428,7 @@ export async function fetchHomepageData(): Promise<HomepageData> {
       (popularResult.data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? [],
     markets,
     podcast,
+    aiRace,
     promoStats,
     player,
     magazineCover,
