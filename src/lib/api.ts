@@ -306,6 +306,18 @@ export async function fetchSitemapEntries(): Promise<
   return entries
 }
 
+export async function fetchRssArticles(limit = 30): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from('articles')
+    .select(articleSelect)
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(limit)
+
+  if (error) throw error
+  return (data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? []
+}
+
 export async function fetchHomepageData(): Promise<HomepageData> {
   const [boardResult, popularResult, marketsResult, podcastResult, settingsResult] =
     await Promise.all([

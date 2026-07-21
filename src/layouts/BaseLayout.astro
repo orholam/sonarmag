@@ -72,6 +72,12 @@ const lcpHref = lcpImage
       />
     )}
     <link rel="canonical" href={canonical} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE_NAME} RSS`}
+      href={absoluteUrl('/rss.xml')}
+    />
 
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:locale" content="en_US" />
