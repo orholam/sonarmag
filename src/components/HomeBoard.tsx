@@ -9,6 +9,30 @@ function cardCopy(article: Article): string | null {
   return textBlocks(article.paragraphs)[0]?.trim() || null
 }
 
+function parseMetricValue(metric: string): number {
+  const match = metric
+    .trim()
+    .replace(/,/g, '')
+    .match(/^([\d.]+)\s*([KMBT])?/i)
+  if (!match) return 0
+  const n = Number(match[1])
+  if (!Number.isFinite(n)) return 0
+  const unit = (match[2] || '').toUpperCase()
+  const mult =
+    unit === 'T' ? 1e12 : unit === 'B' ? 1e9 : unit === 'M' ? 1e6 : unit === 'K' ? 1e3 : 1
+  return n * mult
+}
+
+/** Bar widths vs the board leader; soft floor so tight Elo spreads still read. */
+function barWidths(values: number[]): number[] {
+  const max = Math.max(...values, 0)
+  if (!(max > 0)) return values.map(() => 0)
+  const min = Math.min(...values)
+  const floor = min < max * 0.97 ? min * 0.992 : max * 0.88
+  const span = Math.max(max - floor, Number.EPSILON)
+  return values.map((v) => Math.max(8, Math.min(100, ((v - floor) / span) * 100)))
+}
+
 function IconPlay() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -530,24 +554,52 @@ export function HomeBoard({
                       <p>{board.subtitle}</p>
                     </div>
                     <ol className="ai-race-list">
-                      {board.entries.map((entry) => (
-                        <li key={`${board.id}-${entry.rank}-${entry.name}`}>
-                          <span className="ai-race-rank">{entry.rank}</span>
-                          <span className="ai-race-copy">
-                            <span className="ai-race-name">{entry.name}</span>
-                            <span className="ai-race-detail">
-                              {entry.vendor ? `${entry.vendor} · ` : null}
-                              {entry.detail}
+                      {(() => {
+                        const rows = board.entries.map((entry) => {
+                          const [metric, ...rest] = entry.detail.split(' · ')
+                          return {
+                            entry,
+                            metric,
+                            meta: rest.join(' · ') || null,
+                            value: parseMetricValue(metric),
+                          }
+                        })
+                        const widths = barWidths(rows.map((r) => r.value))
+                        return rows.map((row, i) => (
+                          <li key={`${board.id}-${row.entry.rank}-${row.entry.name}`}>
+                            <span className="ai-race-rank" aria-hidden="true">
+                              {row.entry.rank}
                             </span>
-                          </span>
-                        </li>
-                      ))}
+                            <div className="ai-race-row">
+                              <div className="ai-race-copy">
+                                <div className="ai-race-topline">
+                                  <span className="ai-race-name">{row.entry.name}</span>
+                                  <span className="ai-race-metric">{row.metric}</span>
+                                </div>
+                                <div
+                                  className="ai-race-bar"
+                                  aria-hidden="true"
+                                >
+                                  <span
+                                    className="ai-race-bar-fill"
+                                    style={{ width: `${widths[i]}%` }}
+                                  />
+                                </div>
+                                <span className="ai-race-meta">
+                                  {[row.entry.vendor, row.meta]
+                                    .filter(Boolean)
+                                    .join(' · ')}
+                                </span>
+                              </div>
+                            </div>
+                          </li>
+                        ))
+                      })()}
                     </ol>
                   </section>
                 ))}
                 <p className="ai-race-footnote">
-                  Arena Elo is human preference. OpenRouter ranks public API
-                  token volume for the latest day.
+                  Preference vs API volume — not the same race.
                 </p>
               </div>
             ) : (
