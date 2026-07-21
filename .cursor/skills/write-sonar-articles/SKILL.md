@@ -66,6 +66,7 @@ Article pair
 - [ ] Manifesto checklist pass on both (incl. §8a)
 - [ ] Insert both rows (status published)
 - [ ] Confirm /article/{slug} and homepage hero for A
+- [ ] Ping IndexNow for both article URLs + homepage
 ```
 
 ### 1. Load CMS context
@@ -108,6 +109,19 @@ Do not set `featured_slot` for layout.
 
 - Open `/article/{slug}` for both
 - Homepage large card shows the highlighted piece (allow ~60s cache)
+
+### 5. IndexNow (required after publish)
+
+Notify Bing/IndexNow so new URLs are crawled promptly:
+
+```bash
+curl -sS -X POST https://www.sonarmag.com/api/indexnow \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $INDEXNOW_SUBMIT_SECRET" \
+  -d '{"urls":["/","/article/SLUG-A","/article/SLUG-B"]}'
+```
+
+If `INDEXNOW_SUBMIT_SECRET` is unset locally, omit the Authorization header. Prefer calling the live site after rows are published (not localhost). Or POST directly to `https://api.indexnow.org/indexnow` using the key in `public/{key}.txt` / `INDEXNOW_KEY` — see `src/lib/indexnow.ts`.
 
 ## Anti-patterns
 

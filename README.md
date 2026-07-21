@@ -35,8 +35,10 @@ OPENROUTER_API_KEY=<server-only-openrouter-key>
 | `PUBLIC_SUPABASE_ANON_KEY` | Public anon/publishable key (RLS-protected reads) |
 | `PUBLIC_SITE_URL` | Canonical origin for meta, sitemap, robots |
 | `OPENROUTER_API_KEY` | Server-only key for OpenRouter usage rankings on the homepage AI Race rail |
+| `INDEXNOW_KEY` | IndexNow ownership key (must match `public/{key}.txt`) |
+| `INDEXNOW_SUBMIT_SECRET` | Bearer secret for `POST /api/indexnow` (set in production) |
 
-Also set these on Vercel for **Production** (and Preview). The code still accepts legacy `VITE_*` names as fallbacks. Never prefix `OPENROUTER_API_KEY` with `PUBLIC_`.
+Also set these on Vercel for **Production** (and Preview). The code still accepts legacy `VITE_*` names as fallbacks. Never prefix `OPENROUTER_API_KEY` or IndexNow secrets with `PUBLIC_`.
 
 ## Supabase schema
 
@@ -76,6 +78,7 @@ Dynamic endpoints:
 
 - `/sitemap.xml` — built from published articles + pages
 - `/robots.txt` — points at the sitemap
+- IndexNow — key at `/{INDEXNOW_KEY}.txt`; notify Bing via `POST /api/indexnow` with `{ "slug": "…" }` or `{ "urls": […] }`
 
 ## Develop
 
