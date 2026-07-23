@@ -1,4 +1,5 @@
 import { fetchAiRaceData } from './ai-race'
+import { ensurePopularRanking } from './popular-sync'
 import { supabase } from './supabase'
 import type {
   Article,
@@ -319,10 +320,49 @@ export async function fetchRssArticles(limit = 30): Promise<Article[]> {
   return (data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? []
 }
 
+/** Full Latest archive — newest published stories first. */
+export async function fetchLatestArticles(limit = 100): Promise<Article[]> {
+  return fetchRssArticles(limit)
+}
+
+async function fetchPopularArticles(limit: number): Promise<Article[]> {
+  // Best-effort analytics sync (age-gated). Stale ranks beat an empty rail.
+  await ensurePopularRanking()
+
+  const { data, error } = await supabase
+    .from('articles')
+    .select(articleSelect)
+    .eq('status', 'published')
+    .not('popular_rank', 'is', null)
+    .order('popular_rank', { ascending: true })
+    .limit(limit)
+
+  if (error) throw error
+
+  const ranked =
+    (data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? []
+  if (ranked.length > 0) return ranked
+
+  // Before the first successful sync, fall back to newest published stories.
+  const fallback = await supabase
+    .from('articles')
+    .select(articleSelect)
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(limit)
+
+  if (fallback.error) throw fallback.error
+  return (fallback.data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? []
+}
+
+export async function fetchPopularPageData(limit = 10): Promise<Article[]> {
+  return fetchPopularArticles(limit)
+}
+
 export async function fetchHomepageData(): Promise<HomepageData> {
   const [
     boardResult,
-    popularResult,
+    popular,
     marketsResult,
     podcastResult,
     settingsResult,
@@ -335,13 +375,7 @@ export async function fetchHomepageData(): Promise<HomepageData> {
         .eq('status', 'published')
         .order('published_at', { ascending: false })
         .limit(24),
-      supabase
-        .from('articles')
-        .select(articleSelect)
-        .eq('status', 'published')
-        .not('popular_rank', 'is', null)
-        .order('popular_rank', { ascending: true })
-        .limit(5),
+      fetchPopularArticles(5),
       supabase
         .from('market_tickers')
         .select('pair, change_pct, value, is_up, sort_order')
@@ -358,7 +392,6 @@ export async function fetchHomepageData(): Promise<HomepageData> {
 
   for (const result of [
     boardResult,
-    popularResult,
     marketsResult,
     podcastResult,
     settingsResult,
@@ -424,8 +457,7 @@ export async function fetchHomepageData(): Promise<HomepageData> {
     opinion,
     privacyCard,
     latest,
-    popular:
-      (popularResult.data as unknown as ArticleRow[] | null)?.map(mapArticle) ?? [],
+    popular,
     markets,
     podcast,
     aiRace,

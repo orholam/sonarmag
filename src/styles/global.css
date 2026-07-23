@@ -1140,6 +1140,47 @@ button.print-btn:hover {
   letter-spacing: -0.01em;
 }
 
+.rail-empty {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #666;
+}
+
+.popular-page-dek {
+  margin: -0.5rem 0 1.75rem;
+  max-width: 36rem;
+  font-family: var(--font-sans);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: #444;
+}
+
+.popular-page-list {
+  max-width: 40rem;
+}
+
+.popular-page-list .popular-item {
+  padding: 1.2rem 0;
+}
+
+.popular-page-list .popular-title {
+  font-size: 1.2rem;
+}
+
+.latest-page-feed {
+  max-width: 42rem;
+}
+
+.latest-page-feed .feed-item {
+  padding: 1.25rem 0;
+}
+
+.latest-page-feed .feed-copy h3 {
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+}
+
 .site-footer {
   margin-top: 0;
   padding-top: 2.75rem;

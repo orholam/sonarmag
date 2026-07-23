@@ -37,8 +37,12 @@ OPENROUTER_API_KEY=<server-only-openrouter-key>
 | `OPENROUTER_API_KEY` | Server-only key for OpenRouter usage rankings on the homepage AI Race rail |
 | `INDEXNOW_KEY` | IndexNow ownership key (must match `public/{key}.txt`) |
 | `INDEXNOW_SUBMIT_SECRET` | Bearer secret for `POST /api/indexnow` (set in production) |
+| `CRON_SECRET` | Bearer secret for `GET /api/cron/*` (Vercel Cron sends it when set) |
+| `VERCEL_API_TOKEN` | Token with Web Analytics read access (Popular rail sync) |
+| `VERCEL_PROJECT_ID` | Vercel project id (auto-injected on Vercel; set locally to test sync) |
+| `VERCEL_TEAM_ID` | Team id when the project is under a team |
 
-Also set these on Vercel for **Production** (and Preview). The code still accepts legacy `VITE_*` names as fallbacks. Never prefix `OPENROUTER_API_KEY` or IndexNow secrets with `PUBLIC_`.
+Also set these on Vercel for **Production** (and Preview). The code still accepts legacy `VITE_*` names as fallbacks. Never prefix `OPENROUTER_API_KEY`, IndexNow secrets, or `VERCEL_API_TOKEN` / `CRON_SECRET` with `PUBLIC_`.
 
 ## Supabase schema
 
@@ -63,7 +67,7 @@ Homepage:
 - Insert a published row → it appears on the board automatically
 - `is_highlighted = true` → large splash hero (newest highlighted wins)
 - Secondary, opinion, dark card, and Latest fill from remaining recent stories
-- Popular: optional `popular_rank` ascending
+- Popular: traffic-backed via Vercel Web Analytics → `popular_rank` (cron + lazy refresh). Manual `popular_rank` is overwritten on sync.
 
 ## SEO
 
@@ -79,6 +83,7 @@ Dynamic endpoints:
 - `/sitemap.xml` — built from published articles + pages
 - `/robots.txt` — points at the sitemap
 - IndexNow — key at `/{INDEXNOW_KEY}.txt`; notify Bing via `POST /api/indexnow` with `{ "slug": "…" }` or `{ "urls": […] }`
+- Popular sync — hourly cron `GET /api/cron/sync-popular` reads Vercel Web Analytics top `/article/*` paths (7-day unique visitors) and writes `articles.popular_rank`. Homepage also refreshes lazily when the snapshot is older than ~45 minutes.
 
 ## Develop
 

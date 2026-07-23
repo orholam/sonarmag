@@ -13,6 +13,17 @@ interface ImportMetaEnv {
   readonly INDEXNOW_KEY?: string
   /** Bearer secret for POST /api/indexnow. Set in production. */
   readonly INDEXNOW_SUBMIT_SECRET?: string
+  /** Bearer secret for GET /api/cron/* (Vercel Cron sends this automatically when set). */
+  readonly CRON_SECRET?: string
+  /** Vercel API token with Web Analytics read access. */
+  readonly VERCEL_API_TOKEN?: string
+  /** Fallback name some setups use for the same token. */
+  readonly VERCEL_TOKEN?: string
+  /** Vercel project id (also injected automatically on Vercel). */
+  readonly VERCEL_PROJECT_ID?: string
+  /** Vercel team / org id when the project is under a team. */
+  readonly VERCEL_TEAM_ID?: string
+  readonly VERCEL_ORG_ID?: string
 }
 
 interface ImportMeta {

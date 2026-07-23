@@ -1,1 +1,8 @@
-{}
+{
+  "crons": [
+    {
+      "path": "/api/cron/sync-popular",
+      "schedule": "15 * * * *"
+    }
+  ]
+}

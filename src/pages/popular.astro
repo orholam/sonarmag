@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { fetchPopularPageData } from '../lib/api'
+import { breadcrumbJsonLd } from '../lib/seo'
+
+export const prerender = false
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=60, stale-while-revalidate=300',
+)
+
+const popular = await fetchPopularPageData(10)
+---
+
+<BaseLayout
+  title="Popular"
+  description="Most-read Sonar Mag stories from the last seven days."
+  path="/popular"
+  type="website"
+  jsonLd={[
+    breadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: 'Popular', path: '/popular' },
+    ]),
+  ]}
+>
+  <main class="static-page popular-page">
+    <p class="static-eyebrow">Last 7 days</p>
+    <h1>Popular</h1>
+    <p class="popular-page-dek">
+      Ranked by unique visitors on sonarmag.com, refreshed from site analytics.
+    </p>
+    {
+      popular.length === 0 ? (
+        <p>No traffic data yet. Check back after stories start circulating.</p>
+      ) : (
+        <ol class="popular-list popular-page-list">
+          {popular.map((article, index) => (
+            <li>
+              <a class="popular-item" href={`/article/${article.slug}`}>
+                <span class="popular-rank">{index + 1}</span>
+                <span class="popular-copy">
+                  <span class="popular-title">{article.title}</span>
+                  <span class="byline">
+                    {article.author}
+                    {article.publishedLabel ? ` · ${article.publishedLabel}` : ''}
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+    <p class="static-back">
+      <a href="/">← Back to homepage</a>
+    </p>
+  </main>
+</BaseLayout>

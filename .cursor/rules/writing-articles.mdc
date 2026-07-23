@@ -18,7 +18,7 @@ Before writing prose, open and follow [docs/anti-slop-manifesto.md](docs/anti-sl
 | `status = 'published'` | Eligible for the board |
 | `is_highlighted = true` | Eligible for the **large splash hero** (newest highlighted wins) |
 | everything else | Fills secondary → opinion → dark card → Latest by `published_at` |
-| `popular_rank` | Optional Popular rail (1 = top) |
+| `popular_rank` | **Do not set manually** — overwritten by Vercel Web Analytics sync (Popular rail / `/popular`) |
 
 You do **not** set `featured_slot` for splash layout anymore.
 

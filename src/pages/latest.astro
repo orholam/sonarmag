@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { fetchLatestArticles } from '../lib/api'
+import { thumbSrcSet, unsplashUrl } from '../lib/images'
+import { breadcrumbJsonLd } from '../lib/seo'
+
+export const prerender = false
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=60, stale-while-revalidate=300',
+)
+
+const articles = await fetchLatestArticles(100)
+---
+
+<BaseLayout
+  title="Latest"
+  description="All Sonar Mag stories, newest first."
+  path="/latest"
+  type="website"
+  jsonLd={[
+    breadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: 'Latest', path: '/latest' },
+    ]),
+  ]}
+>
+  <main class="static-page latest-page">
+    <p class="static-eyebrow">All stories</p>
+    <h1>Latest</h1>
+    <p class="popular-page-dek">
+      Every published story, newest first.
+      {
+        articles.length > 0 ? (
+          <>
+            {' '}
+            {articles.length} {articles.length === 1 ? 'piece' : 'pieces'}.
+          </>
+        ) : null
+      }
+    </p>
+    {
+      articles.length === 0 ? (
+        <p>No stories published yet.</p>
+      ) : (
+        <ul class="story-feed latest-page-feed">
+          {articles.map((article) => {
+            const thumb = article.thumbImage || article.heroImage
+            return (
+              <li>
+                <a class="feed-item" href={`/article/${article.slug}`}>
+                  <div class="feed-thumb">
+                    {thumb ? (
+                      <img
+                        src={unsplashUrl(thumb, { width: 320, quality: 70 })}
+                        srcset={thumbSrcSet(thumb)}
+                        sizes="120px"
+                        alt=""
+                        width={240}
+                        height={160}
+                        decoding="async"
+                        loading="lazy"
+                      />
+                    ) : null}
+                    {article.badge ? (
+                      <span class="feed-badge">{article.badge}</span>
+                    ) : null}
+                  </div>
+                  <div class="feed-copy">
+                    <h3>{article.title}</h3>
+                    <p class="byline">
+                      {[article.author, article.category].filter(Boolean).join(' · ')}
+                    </p>
+                    {article.publishedLabel ? (
+                      <p class="timestamp">{article.publishedLabel}</p>
+                    ) : null}
+                  </div>
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      )
+    }
+    <p class="static-back">
+      <a href="/">← Back to homepage</a>
+    </p>
+  </main>
+</BaseLayout>

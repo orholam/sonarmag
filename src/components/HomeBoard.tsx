@@ -651,19 +651,23 @@ export function HomeBoard({
             <h2>Popular</h2>
             <a href="/popular">See All</a>
           </div>
-          <ol className="popular-list" id="popular">
-            {popular.map((article, index) => (
-              <li key={article.slug}>
-                <a className="popular-item" href={`/article/${article.slug}`}>
-                  <span className="popular-rank">{index + 1}</span>
-                  <span className="popular-copy">
-                    <span className="popular-title">{article.title}</span>
-                    <span className="byline">{article.author}</span>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ol>
+          {popular.length === 0 ? (
+            <p className="rail-empty">Ranks appear once story traffic lands.</p>
+          ) : (
+            <ol className="popular-list" id="popular">
+              {popular.map((article, index) => (
+                <li key={article.slug}>
+                  <a className="popular-item" href={`/article/${article.slug}`}>
+                    <span className="popular-rank">{index + 1}</span>
+                    <span className="popular-copy">
+                      <span className="popular-title">{article.title}</span>
+                      <span className="byline">{article.author}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          )}
         </aside>
       </section>
     </>
