@@ -39,6 +39,8 @@ If the user invokes this skill without naming subjects, **do not invent evergree
 5. Shortlist **3–5** candidate stories. Pick **two** that share a territory but need different jobs (e.g. news ledger + judgment companion), or two adjacent tech×philosophy fights from the same week.
 6. Tell the user the two chosen angles in one sentence each **before or as you publish** (no long pitch deck). If the user already said "just write," proceed without waiting.
 
+**Beat variation (addendum):** AI models and lab releases remain fair game, but do not treat frontier-model news as the default every run. Rotate across the wider tech×philosophy space above — platforms, law, biotech, work, speech, governance, and adjacent fights — so the board does not read as an AI-model wire with philosophy garnish. Prefer a mixed shortlist when the week allows.
+
 ### Freshness rules
 
 - Hard prefer stories with a **datable news peg** this week or last.
@@ -131,5 +133,6 @@ If `INDEXNOW_SUBMIT_SECRET` is unset locally, omit the Authorization header. Pre
 - Redeploying the app to "publish" copy — rows are enough
 - Topicless runs that skip research and invent evergreen philosophy
 - Topicless runs that chase pure gadget news with no idea at stake (or pure theory with no news peg)
+- Topicless runs that overload on frontier AI model releases when fresher adjacent tech×philosophy pegs are available
 - Re-covering a slug/case already on the board without a new development
 - Defaulting to stock people, empty offices, or laptop flat-lays when a more specific image exists (see manifesto §12a)
