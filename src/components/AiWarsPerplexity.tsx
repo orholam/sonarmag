@@ -1,6 +1,5 @@
 /**
  * Perplexity research deep-links for the AI Wars board.
- * Branded as an external integration — not Sonar homepage chrome.
  */
 
 const QUERIES: Array<{ label: string; q: string }> = [
@@ -35,8 +34,8 @@ function PerplexityMark({ className }: { className?: string }) {
     <svg
       className={className}
       viewBox="0 0 24 24"
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       aria-hidden="true"
       focusable="false"
     >
@@ -48,57 +47,49 @@ function PerplexityMark({ className }: { className?: string }) {
   )
 }
 
-/** External Perplexity research strip for AI Wars. */
+/** Perplexity research card for AI Wars. */
 export function AiWarsPerplexity() {
   return (
     <section
       className="ai-wars-pplx"
       aria-labelledby="ai-wars-pplx-heading"
     >
-      <div className="ai-wars-pplx-inner">
-        <header className="ai-wars-pplx-head">
-          <div className="ai-wars-pplx-brand">
-            <span className="ai-wars-pplx-logo" aria-hidden="true">
-              <PerplexityMark />
-            </span>
-            <div>
-              <p className="ai-wars-pplx-kicker">Integration</p>
-              <h2 id="ai-wars-pplx-heading">Research on Perplexity</h2>
-            </div>
-          </div>
-          <p className="ai-wars-pplx-dek">
-            Jump into Perplexity with board-shaped queries — cited answers off
-            Sonar’s desk layout.
+      <header className="ai-wars-pplx-head">
+        <div>
+          <h2 id="ai-wars-pplx-heading">
+            <PerplexityMark className="ai-wars-pplx-mark" />
+            Research on Perplexity
+          </h2>
+          <p>
+            Board-shaped queries with cited answers — opens on Perplexity.
           </p>
-        </header>
-
-        <ul className="ai-wars-pplx-queries">
-          {QUERIES.map((item) => (
-            <li key={item.q}>
-              <a
-                href={perplexityUrl(item.q)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>{item.label}</span>
-                <span className="ai-wars-pplx-go" aria-hidden="true">
-                  →
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
+        </div>
         <a
           className="ai-wars-pplx-home"
           href="https://www.perplexity.ai/"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <PerplexityMark className="ai-wars-pplx-home-mark" />
-          Open Perplexity
+          perplexity.ai
         </a>
-      </div>
+      </header>
+
+      <ul className="ai-wars-pplx-queries">
+        {QUERIES.map((item) => (
+          <li key={item.q}>
+            <a
+              href={perplexityUrl(item.q)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>{item.label}</span>
+              <span className="ai-wars-pplx-go" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

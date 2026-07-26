@@ -321,8 +321,6 @@ export function AiWarsBoard({
         <AiWarsStars board={codingStars} />
       </section>
 
-      <AiWarsPerplexity />
-
       <AiWarsPolymarket polymarket={polymarket} />
 
       {history.openrouterVolume ? (
@@ -374,6 +372,8 @@ export function AiWarsBoard({
           ) : null}
         </div>
       </section>
+
+      <AiWarsPerplexity />
     </div>
   )
 }

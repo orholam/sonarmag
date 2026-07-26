@@ -1,6 +1,12 @@
-import type { CodingToolStarsBoard, CodingToolStarsEntry } from '../lib/coding-tool-stars'
-import { STAR_SURFACE_ORDER } from '../lib/coding-tool-stars'
+import { useState } from 'react'
+import { logoDevUrl } from '../lib/ai-wars-field'
+import type {
+  CodingToolStarsBoard,
+  CodingToolStarsEntry,
+} from '../lib/coding-tool-stars'
 import { formatCompactCount } from '../lib/rank-bars'
+
+const PREVIEW_COUNT = 20
 
 function formatFetchedAt(iso: string | null): string | null {
   if (!iso) return null
@@ -32,41 +38,55 @@ function GitHubMark({ className }: { className?: string }) {
   )
 }
 
-function groupBySurface(entries: CodingToolStarsEntry[]) {
-  const bySurface = new Map<string, CodingToolStarsEntry[]>()
-  for (const entry of entries) {
-    const list = bySurface.get(entry.surface) ?? []
-    list.push(entry)
-    bySurface.set(entry.surface, list)
-  }
-
-  const ordered: Array<{ surface: string; entries: CodingToolStarsEntry[] }> = []
-  for (const surface of STAR_SURFACE_ORDER) {
-    const group = bySurface.get(surface)
-    if (!group?.length) continue
-    ordered.push({
-      surface,
-      entries: [...group].sort((a, b) => b.stars - a.stars),
-    })
-    bySurface.delete(surface)
-  }
-  for (const [surface, group] of bySurface) {
-    ordered.push({
-      surface,
-      entries: [...group].sort((a, b) => b.stars - a.stars),
-    })
-  }
-  return ordered
+function RepoChip({ entry }: { entry: CodingToolStarsEntry }) {
+  const logo = logoDevUrl(entry.domain, { size: 32 })
+  return (
+    <li>
+      <a
+        href={entry.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={`${entry.company} · ${entry.repo}`}
+      >
+        {logo ? (
+          <img
+            className="ai-wars-starboard-logo"
+            src={logo}
+            alt=""
+            width={16}
+            height={16}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <span className="ai-wars-starboard-mono" aria-hidden="true">
+            {entry.company.slice(0, 1)}
+          </span>
+        )}
+        <span className="ai-wars-starboard-name">{entry.name}</span>
+        <span className="ai-wars-starboard-score">
+          <span aria-hidden="true">★</span>
+          {formatCompactCount(entry.stars)}
+        </span>
+      </a>
+    </li>
+  )
 }
 
 /**
- * Hand-curated open coding tools as compact pills, grouped by surface type.
+ * Compact star chips for field-company flagship GitHub repos.
+ * Shows the top N by stars; expands for the rest.
  */
 export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
+  const [expanded, setExpanded] = useState(false)
+
   if (!board.entries.length) return null
 
   const fetched = formatFetchedAt(board.asOf)
-  const groups = groupBySurface(board.entries)
+  const hidden = Math.max(0, board.entries.length - PREVIEW_COUNT)
+  const visible = expanded
+    ? board.entries
+    : board.entries.slice(0, PREVIEW_COUNT)
 
   return (
     <section
@@ -74,45 +94,34 @@ export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
       aria-labelledby="ai-wars-starboard-heading"
     >
       <header className="ai-wars-starboard-head">
-        <h2 id="ai-wars-starboard-heading">
-          <GitHubMark className="ai-wars-starboard-gh" />
-          Open-source stars
-        </h2>
-        <p>
-          Hand-curated · live stargazers
-          {fetched ? ` · ${fetched}` : ''}
-        </p>
+        <div>
+          <h2 id="ai-wars-starboard-heading">
+            <GitHubMark className="ai-wars-starboard-gh" />
+            Lab repos
+          </h2>
+          <p>
+            Flagship GitHub projects from the tracked labs
+            {fetched ? ` · ${fetched}` : ''}
+          </p>
+        </div>
       </header>
 
-      <div className="ai-wars-starboard-groups">
-        {groups.map((group) => (
-          <div
-            key={group.surface}
-            className="ai-wars-starboard-group"
-            data-surface={group.surface.toLowerCase()}
-          >
-            <p className="ai-wars-starboard-group-label">{group.surface}</p>
-            <ul className="ai-wars-starboard-pills">
-              {group.entries.map((entry) => (
-                <li key={entry.repo}>
-                  <a
-                    href={entry.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={entry.repo}
-                  >
-                    <span className="ai-wars-starboard-name">{entry.name}</span>
-                    <span className="ai-wars-starboard-score">
-                      <span aria-hidden="true">★</span>
-                      {formatCompactCount(entry.stars)}
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+      <ul className="ai-wars-starboard-list">
+        {visible.map((entry) => (
+          <RepoChip key={entry.repo} entry={entry} />
         ))}
-      </div>
+      </ul>
+
+      {hidden > 0 ? (
+        <button
+          type="button"
+          className="ai-wars-starboard-more"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((v) => !v)}
+        >
+          {expanded ? 'Show less' : `Show ${hidden} more`}
+        </button>
+      ) : null}
     </section>
   )
 }
