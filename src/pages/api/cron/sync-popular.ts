@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { syncPopularFromAnalytics } from '../../lib/popular-sync'
+import { syncPopularFromAnalytics } from '../../../lib/popular-sync'
 
 export const prerender = false
 
