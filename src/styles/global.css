@@ -1859,25 +1859,65 @@ button.print-btn:hover {
 .ai-wars-starboard-groups {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
   min-width: 0;
 }
 
 .ai-wars-starboard-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.28rem;
+  display: grid;
+  grid-template-columns: 4.75rem minmax(0, 1fr);
+  gap: 0.45rem 0.55rem;
+  align-items: center;
   min-width: 0;
+  padding: 0.35rem 0.45rem 0.35rem 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--row-accent, #6e6e6e) 10%, #fff);
+  border: 1px solid color-mix(in srgb, var(--row-accent, #6e6e6e) 18%, transparent);
+  box-shadow: inset 3px 0 0 var(--row-accent, #6e6e6e);
+}
+
+.ai-wars-starboard-group[data-surface='tui'] {
+  --row-accent: #0f7a8a;
+}
+
+.ai-wars-starboard-group[data-surface='cli'] {
+  --row-accent: #1f5fbf;
+}
+
+.ai-wars-starboard-group[data-surface='ide'] {
+  --row-accent: #c47a00;
+}
+
+.ai-wars-starboard-group[data-surface='editor'] {
+  --row-accent: #7a4bb8;
+}
+
+.ai-wars-starboard-group[data-surface='agent'] {
+  --row-accent: #e11d2e;
+}
+
+.ai-wars-starboard-group[data-surface='web'] {
+  --row-accent: #2f7d4a;
+}
+
+.ai-wars-starboard-group[data-surface='router'] {
+  --row-accent: #9f1239;
+}
+
+.ai-wars-starboard-group[data-surface='neovim'] {
+  --row-accent: #3d7a4a;
 }
 
 .ai-wars-starboard-group-label {
   margin: 0;
+  padding-left: 0.55rem;
   font-family: var(--font-sans);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--row-accent, var(--muted));
+  line-height: 1.2;
 }
 
 .ai-wars-starboard-pills {
@@ -1886,7 +1926,7 @@ button.print-btn:hover {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 0.28rem;
   min-width: 0;
 }
 
@@ -1898,9 +1938,9 @@ button.print-btn:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.3rem 0.55rem;
-  background: var(--surface-soft);
-  border: 1px solid rgba(23, 23, 23, 0.08);
+  padding: 0.28rem 0.5rem;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid color-mix(in srgb, var(--row-accent, #6e6e6e) 22%, rgba(23, 23, 23, 0.08));
   border-radius: 999px;
   color: inherit;
   text-decoration: none;
@@ -1909,7 +1949,7 @@ button.print-btn:hover {
 
 .ai-wars-starboard-pills a:hover {
   background: #fff;
-  border-color: rgba(23, 23, 23, 0.22);
+  border-color: var(--row-accent, rgba(23, 23, 23, 0.22));
 }
 
 .ai-wars-starboard-name {
@@ -2258,6 +2298,10 @@ a.ai-wars-rank-name:hover {
 @media (max-width: 640px) {
   .ai-wars-masthead h1 {
     font-size: 1.9rem;
+  }
+
+  .ai-wars-starboard-group {
+    grid-template-columns: 3.6rem minmax(0, 1fr);
   }
 }
 
