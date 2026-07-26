@@ -39,6 +39,7 @@ const TOOL_COLORS: Record<string, string> = {
   codex: '#171717',
   cursor: '#0f7a8a',
   'github-copilot': '#1f5fbf',
+  opencode: '#2f7d4a',
   windsurf: '#c47a00',
   cline: '#8b4513',
 }
