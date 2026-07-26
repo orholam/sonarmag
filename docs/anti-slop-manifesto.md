@@ -449,9 +449,10 @@ These are **defaults and deprioritizations**, not absolute bans. Use a human, an
 
 ### Craft
 
-- Same source URL pattern for `hero_image` and `thumb_image` is fine; write `hero_alt` as a concrete scene description, not a vibe caption.
+- Same source URL pattern for `hero_image` and `thumb_image` is fine; write `hero_alt` as a concrete scene description, not a vibe caption. **`hero_alt` is required** when `hero_image` is set.
 - If the first Unsplash hit is a stock person, office, or laptop farm, search again before settling.
 - Do not invent photojournalism. Better a slightly abstract but specific object than a fake "reporter in the field" render.
+- **Do not reuse photos across articles.** The Unsplash `photo-…` id (ignoring query params) must be unique site-wide. Hero and thumb on the *same* story may match.
 
 ---
 
@@ -583,7 +584,7 @@ When stuck, force the title into one of the pattern rows in §2 before drafting 
 10. Would you publish this under your own name?
 11. If this is a study piece: does the title's scope match the measurement, and can a non-specialist paraphrase the finding after one read?
 12. LLM tells (§8a): zero em-dash pairs, no *not X, but Y*, no *actually* as fake emphasis?
-13. Images (§12a): is the hero specific to the piece — not stock people / office / laptop wallpaper unless earned?
+13. Images (§12a): is the hero specific to the piece — not stock people / office / laptop wallpaper unless earned? Is the photo unused by every other article?
 
 ---
 

@@ -28,7 +28,7 @@ You do **not** set `featured_slot` for splash layout anymore.
   - `excerpt` is the homepage card dek: one continuous ~70–110 word block (CSS columns). Never rely on body paragraphs for card layout.
   - Titles must pass the manifesto clarity test: clever tone without a clear case still fails; study titles must not slogan-oversell.
 - `author_id`, `category_id`
-- `hero_image`, `hero_alt`, `thumb_image` — follow manifesto §12a (deprioritize stock people *and* generic offices/computers; not absolute bans)
+- `hero_image`, `hero_alt`, `thumb_image` — follow manifesto §12a; **must not reuse** another article’s photo (Unsplash `photo-…` id). Same URL for hero+thumb on one row is fine. DB enforces uniqueness via `article_image_key()`. **`hero_alt` is required** whenever `hero_image` is set (concrete scene, not empty / vibe words).
 - `read_minutes`, `listen_minutes`, `published_at`, `published_label`
 - `paragraphs` jsonb blocks (strings and optional `{ type: "tweet", ... }`)
 - `is_highlighted` boolean

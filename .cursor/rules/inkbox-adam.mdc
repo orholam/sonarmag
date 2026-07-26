@@ -1,0 +1,51 @@
+---
+description: Inkbox @adam email/comms harness — use for any signup or verification email
+alwaysApply: true
+---
+
+# Inkbox (@adam)
+
+When a task needs an **email address**, **email verification**, magic links, or agent outbound mail/SMS/iMessage:
+
+## Identity
+
+- Handle: **@adam**
+- Email: **adam@inkboxmail.com** (never invent `adam@sonarmag.com` or reuse `desk@` for verification flows)
+- API base: `https://inkbox.ai`
+- Credentials: `INKBOX_API_KEY` (+ `INKBOX_IDENTITY=adam`) in `/home/josiaha/Repos/os-agents/.env`
+- iMessage: humans text `connect @adam` to `+16504849720`
+
+## How to use (in order)
+
+1. Prefer **Inkbox MCP** (`user-inkbox` / server `inkbox`): `inkbox_whoami`, `inkbox_list_emails`, `inkbox_list_unread_emails`, `inkbox_get_email_thread`, `inkbox_mark_emails_read`, `inkbox_send_email`, contacts, SMS, iMessage.
+2. MCP thread/list tools often return **snippets only**. For verification links, use CLI with env from os-agents:
+   `set -a; source /home/josiaha/Repos/os-agents/.env; set +a`
+   then `inkbox email unread -i adam --json` / `inkbox email get -i adam --json <message-id>` and extract URLs from `bodyText`.
+3. If MCP is missing from this workspace, it is defined in `/home/josiaha/Repos/os-agents/.cursor/mcp.json` and should also be in `~/.cursor/mcp.json`. Reload MCP rather than guessing another inbox product.
+4. Do **not** confuse Inkbox with AgentMail, MailSink, Gmail, or OpenMessage. Never invent `adam@sonarmag.com`.
+
+## Hard rule: outbound email pacing
+
+**There must be a ≥20 second delay between each outbound email send.**
+
+- Applies to every path: Inkbox MCP (`inkbox_send_email`), CLI (`inkbox email send`), and any SDK/API wrapper.
+- After each successful send, wait at least **20 seconds** before the next send (e.g. `sleep 20`).
+- Do **not** batch-fire, parallelize, or otherwise send multiple emails in the same second/burst.
+- Single one-off emails are fine; the delay is required whenever sending **more than one** in a session/task.
+
+## Reference harness
+
+Canonical Cursor rule + skills live under the os-agents repo:
+
+- Rule: `/home/josiaha/Repos/os-agents/.cursor/rules/inkbox-adam.mdc`
+- Skills: `/home/josiaha/Repos/os-agents/.cursor/skills/inkbox-cursor/` (and `inkbox-ts` / `inkbox-cli` / `inkbox-python`)
+- MCP package: `/home/josiaha/Repos/os-agents/packages/inkbox-mcp`
+
+## Directory / listing submissions
+
+Before submitting or emailing about sonarmag.com listings:
+
+1. Read tracked log [`docs/directory-submissions.md`](../../docs/directory-submissions.md) (forms / live listings).
+2. Read local email ledger [`docs/directory-outreach.local.md`](../../docs/directory-outreach.local.md) (gitignored) — **never re-mail** a To: already listed there.
+3. Prefer `adam@inkboxmail.com` for every listing contact field and outbound pitch.
+4. After each attempt, update the matching log the same turn.

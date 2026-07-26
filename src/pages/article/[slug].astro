@@ -45,6 +45,7 @@ if (!article) {
     description={article.excerpt || textBlocks(article.paragraphs)[0] || undefined}
     path={`/article/${article.slug}`}
     image={article.heroImage}
+    imageAlt={article.heroAlt}
     lcpImage={article.heroImage}
     type="article"
     publishedAt={article.publishedAt}

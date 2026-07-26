@@ -28,6 +28,8 @@ type Props = {
   prefetchPaths?: string[]
   /** When set, preload this as the likely LCP image. */
   lcpImage?: string | null
+  /** Alt text for og:image / twitter:image when `image` is set. */
+  imageAlt?: string | null
 }
 
 const {
@@ -43,11 +45,13 @@ const {
   jsonLd,
   prefetchPaths = [],
   lcpImage = null,
+  imageAlt = null,
 } = Astro.props
 
 const fullTitle = pageTitle(title)
 const canonical = absoluteUrl(path)
 const imageUrl = absoluteUrl(image || DEFAULT_OG_IMAGE)
+const imageAltText = imageAlt?.trim() || fullTitle
 const desc = description.trim() || DEFAULT_DESCRIPTION
 const ogType = type === 'article' ? 'article' : 'website'
 const lcpHref = lcpImage
@@ -89,7 +93,7 @@ const lcpHref = lcpImage
     <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={imageUrl} />
-    <meta property="og:image:alt" content={fullTitle} />
+    <meta property="og:image:alt" content={imageAltText} />
     {type === 'article' && publishedAt && (
       <meta property="article:published_time" content={publishedAt} />
     )}
@@ -104,6 +108,7 @@ const lcpHref = lcpImage
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={desc} />
     <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAltText} />
 
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
     <link rel="dns-prefetch" href="https://images.unsplash.com" />

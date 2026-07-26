@@ -1,5 +1,25 @@
 /** Unsplash-friendly responsive URLs + defaults for CLS-safe images. */
 
+/** Stable key for uniqueness checks (Unsplash photo id when present). */
+export function articleImageKey(src: string | null | undefined): string | null {
+  if (!src?.trim()) return null
+  try {
+    const url = new URL(src.trim())
+    const path = url.pathname.toLowerCase()
+    const unsplashPhoto = path.match(/\/(photo-[a-z0-9-]+)\/?$/)
+    if (unsplashPhoto?.[1] && url.hostname.includes('unsplash')) {
+      return unsplashPhoto[1]
+    }
+    const photosSlug = path.match(/\/photos\/([a-z0-9_-]+)\/?$/)
+    if (photosSlug?.[1] && url.hostname.includes('unsplash')) {
+      return photosSlug[1]
+    }
+    return `${url.hostname}${path}`.toLowerCase()
+  } catch {
+    return src.trim().split(/[?#]/)[0]?.toLowerCase() || null
+  }
+}
+
 export function unsplashUrl(
   src: string,
   opts: { width: number; quality?: number },

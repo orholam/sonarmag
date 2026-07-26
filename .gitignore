@@ -13,3 +13,6 @@ dist-ssr
 .astro
 *.local
 .vercel
+
+# Local outreach ledger (emails / pitches — keep out of git)
+docs/directory-outreach.local.md
