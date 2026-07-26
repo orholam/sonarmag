@@ -5,6 +5,7 @@ import { fetchAiRaceData } from '../lib/ai-race'
 import { fetchAiWarsField, fieldByRegion } from '../lib/ai-wars-field'
 import { fetchAiWarsHistory } from '../lib/ai-wars-history'
 import { fetchCodingToolReddit } from '../lib/coding-tool-reddit'
+import { fetchCodingToolStars } from '../lib/coding-tool-stars'
 import { fetchPolymarketAiWars } from '../lib/polymarket'
 import { breadcrumbJsonLd } from '../lib/seo'
 
@@ -15,13 +16,15 @@ Astro.response.headers.set(
   'public, s-maxage=60, stale-while-revalidate=300',
 )
 
-const [aiRace, history, codingTools, field, polymarket] = await Promise.all([
-  fetchAiRaceData(8),
-  fetchAiWarsHistory(),
-  fetchCodingToolReddit(),
-  fetchAiWarsField(),
-  fetchPolymarketAiWars(),
-])
+const [aiRace, history, codingTools, codingStars, field, polymarket] =
+  await Promise.all([
+    fetchAiRaceData(8),
+    fetchAiWarsHistory(),
+    fetchCodingToolReddit(),
+    fetchCodingToolStars(),
+    fetchAiWarsField(),
+    fetchPolymarketAiWars(),
+  ])
 
 const usField = fieldByRegion(field.companies, 'us')
 const intlField = fieldByRegion(field.companies, 'international')
@@ -29,7 +32,7 @@ const intlField = fieldByRegion(field.companies, 'international')
 
 <BaseLayout
   title="AI Wars"
-  description="Who’s winning in AI over time — Arena preference, OpenRouter volume and provider share, coding-agent subreddit weekly visitors, and desk analyses of the leading labs."
+  description="Who’s winning in AI over time — Arena preference, OpenRouter volume and provider share, coding-agent Reddit heat, open-source GitHub stars, and desk analyses of the leading labs."
   path="/ai-wars"
   type="website"
   jsonLd={[
@@ -44,8 +47,8 @@ const intlField = fieldByRegion(field.companies, 'international')
       <p class="ai-wars-kicker">Permanent board</p>
       <h1>AI Wars</h1>
       <p class="ai-wars-dek">
-        Preference, API volume, and coding-agent heat — live boards plus history
-        you can scrub.
+        Preference, API volume, coding-agent heat, and open-source stars — live
+        boards plus history you can scrub.
       </p>
     </header>
 
@@ -54,6 +57,7 @@ const intlField = fieldByRegion(field.companies, 'international')
       aiRace={aiRace}
       history={history}
       codingTools={codingTools}
+      codingStars={codingStars}
       field={field}
       polymarket={polymarket}
     />

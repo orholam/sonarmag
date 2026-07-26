@@ -2,6 +2,7 @@ import type { AiRaceData } from '../lib/ai-race'
 import type { AiWarsChart, AiWarsHistory } from '../lib/ai-wars-history'
 import type { AiWarsFieldBoard } from '../lib/ai-wars-field'
 import type { CodingToolRedditBoard } from '../lib/coding-tool-reddit'
+import type { CodingToolStarsBoard } from '../lib/coding-tool-stars'
 import type { PolymarketAiWars } from '../lib/polymarket'
 import { barWidths, parseMetricValue } from '../lib/rank-bars'
 import { AiWarsField } from './AiWarsField'
@@ -12,6 +13,7 @@ type Props = {
   aiRace: AiRaceData
   history: AiWarsHistory
   codingTools: CodingToolRedditBoard
+  codingStars: CodingToolStarsBoard
   field: AiWarsFieldBoard
   polymarket: PolymarketAiWars
 }
@@ -43,6 +45,7 @@ function RankList({
     name: string
     detail: string
     vendor?: string | null
+    url?: string | null
   }>
   accentFor?: (name: string) => string | undefined
   limit?: number
@@ -75,6 +78,7 @@ function RankList({
       <ol className="ai-wars-rank-list">
         {rows.map((row, i) => {
           const accent = accentFor?.(row.entry.name)
+          const href = row.entry.url?.trim() || null
           return (
             <li key={`${title}-${row.entry.rank}-${row.entry.name}`}>
               <span className="ai-wars-rank-num" aria-hidden="true">
@@ -82,7 +86,18 @@ function RankList({
               </span>
               <div className="ai-wars-rank-body">
                 <div className="ai-wars-rank-top">
-                  <span className="ai-wars-rank-name">{row.entry.name}</span>
+                  {href ? (
+                    <a
+                      className="ai-wars-rank-name"
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {row.entry.name}
+                    </a>
+                  ) : (
+                    <span className="ai-wars-rank-name">{row.entry.name}</span>
+                  )}
                   <span className="ai-wars-rank-metric">{row.metric}</span>
                 </div>
                 <div className="ai-wars-rank-bar" aria-hidden="true">
@@ -234,6 +249,7 @@ export function AiWarsBoard({
   aiRace,
   history,
   codingTools,
+  codingStars,
   field,
   polymarket,
 }: Props) {
@@ -273,8 +289,8 @@ export function AiWarsBoard({
         <div className="ai-wars-section-label">
           <h2 id="ai-wars-agents-heading">Coding agents</h2>
           <p>
-            Subreddit weekly visitors as a community-heat proxy, tracked from
-            July 2026.
+            Subreddit weekly visitors as a community-heat proxy, plus live
+            GitHub stars for open coding tools.
           </p>
         </div>
 
@@ -296,6 +312,18 @@ export function AiWarsBoard({
               chart={codingChart}
               height={220}
               footnote="Desk-tracked estimates — heat signal, not seats or revenue."
+            />
+          </div>
+        ) : null}
+
+        {codingStars.entries.length ? (
+          <div className="ai-wars-stars">
+            <RankList
+              title="Open-source GitHub stars"
+              subtitle="Live stargazer counts for open coding agents and CLIs — not the same race as Reddit heat."
+              sourceUrl="https://github.com/topics/ai-coding-agent"
+              entries={codingStars.entries}
+              limit={12}
             />
           </div>
         ) : null}

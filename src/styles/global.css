@@ -1812,6 +1812,10 @@ button.print-btn:hover {
   margin-top: 0.85rem;
 }
 
+.ai-wars-stars {
+  margin-top: 0.85rem;
+}
+
 .ai-wars-share-bar {
   display: flex;
   width: 100%;
@@ -1987,6 +1991,10 @@ button.print-btn:hover {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+a.ai-wars-rank-name:hover {
+  color: var(--red);
 }
 
 .ai-wars-rank-metric {
