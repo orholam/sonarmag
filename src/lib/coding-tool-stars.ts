@@ -26,8 +26,30 @@ type CuratedRepo = {
   name: string
   owner: string
   repo: string
-  /** Where the tool mainly lives — shown as a small chip. */
-  surface: 'TUI' | 'CLI' | 'IDE' | 'Editor' | 'Web' | 'Agent' | 'Router' | 'Neovim'
+  /**
+   * Primary surface for desk grouping:
+   * - TUI: fullscreen interactive terminal UI (Ink / Bubble Tea–style)
+   * - CLI: terminal agent invoked as a command (may have a light prompt UI)
+   * - IDE: plugin / extension inside VS Code, JetBrains, etc.
+   * - Editor: standalone editor / local app builder (not a plugin)
+   * - Agent: autonomous issue/task runner or multi-agent platform
+   * - Web: browser app
+   * - Router: model/capability control plane for other agents
+   * - Neovim: Neovim plugin
+   * - Workspace: human↔agent collaboration room (not a coding harness)
+   * - Self-host: self-hosted coding assistant / completion server
+   */
+  surface:
+    | 'TUI'
+    | 'CLI'
+    | 'IDE'
+    | 'Editor'
+    | 'Web'
+    | 'Agent'
+    | 'Router'
+    | 'Neovim'
+    | 'Workspace'
+    | 'Self-host'
 }
 
 /**
@@ -37,7 +59,8 @@ type CuratedRepo = {
 const REPOS: CuratedRepo[] = [
   { id: 'opencode', name: 'OpenCode', owner: 'anomalyco', repo: 'opencode', surface: 'TUI' },
   { id: 'gemini-cli', name: 'Gemini CLI', owner: 'google-gemini', repo: 'gemini-cli', surface: 'CLI' },
-  { id: 'codex', name: 'Codex', owner: 'openai', repo: 'codex', surface: 'CLI' },
+  // Codex ships a terminal TUI as the main loop (not just a one-shot CLI).
+  { id: 'codex', name: 'Codex', owner: 'openai', repo: 'codex', surface: 'TUI' },
   { id: 'openhands', name: 'OpenHands', owner: 'OpenHands', repo: 'OpenHands', surface: 'Agent' },
   {
     id: 'open-interpreter',
@@ -57,14 +80,16 @@ const REPOS: CuratedRepo[] = [
     surface: 'Router',
   },
   { id: 'continue', name: 'Continue', owner: 'continuedev', repo: 'continue', surface: 'IDE' },
-  { id: 'tabby', name: 'Tabby', owner: 'TabbyML', repo: 'tabby', surface: 'IDE' },
+  // Tabby is a self-hosted assistant/server with IDE clients — not an IDE itself.
+  { id: 'tabby', name: 'Tabby', owner: 'TabbyML', repo: 'tabby', surface: 'Self-host' },
   { id: 'void', name: 'Void', owner: 'voideditor', repo: 'void', surface: 'Editor' },
   { id: 'crush', name: 'Crush', owner: 'charmbracelet', repo: 'crush', surface: 'TUI' },
   { id: 'kilocode', name: 'Kilo Code', owner: 'Kilo-Org', repo: 'kilocode', surface: 'IDE' },
   { id: 'qwen-code', name: 'Qwen Code', owner: 'QwenLM', repo: 'qwen-code', surface: 'TUI' },
   { id: 'roo-code', name: 'Roo Code', owner: 'RooCodeInc', repo: 'Roo-Code', surface: 'IDE' },
   { id: 'grok-build', name: 'Grok Build', owner: 'xai-org', repo: 'grok-build', surface: 'TUI' },
-  { id: 'buzz', name: 'Buzz', owner: 'block', repo: 'buzz', surface: 'Agent' },
+  // Buzz is a human↔agent collaboration workspace (channels/huddles), not a coding harness.
+  { id: 'buzz', name: 'Buzz', owner: 'block', repo: 'buzz', surface: 'Workspace' },
   { id: 'dyad', name: 'Dyad', owner: 'dyad-sh', repo: 'dyad', surface: 'Editor' },
   { id: 'swe-agent', name: 'SWE-agent', owner: 'SWE-agent', repo: 'SWE-agent', surface: 'Agent' },
   { id: 'bolt-diy', name: 'Bolt.diy', owner: 'stackblitz-labs', repo: 'bolt.diy', surface: 'Web' },
@@ -88,6 +113,8 @@ export const STAR_SURFACE_ORDER = [
   'Web',
   'Router',
   'Neovim',
+  'Self-host',
+  'Workspace',
 ] as const
 
 type GhRepo = {
