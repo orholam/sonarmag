@@ -14,8 +14,8 @@ function formatFetchedAt(iso: string | null): string | null {
 }
 
 /**
- * Open-source coding tools by live GitHub stars — intentionally not the
- * Arena/OpenRouter rank-list chrome.
+ * Open-source coding tools by live GitHub stars — light magazine ledger,
+ * not the Arena/OpenRouter rank-list chrome and not a dark-mode panel.
  */
 export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
   if (!board.entries.length) return null
@@ -31,12 +31,11 @@ export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
     >
       <header className="ai-wars-starboard-head">
         <div>
-          <p className="ai-wars-starboard-kicker">Open source · live stars</p>
-          <h2 id="ai-wars-starboard-heading">GitHub gravity</h2>
+          <p className="ai-wars-starboard-kicker">Open source</p>
+          <h2 id="ai-wars-starboard-heading">GitHub stars</h2>
           <p>
-            Stargazer counts for open coding agents and harnesses — a different
-            race from Reddit heat. Grok Build, OpenCode, and the rest of the
-            open field.
+            Live stargazer counts for open coding agents and harnesses — repo
+            gravity, not Reddit heat.
           </p>
         </div>
         <div className="ai-wars-starboard-meta">
@@ -64,7 +63,10 @@ export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
             <span className="ai-wars-starboard-leader-name">{leader.name}</span>
             <span className="ai-wars-starboard-repo">{leader.repo}</span>
           </div>
-          <div className="ai-wars-starboard-leader-score" aria-label={`${leader.detail} stars`}>
+          <div
+            className="ai-wars-starboard-leader-score"
+            aria-label={`${leader.detail} stars`}
+          >
             <span className="ai-wars-starboard-glyph" aria-hidden="true">
               ★
             </span>
@@ -75,7 +77,7 @@ export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
 
       <ol className="ai-wars-starboard-grid">
         {rest.map((entry) => {
-          const weight = Math.max(0.12, entry.stars / max)
+          const weight = Math.max(0.14, entry.stars / max)
           return (
             <li key={entry.repo}>
               <a
