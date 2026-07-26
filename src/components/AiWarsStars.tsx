@@ -18,8 +18,8 @@ function GitHubMark({ className }: { className?: string }) {
     <svg
       className={className}
       viewBox="0 0 16 16"
-      width="14"
-      height="14"
+      width="15"
+      height="15"
       aria-hidden="true"
       focusable="false"
     >
@@ -32,7 +32,8 @@ function GitHubMark({ className }: { className?: string }) {
 }
 
 /**
- * Compact open-source stars — GitHub mark + dense pills, not a giant tile board.
+ * Hand-curated open coding tools, ranked by live GitHub stars.
+ * Readable two-column table — not Arena rank chrome, not tiny pill soup.
  */
 export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
   if (!board.entries.length) return null
@@ -45,35 +46,27 @@ export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
       aria-labelledby="ai-wars-starboard-heading"
     >
       <header className="ai-wars-starboard-head">
-        <h2 id="ai-wars-starboard-heading">
-          <GitHubMark className="ai-wars-starboard-gh" />
-          Open-source stars
-        </h2>
-        <p>
-          Live GitHub stargazers for open coding agents
-          {fetched ? ` · ${fetched}` : ''}
-          {' · '}
-          <a
-            href="https://github.com/topics/ai-coding-agent"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            topic
-          </a>
-        </p>
+        <div>
+          <h2 id="ai-wars-starboard-heading">
+            <GitHubMark className="ai-wars-starboard-gh" />
+            Open-source stars
+          </h2>
+          <p>
+            Hand-curated coding agents · live stargazer counts
+            {fetched ? ` · ${fetched}` : ''}
+          </p>
+        </div>
       </header>
 
-      <ol className="ai-wars-starboard-pills">
+      <ol className="ai-wars-starboard-table">
         {board.entries.map((entry) => (
           <li key={entry.repo}>
-            <a
-              href={entry.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={entry.repo}
-            >
-              <span className="ai-wars-starboard-surface">{entry.surface}</span>
-              <span className="ai-wars-starboard-name">{entry.name}</span>
+            <a href={entry.url} target="_blank" rel="noopener noreferrer">
+              <span className="ai-wars-starboard-main">
+                <span className="ai-wars-starboard-name">{entry.name}</span>
+                <span className="ai-wars-starboard-surface">{entry.surface}</span>
+              </span>
+              <span className="ai-wars-starboard-repo">{entry.repo}</span>
               <span className="ai-wars-starboard-score">
                 <span aria-hidden="true">★</span>
                 {formatCompactCount(entry.stars)}
