@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { AiWarsBoard } from '../components/AiWarsBoard'
+import { fetchAiRaceData } from '../lib/ai-race'
+import { fetchAiWarsField, fieldByRegion } from '../lib/ai-wars-field'
+import { fetchAiWarsHistory } from '../lib/ai-wars-history'
+import { fetchCodingToolReddit } from '../lib/coding-tool-reddit'
+import { fetchPolymarketAiWars } from '../lib/polymarket'
+import { breadcrumbJsonLd } from '../lib/seo'
+
+export const prerender = false
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=60, stale-while-revalidate=300',
+)
+
+const [aiRace, history, codingTools, field, polymarket] = await Promise.all([
+  fetchAiRaceData(8),
+  fetchAiWarsHistory(),
+  fetchCodingToolReddit(),
+  fetchAiWarsField(),
+  fetchPolymarketAiWars(),
+])
+
+const usField = fieldByRegion(field.companies, 'us')
+const intlField = fieldByRegion(field.companies, 'international')
+---
+
+<BaseLayout
+  title="AI Wars"
+  description="Who’s winning in AI over time — Arena preference, OpenRouter volume and provider share, coding-agent subreddit weekly visitors, and desk analyses of the leading labs."
+  path="/ai-wars"
+  type="website"
+  jsonLd={[
+    breadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: 'AI Wars', path: '/ai-wars' },
+    ]),
+  ]}
+>
+  <main class="ai-wars-page">
+    <header class="ai-wars-masthead">
+      <p class="ai-wars-kicker">Permanent board</p>
+      <h1>AI Wars</h1>
+      <p class="ai-wars-dek">
+        Preference, API volume, and coding-agent heat — live boards plus history
+        you can scrub.
+      </p>
+    </header>
+
+    <AiWarsBoard
+      client:load
+      aiRace={aiRace}
+      history={history}
+      codingTools={codingTools}
+      field={field}
+      polymarket={polymarket}
+    />
+
+    {
+      field.companies.length ? (
+        <section
+          class="ai-wars-analyses"
+          aria-labelledby="ai-wars-analyses-heading"
+        >
+          <div class="ai-wars-section-label">
+            <h2 id="ai-wars-analyses-heading">Desk analyses</h2>
+            <p>
+              Full write-ups behind each company score — server-rendered for
+              readers and crawlers. Ranked by positioning + heat within region.
+            </p>
+          </div>
+
+          <div class="ai-wars-analyses-grid">
+            <div class="ai-wars-analyses-col">
+              <h3>United States</h3>
+              {
+                usField.map((company) => (
+                  <article
+                    class="ai-wars-analysis"
+                    id={`analysis-${company.id}`}
+                  >
+                    <header>
+                      <p class="ai-wars-analysis-kicker">
+                        #{company.rank} · {company.hq} · positioning{' '}
+                        {company.scores.positioning} · heat{' '}
+                        {company.scores.heat} ·{' '}
+                        {company.openWeight ? 'open weight' : 'closed weight'}
+                      </p>
+                      <h4>{company.name}</h4>
+                      <p class="ai-wars-analysis-blurb">{company.blurb}</p>
+                    </header>
+                    {company.analysis.map((para) => (
+                      <p>{para}</p>
+                    ))}
+                  </article>
+                ))
+              }
+            </div>
+
+            <div class="ai-wars-analyses-col">
+              <h3>International</h3>
+              {
+                intlField.map((company) => (
+                  <article
+                    class="ai-wars-analysis"
+                    id={`analysis-${company.id}`}
+                  >
+                    <header>
+                      <p class="ai-wars-analysis-kicker">
+                        #{company.rank} · {company.hq} · positioning{' '}
+                        {company.scores.positioning} · heat{' '}
+                        {company.scores.heat} ·{' '}
+                        {company.openWeight ? 'open weight' : 'closed weight'}
+                      </p>
+                      <h4>{company.name}</h4>
+                      <p class="ai-wars-analysis-blurb">{company.blurb}</p>
+                    </header>
+                    {company.analysis.map((para) => (
+                      <p>{para}</p>
+                    ))}
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+      ) : null
+    }
+
+    <p class="ai-wars-back">
+      <a href="/">← Back to homepage</a>
+    </p>
+  </main>
+</BaseLayout>

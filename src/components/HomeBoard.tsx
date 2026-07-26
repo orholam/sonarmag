@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { heroSrcSet, thumbSrcSet, unsplashUrl } from '../lib/images'
+import { barWidths, parseMetricValue } from '../lib/rank-bars'
 import { textBlocks, type Article, type HomepageData } from '../lib/types'
 
 /** Continuous card dek — one flowing block for CSS columns, never two clipped body paras. */
@@ -7,30 +8,6 @@ function cardCopy(article: Article): string | null {
   const excerpt = article.excerpt?.trim()
   if (excerpt) return excerpt
   return textBlocks(article.paragraphs)[0]?.trim() || null
-}
-
-function parseMetricValue(metric: string): number {
-  const match = metric
-    .trim()
-    .replace(/,/g, '')
-    .match(/^([\d.]+)\s*([KMBT])?/i)
-  if (!match) return 0
-  const n = Number(match[1])
-  if (!Number.isFinite(n)) return 0
-  const unit = (match[2] || '').toUpperCase()
-  const mult =
-    unit === 'T' ? 1e12 : unit === 'B' ? 1e9 : unit === 'M' ? 1e6 : unit === 'K' ? 1e3 : 1
-  return n * mult
-}
-
-/** Bar widths vs the board leader; soft floor so tight Elo spreads still read. */
-function barWidths(values: number[]): number[] {
-  const max = Math.max(...values, 0)
-  if (!(max > 0)) return values.map(() => 0)
-  const min = Math.min(...values)
-  const floor = min < max * 0.97 ? min * 0.992 : max * 0.88
-  const span = Math.max(max - floor, Number.EPSILON)
-  return values.map((v) => Math.max(8, Math.min(100, ((v - floor) / span) * 100)))
 }
 
 function IconPlay() {
@@ -105,36 +82,6 @@ function IconEye() {
         strokeWidth="1.6"
       />
       <circle cx="12" cy="12" r="2.5" fill="currentColor" />
-    </svg>
-  )
-}
-
-function IconDoc() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M7 4h7l4 4v12H7V4Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <path d="M14 4v4h4M9 12h6M9 16h6" fill="none" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  )
-}
-
-function IconUsers() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="9" cy="9" r="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="16.5" cy="10" r="2.3" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M3.5 18.5c.8-2.6 2.8-4 5.5-4s4.7 1.4 5.5 4M14 14.8c1.7-.3 3.2.4 4 2.2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
     </svg>
   )
 }
@@ -294,21 +241,18 @@ export function HomeBoard({
             </article>
           ) : null}
 
-          <aside className="card promo-card">
-            <h3>Tide of Thoughts</h3>
+          <a className="card promo-card" href="/ai-wars">
+            <h3>AI Wars</h3>
             <p>
-              Our journal&apos;s opinion columnists and editorial board offer a
-              range of viewpoints for €2.50.
+              Who&apos;s winning across preference, API volume, and coding-agent
+              heat — live boards and history.
             </p>
             <div className="promo-stats">
-              <span>
-                <IconDoc /> {data.promoStats.articles.toLocaleString()} articles
-              </span>
-              <span>
-                <IconUsers /> {data.promoStats.authors.toLocaleString()} authors
-              </span>
+              <span>Arena</span>
+              <span>OpenRouter</span>
+              <span>Coding agents</span>
             </div>
-          </aside>
+          </a>
 
           <div className="social-row">
             <a className="social social-tg" href="#telegram" aria-label="Telegram">
@@ -529,13 +473,7 @@ export function HomeBoard({
           <div className="rail-block">
             <div className="rail-heading">
               <h2 id="ai-race-heading">AI Race</h2>
-              <a
-                href="https://openrouter.ai/rankings"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Sources
-              </a>
+              <a href="/ai-wars">See All</a>
             </div>
             {aiRace.boards.length ? (
               <div className="ai-race" id="ai-race" aria-labelledby="ai-race-heading">
@@ -625,7 +563,7 @@ export function HomeBoard({
                       })}
                       srcSet={thumbSrcSet(article.thumbImage ?? article.heroImage)}
                       sizes="120px"
-                      alt=""
+                      alt={article.heroAlt || article.title}
                       width={240}
                       height={160}
                       decoding="async"

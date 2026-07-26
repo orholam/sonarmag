@@ -287,7 +287,12 @@ export async function fetchSitemapEntries(): Promise<
     supabase.from('pages').select('slug, updated_at').order('slug'),
   ])
 
-  const entries: Array<{ loc: string; lastmod?: string }> = [{ loc: '/' }]
+  const entries: Array<{ loc: string; lastmod?: string }> = [
+    { loc: '/' },
+    { loc: '/latest' },
+    { loc: '/popular' },
+    { loc: '/ai-wars' },
+  ]
 
   for (const article of articles ?? []) {
     entries.push({

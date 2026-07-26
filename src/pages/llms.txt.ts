@@ -45,8 +45,9 @@ ${sectionLines || `- [World](${SITE_URL}/world)
 ${articleLines || `- See ${SITE_URL}/ for the latest board.`}
 
 ## Optional
+- [AI Wars](${SITE_URL}/ai-wars) — model + coding-agent scoreboard, with full desk analyses of US and international labs
 - Contact: desk@sonarmag.com
-- Keywords: journalism, culture, markets, essays, independent media, Sonar Mag
+- Keywords: journalism, culture, markets, essays, independent media, Sonar Mag, AI
 `
 
   return new Response(body, {

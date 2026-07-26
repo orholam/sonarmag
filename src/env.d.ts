@@ -4,6 +4,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_SUPABASE_URL?: string
   readonly PUBLIC_SUPABASE_ANON_KEY?: string
   readonly PUBLIC_SITE_URL?: string
+  /** Publishable logo.dev token for company marks (safe in client image URLs). */
+  readonly PUBLIC_LOGO_DEV_TOKEN?: string
   readonly VITE_SUPABASE_URL?: string
   readonly VITE_SUPABASE_ANON_KEY?: string
   readonly VITE_SITE_URL?: string
