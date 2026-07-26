@@ -13,16 +13,31 @@ function formatFetchedAt(iso: string | null): string | null {
   })
 }
 
+function GitHubMark({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 16 16"
+      width="14"
+      height="14"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        fill="currentColor"
+        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+      />
+    </svg>
+  )
+}
+
 /**
- * Open-source coding tools by live GitHub stars — light magazine ledger,
- * not the Arena/OpenRouter rank-list chrome and not a dark-mode panel.
+ * Compact open-source stars — GitHub mark + dense pills, not a giant tile board.
  */
 export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
   if (!board.entries.length) return null
 
-  const [leader, ...rest] = board.entries
   const fetched = formatFetchedAt(board.asOf)
-  const max = leader?.stars ?? 1
 
   return (
     <section
@@ -30,76 +45,42 @@ export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
       aria-labelledby="ai-wars-starboard-heading"
     >
       <header className="ai-wars-starboard-head">
-        <div>
-          <p className="ai-wars-starboard-kicker">Open source</p>
-          <h2 id="ai-wars-starboard-heading">GitHub stars</h2>
-          <p>
-            Live stargazer counts for open coding agents and harnesses — repo
-            gravity, not Reddit heat.
-          </p>
-        </div>
-        <div className="ai-wars-starboard-meta">
-          <span>{board.entries.length} tools</span>
-          {fetched ? <span>Fetched {fetched}</span> : null}
+        <h2 id="ai-wars-starboard-heading">
+          <GitHubMark className="ai-wars-starboard-gh" />
+          Open-source stars
+        </h2>
+        <p>
+          Live GitHub stargazers for open coding agents
+          {fetched ? ` · ${fetched}` : ''}
+          {' · '}
           <a
             href="https://github.com/topics/ai-coding-agent"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Topic →
+            topic
           </a>
-        </div>
+        </p>
       </header>
 
-      {leader ? (
-        <a
-          className="ai-wars-starboard-leader"
-          href={leader.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <div className="ai-wars-starboard-leader-copy">
-            <span className="ai-wars-starboard-surface">{leader.surface}</span>
-            <span className="ai-wars-starboard-leader-name">{leader.name}</span>
-            <span className="ai-wars-starboard-repo">{leader.repo}</span>
-          </div>
-          <div
-            className="ai-wars-starboard-leader-score"
-            aria-label={`${leader.detail} stars`}
-          >
-            <span className="ai-wars-starboard-glyph" aria-hidden="true">
-              ★
-            </span>
-            <span className="ai-wars-starboard-count">{leader.detail}</span>
-          </div>
-        </a>
-      ) : null}
-
-      <ol className="ai-wars-starboard-grid">
-        {rest.map((entry) => {
-          const weight = Math.max(0.14, entry.stars / max)
-          return (
-            <li key={entry.repo}>
-              <a
-                href={entry.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  ['--star-weight' as string]: String(weight),
-                }}
-              >
-                <span className="ai-wars-starboard-surface">{entry.surface}</span>
-                <span className="ai-wars-starboard-name">{entry.name}</span>
-                <span className="ai-wars-starboard-score">
-                  <span aria-hidden="true">★</span>
-                  {formatCompactCount(entry.stars)}
-                </span>
-                <span className="ai-wars-starboard-repo">{entry.repo}</span>
-                <span className="ai-wars-starboard-track" aria-hidden="true" />
-              </a>
-            </li>
-          )
-        })}
+      <ol className="ai-wars-starboard-pills">
+        {board.entries.map((entry) => (
+          <li key={entry.repo}>
+            <a
+              href={entry.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={entry.repo}
+            >
+              <span className="ai-wars-starboard-surface">{entry.surface}</span>
+              <span className="ai-wars-starboard-name">{entry.name}</span>
+              <span className="ai-wars-starboard-score">
+                <span aria-hidden="true">★</span>
+                {formatCompactCount(entry.stars)}
+              </span>
+            </a>
+          </li>
+        ))}
       </ol>
     </section>
   )
