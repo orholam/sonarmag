@@ -1857,19 +1857,21 @@ button.print-btn:hover {
 }
 
 .ai-wars-starboard-groups {
-  display: grid;
-  gap: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
 .ai-wars-starboard-group {
-  display: grid;
-  grid-template-columns: 4.2rem minmax(0, 1fr);
-  gap: 0.45rem 0.65rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  min-width: 0;
 }
 
 .ai-wars-starboard-group-label {
-  margin: 0.28rem 0 0;
+  margin: 0;
   font-family: var(--font-sans);
   font-size: 0.62rem;
   font-weight: 700;
@@ -1885,6 +1887,7 @@ button.print-btn:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
+  min-width: 0;
 }
 
 .ai-wars-starboard-pills li {
@@ -1912,7 +1915,7 @@ button.print-btn:hover {
 .ai-wars-starboard-name {
   font-family: var(--font-sans);
   font-size: 0.8rem;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
@@ -2255,11 +2258,6 @@ a.ai-wars-rank-name:hover {
 @media (max-width: 640px) {
   .ai-wars-masthead h1 {
     font-size: 1.9rem;
-  }
-
-  .ai-wars-starboard-group {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
   }
 }
 

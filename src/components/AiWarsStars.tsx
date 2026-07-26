@@ -87,7 +87,7 @@ export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
       <div className="ai-wars-starboard-groups">
         {groups.map((group) => (
           <div key={group.surface} className="ai-wars-starboard-group">
-            <h3 className="ai-wars-starboard-group-label">{group.surface}</h3>
+            <p className="ai-wars-starboard-group-label">{group.surface}</p>
             <ul className="ai-wars-starboard-pills">
               {group.entries.map((entry) => (
                 <li key={entry.repo}>
