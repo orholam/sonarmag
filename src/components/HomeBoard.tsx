@@ -245,7 +245,7 @@ export function HomeBoard({
             <h3>AI Wars</h3>
             <p>
               Who&apos;s winning across preference, API volume, and coding-agent
-              heat — live boards and history.
+              heat. Live boards and history.
             </p>
             <div className="promo-stats">
               <span>Arena</span>
@@ -537,7 +537,7 @@ export function HomeBoard({
                   </section>
                 ))}
                 <p className="ai-race-footnote">
-                  Preference vs API volume — not the same race.
+                  Preference and API volume measure different races.
                 </p>
               </div>
             ) : (

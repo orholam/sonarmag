@@ -15,9 +15,15 @@ ${entries
     const loc = `${SITE_URL}${entry.loc === '/' ? '/' : entry.loc}`
     const lastmod = entry.lastmod || today
     const priority =
-      entry.loc === '/' ? '1.0' : entry.loc.startsWith('/article/') ? '0.8' : '0.5'
-    const changefreq =
       entry.loc === '/'
+        ? '1.0'
+        : entry.loc === '/ai-wars'
+          ? '0.9'
+          : entry.loc.startsWith('/article/')
+            ? '0.8'
+            : '0.5'
+    const changefreq =
+      entry.loc === '/' || entry.loc === '/ai-wars'
         ? 'daily'
         : entry.loc.startsWith('/article/')
           ? 'weekly'

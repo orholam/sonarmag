@@ -313,7 +313,7 @@ export function AiWarsBoard({
             <ChartBlock
               chart={codingChart}
               height={220}
-              footnote="Desk-tracked estimates — heat signal, not seats or revenue."
+              footnote="Desk-tracked estimates. Heat signal only, not seats or revenue."
             />
           </div>
         ) : null}
@@ -327,7 +327,7 @@ export function AiWarsBoard({
         <ChartBlock
           chart={history.openrouterVolume}
           height={292}
-          footnote="OpenRouter rankings-daily · prompt + completion tokens for the public top 50 each day."
+          footnote="OpenRouter rankings-daily. Prompt + completion tokens for the public top 50 each day."
         />
       ) : null}
 
@@ -351,7 +351,7 @@ export function AiWarsBoard({
       <section className="ai-wars-section" aria-labelledby="ai-wars-now-heading">
         <div className="ai-wars-section-label">
           <h2 id="ai-wars-now-heading">Live boards</h2>
-          <p>Preference vs API volume — not the same race.</p>
+          <p>Preference and API volume measure different races.</p>
         </div>
         <div className="ai-wars-now-grid">
           {arena ? (

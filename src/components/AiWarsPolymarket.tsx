@@ -98,7 +98,7 @@ export function AiWarsPolymarket({
             Prediction markets
           </h2>
           <p>
-            Longer-horizon AI odds from Polymarket — skips markets resolving
+            Longer-horizon AI odds from Polymarket. Skips markets resolving
             within ~10 days
             {polymarket.asOf
               ? ` · as of ${formatSnapshotDate(polymarket.asOf)}`

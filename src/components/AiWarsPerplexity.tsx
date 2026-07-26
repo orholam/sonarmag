@@ -9,7 +9,7 @@ const QUERIES: Array<{ label: string; q: string }> = [
   },
   {
     label: 'OpenCode vs Claude Code',
-    q: 'OpenCode vs Claude Code vs Codex vs Cursor — which coding agent is winning in 2026?',
+    q: 'OpenCode vs Claude Code vs Codex vs Cursor: which coding agent is winning in 2026?',
   },
   {
     label: 'Grok Build open source',
@@ -61,7 +61,7 @@ export function AiWarsPerplexity() {
             Research on Perplexity
           </h2>
           <p>
-            Board-shaped queries with cited answers — opens on Perplexity.
+            Board-shaped queries with cited answers. Opens on Perplexity.
           </p>
         </div>
         <a

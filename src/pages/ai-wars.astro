@@ -7,7 +7,13 @@ import { fetchAiWarsHistory } from '../lib/ai-wars-history'
 import { fetchCodingToolReddit } from '../lib/coding-tool-reddit'
 import { fetchCodingToolStars } from '../lib/coding-tool-stars'
 import { fetchPolymarketAiWars } from '../lib/polymarket'
-import { breadcrumbJsonLd } from '../lib/seo'
+import {
+  breadcrumbJsonLd,
+  faqJsonLd,
+  itemListJsonLd,
+  webPageJsonLd,
+} from '../lib/seo'
+import { absoluteUrl } from '../lib/site'
 
 export const prerender = false
 
@@ -28,11 +34,57 @@ const [aiRace, history, codingTools, codingStars, field, polymarket] =
 
 const usField = fieldByRegion(field.companies, 'us')
 const intlField = fieldByRegion(field.companies, 'international')
+
+const topUs = usField[0]?.name ?? null
+const topIntl = intlField[0]?.name ?? null
+const topAgent = codingTools.entries[0]?.name ?? null
+
+const pageTitleText = 'AI Wars: AI model & coding agent scoreboard'
+const pageDescription = [
+  'Live scoreboard for the AI race: desk ranks of US and international labs,',
+  'LMSYS Arena preference, OpenRouter API volume, coding-agent Reddit heat,',
+  'lab GitHub stars, and Polymarket odds.',
+  topUs && topIntl
+    ? ` Current desk leaders: ${topUs} (US) and ${topIntl} (international).`
+    : '',
+  topAgent ? ` Coding-agent heat leader: ${topAgent}.` : '',
+]
+  .filter(Boolean)
+  .join(' ')
+  .replace(/\s+/g, ' ')
+  .trim()
+
+const dateModified =
+  field.companies
+    .map((c) => c.updatedAt)
+    .filter((d): d is string => Boolean(d))
+    .sort()
+    .at(-1) ?? new Date().toISOString()
+
+const faqs = [
+  {
+    question: 'What is AI Wars?',
+    answer:
+      'AI Wars is Sonar Mag’s permanent scoreboard for the AI industry. It combines desk assessments of major labs with live signals from LMSYS Chatbot Arena, OpenRouter volume, coding-agent Reddit communities, open-source GitHub stars, and Polymarket prediction markets.',
+  },
+  {
+    question: 'How are the lab rankings decided?',
+    answer:
+      'US and international labs are scored by the desk on positioning (strategic seat) and heat (near-term momentum), each from 0 to 100. Rank within each region is derived from the sum of those scores, and each company has a full analysis below the board.',
+  },
+  {
+    question: 'How often does AI Wars update?',
+    answer:
+      'Arena, OpenRouter, Reddit visitor estimates, GitHub stars, and Polymarket odds refresh on page load with short CDN caching. Positioning and heat are a weekly desk pass: every company on the board gets its week’s news read carefully (product drops, funding, distribution deals, usage slips, open-weight releases), then scores, blurbs, and full analyses are updated where the footing actually moved. Each regional column shows when that side was last reviewed.',
+  },
+]
+
+const analysisPath = (id: string) => absoluteUrl(`/ai-wars#analysis-${id}`)
 ---
 
 <BaseLayout
-  title="AI Wars"
-  description="Who’s winning in AI over time — Arena preference, OpenRouter volume and provider share, coding-agent Reddit heat, open-source GitHub stars, and desk analyses of the leading labs."
+  title={pageTitleText}
+  description={pageDescription}
   path="/ai-wars"
   type="website"
   jsonLd={[
@@ -40,6 +92,43 @@ const intlField = fieldByRegion(field.companies, 'international')
       { name: 'Home', path: '/' },
       { name: 'AI Wars', path: '/ai-wars' },
     ]),
+    webPageJsonLd({
+      name: pageTitleText,
+      description: pageDescription,
+      path: '/ai-wars',
+      dateModified,
+    }),
+    ...(usField.length
+      ? [
+          itemListJsonLd({
+            name: 'AI Wars: United States labs',
+            description:
+              'Desk ranking of major US AI companies by positioning and heat.',
+            path: '/ai-wars',
+            items: usField.map((c) => ({
+              name: c.name,
+              position: c.rank,
+              url: analysisPath(c.id),
+            })),
+          }),
+        ]
+      : []),
+    ...(intlField.length
+      ? [
+          itemListJsonLd({
+            name: 'AI Wars: International labs',
+            description:
+              'Desk ranking of major international AI companies by positioning and heat.',
+            path: '/ai-wars',
+            items: intlField.map((c) => ({
+              name: c.name,
+              position: c.rank,
+              url: analysisPath(c.id),
+            })),
+          }),
+        ]
+      : []),
+    faqJsonLd(faqs),
   ]}
 >
   <main class="ai-wars-page">
@@ -47,8 +136,14 @@ const intlField = fieldByRegion(field.companies, 'international')
       <p class="ai-wars-kicker">Permanent board</p>
       <h1>AI Wars</h1>
       <p class="ai-wars-dek">
-        Preference, API volume, coding-agent heat, and open-source stars — live
-        boards plus history you can scrub.
+        Who’s ahead in foundation models and coding agents, tracked across
+        several signals that often diverge. Desk ranks for US and international
+        labs sit above Arena preference, OpenRouter volume, Reddit heat for
+        coding tools, lab GitHub stars, and longer-horizon Polymarket odds.
+      </p>
+      <p class="ai-wars-dek ai-wars-dek-secondary">
+        Scroll the charts for history. Open a lab card for the full analysis, or
+        jump to the write-ups collected at the bottom of the page.
       </p>
     </header>
 
@@ -71,10 +166,47 @@ const intlField = fieldByRegion(field.companies, 'international')
           <div class="ai-wars-section-label">
             <h2 id="ai-wars-analyses-heading">Desk analyses</h2>
             <p>
-              Full write-ups behind each company score — server-rendered for
-              readers and crawlers. Ranked by positioning + heat within region.
+              Full write-ups behind each company score, kept on the page for
+              easy reading. Ranked by positioning + heat within region.
             </p>
           </div>
+
+          <nav class="ai-wars-toc" aria-label="Desk analyses">
+            <div class="ai-wars-toc-col">
+              <p class="ai-wars-toc-label">United States</p>
+              <ol>
+                {
+                  usField.map((company) => (
+                    <li>
+                      <a href={`#analysis-${company.id}`}>
+                        <span class="ai-wars-toc-rank">
+                          {String(company.rank).padStart(2, '0')}
+                        </span>
+                        {company.name}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ol>
+            </div>
+            <div class="ai-wars-toc-col">
+              <p class="ai-wars-toc-label">International</p>
+              <ol>
+                {
+                  intlField.map((company) => (
+                    <li>
+                      <a href={`#analysis-${company.id}`}>
+                        <span class="ai-wars-toc-rank">
+                          {String(company.rank).padStart(2, '0')}
+                        </span>
+                        {company.name}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ol>
+            </div>
+          </nav>
 
           <div class="ai-wars-analyses-grid">
             <div class="ai-wars-analyses-col">
@@ -132,6 +264,23 @@ const intlField = fieldByRegion(field.companies, 'international')
         </section>
       ) : null
     }
+
+    <section class="ai-wars-faq" aria-labelledby="ai-wars-faq-heading">
+      <div class="ai-wars-section-label">
+        <h2 id="ai-wars-faq-heading">About this board</h2>
+        <p>What you’re looking at, and how often it moves.</p>
+      </div>
+      <dl class="ai-wars-faq-list">
+        {
+          faqs.map((faq) => (
+            <div class="ai-wars-faq-item">
+              <dt>{faq.question}</dt>
+              <dd>{faq.answer}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
 
     <p class="ai-wars-back">
       <a href="/">← Back to homepage</a>

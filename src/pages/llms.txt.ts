@@ -32,6 +32,7 @@ Sonar Mag is an independent online publication. We publish essays, reporting, an
 
 ## Start here
 - [Homepage](${SITE_URL}/)
+- [AI Wars](${SITE_URL}/ai-wars) - live AI lab scoreboard (Arena, OpenRouter, coding agents, GitHub stars, Polymarket) plus desk analyses
 - [About](${SITE_URL}/about)
 - [Subscribe / newsletter](${SITE_URL}/#subscribe)
 - [Sitemap](${SITE_URL}/sitemap.xml)
@@ -45,9 +46,8 @@ ${sectionLines || `- [World](${SITE_URL}/world)
 ${articleLines || `- See ${SITE_URL}/ for the latest board.`}
 
 ## Optional
-- [AI Wars](${SITE_URL}/ai-wars) — model + coding-agent scoreboard (Reddit heat, open-source GitHub stars), with full desk analyses of US and international labs
 - Contact: desk@sonarmag.com
-- Keywords: journalism, culture, markets, essays, independent media, Sonar Mag, AI
+- Keywords: journalism, culture, markets, essays, independent media, Sonar Mag, AI, AI Wars
 `
 
   return new Response(body, {

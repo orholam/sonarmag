@@ -1060,12 +1060,18 @@ button.print-btn:hover {
 
 .ai-wars-dek {
   margin: 0;
-  max-width: 40rem;
+  max-width: 42rem;
   font-family: var(--font-sans);
   font-size: 0.95rem;
   line-height: 1.5;
   color: #5a5a5a;
   font-weight: 400;
+}
+
+.ai-wars-dek-secondary {
+  margin-top: 0.55rem;
+  font-size: 0.88rem;
+  color: #6a6a6a;
 }
 
 .ai-wars {
@@ -1861,10 +1867,15 @@ button.print-btn:hover {
 /* —— Lab GitHub repos (compact) —— */
 .ai-wars-starboard {
   margin-top: 1rem;
-  padding: 0.75rem 0.85rem 0.7rem;
+  padding: 0;
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(23, 23, 23, 0.07);
   border-radius: 10px;
+  overflow: hidden;
+}
+
+.ai-wars-starboard-body {
+  padding: 0.7rem 0.85rem 0.7rem;
 }
 
 .ai-wars-starboard-head {
@@ -1895,6 +1906,66 @@ button.print-btn:hover {
   font-size: 0.68rem;
   line-height: 1.35;
   color: var(--muted);
+}
+
+.ai-wars-starboard-share {
+  display: flex;
+  width: 100%;
+  height: 5px;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0;
+  background: rgba(23, 23, 23, 0.06);
+  cursor: default;
+  transition: height 0.2s ease;
+}
+
+.ai-wars-starboard:hover .ai-wars-starboard-share,
+.ai-wars-starboard:focus-within .ai-wars-starboard-share {
+  height: 1.45rem;
+}
+
+.ai-wars-starboard-share-seg {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.12s ease;
+}
+
+.ai-wars-starboard-share-seg + .ai-wars-starboard-share-seg {
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.35);
+}
+
+.ai-wars-starboard-share-seg:hover {
+  filter: brightness(1.12);
+  z-index: 1;
+}
+
+.ai-wars-starboard-share-label {
+  padding: 0 0.3rem;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  pointer-events: none;
+}
+
+.ai-wars-starboard:hover .ai-wars-starboard-share-label,
+.ai-wars-starboard:focus-within .ai-wars-starboard-share-label {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .ai-wars-starboard-list {
@@ -2311,6 +2382,57 @@ a.ai-wars-rank-name:hover {
   border-top: 1px solid rgba(23, 23, 23, 0.08);
 }
 
+.ai-wars-toc {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  padding: 0.75rem 0.85rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(23, 23, 23, 0.07);
+  border-radius: 10px;
+}
+
+.ai-wars-toc-label {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ai-wars-toc ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.22rem;
+}
+
+.ai-wars-toc a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 550;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.ai-wars-toc a:hover {
+  color: var(--red);
+}
+
+.ai-wars-toc-rank {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.68rem;
+  font-weight: 650;
+  color: var(--muted);
+}
+
 .ai-wars-analyses-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2375,6 +2497,44 @@ a.ai-wars-rank-name:hover {
   margin-bottom: 0;
 }
 
+.ai-wars-faq {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(23, 23, 23, 0.08);
+}
+
+.ai-wars-faq-list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.ai-wars-faq-item {
+  margin: 0;
+  padding: 0.85rem 0.95rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(23, 23, 23, 0.07);
+  border-radius: 10px;
+}
+
+.ai-wars-faq-item dt {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.ai-wars-faq-item dd {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: #5a5a5a;
+}
+
 .ai-wars-back a:hover {
   color: var(--red);
 }
@@ -2390,6 +2550,7 @@ a.ai-wars-rank-name:hover {
   .ai-wars-now-grid,
   .ai-wars-field-grid,
   .ai-wars-analyses-grid,
+  .ai-wars-toc,
   .ai-wars-poly-grid {
     grid-template-columns: 1fr;
   }

@@ -191,8 +191,8 @@ function CompanyDialog({
             <p className="ai-wars-dialog-blurb">{company.blurb}</p>
             <p className="ai-wars-dialog-ow">
               {company.openWeight
-                ? 'Open weight — primary / frontier models are self-hostable or open-weight.'
-                : 'Closed weight — primary models are closed (side experiments don’t count).'}
+                ? 'Open weight: primary / frontier models are self-hostable or open-weight.'
+                : 'Closed weight: primary models are closed (side experiments don’t count).'}
             </p>
           </div>
         </header>
@@ -245,7 +245,7 @@ function RegionColumn({
                 <time dateTime={updatedAt ?? undefined}>{updatedLabel}</time>
               </>
             ) : (
-              <em>Updated —</em>
+              <em>Updated</em>
             )}
           </span>
         </div>
@@ -255,7 +255,7 @@ function RegionColumn({
       <div className="ai-wars-field-chart">
         <div className="ai-wars-field-chart-label">
           <span>Positioning over time</span>
-          <span>0–100</span>
+          <span>0 to 100</span>
         </div>
         <SeriesLineChart chart={chart} height={200} />
       </div>
@@ -292,11 +292,11 @@ export function AiWarsField({ field }: { field: AiWarsFieldBoard }) {
       <div className="ai-wars-section-label">
         <h2 id="ai-wars-field-heading">Current state</h2>
         <p>
-          Desk ranking of who holds the field right now — split by US and
-          international labs. Order is positioning + heat (0–100). Green dot =
-          primary models are open-weight / self-hostable; red = primary models
-          closed (side experiments don’t count). Click a company for the full
-          analysis (also below in Desk analyses).
+          Desk ranking of who holds the field right now, split by US and
+          international labs. Order is positioning + heat (0 to 100). Green dot
+          means primary models are open-weight / self-hostable; red means
+          primary models are closed (side experiments don’t count). Click a
+          company for the full analysis, also listed below under Desk analyses.
         </p>
       </div>
 

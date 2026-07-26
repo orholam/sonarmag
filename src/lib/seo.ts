@@ -97,6 +97,63 @@ export function breadcrumbJsonLd(
   }
 }
 
+/** Permanent / data board page (AI Wars, etc.). */
+export function webPageJsonLd(opts: {
+  name: string
+  description: string
+  path: string
+  dateModified?: string | null
+}) {
+  const url = absoluteUrl(opts.path)
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: opts.name,
+    description: opts.description,
+    url,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    about: {
+      '@type': 'Thing',
+      name: 'Artificial intelligence industry competition',
+    },
+    ...(opts.dateModified
+      ? { dateModified: opts.dateModified }
+      : {}),
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+  }
+}
+
+/** Ranked named entities (labs, models, tools) for a board section. */
+export function itemListJsonLd(opts: {
+  name: string
+  description?: string
+  path: string
+  items: Array<{ name: string; url?: string; position: number }>
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: opts.name,
+    ...(opts.description ? { description: opts.description } : {}),
+    url: absoluteUrl(opts.path),
+    numberOfItems: opts.items.length,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    itemListElement: opts.items.map((item) => ({
+      '@type': 'ListItem',
+      position: item.position,
+      name: item.name,
+      ...(item.url ? { url: item.url } : {}),
+    })),
+  }
+}
+
 /** Map display category names to existing section routes. */
 export function categoryPath(category: string): string | null {
   const map: Record<string, string> = {
