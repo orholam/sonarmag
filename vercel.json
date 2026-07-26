@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/sync-popular",
-      "schedule": "15 * * * *"
+      "schedule": "15 12 * * *"
     }
   ]
 }

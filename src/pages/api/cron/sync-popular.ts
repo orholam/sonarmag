@@ -18,7 +18,9 @@ function cronAuthorized(request: Request): boolean {
 
 /**
  * GET /api/cron/sync-popular
- * Hourly Vercel Cron (and manual) refresh of Popular ranks from Web Analytics.
+ * Daily Vercel Cron (and manual) refresh of Popular ranks from Web Analytics.
+ * Schedule is once/day because Hobby only allows daily crons; homepage also
+ * refreshes Popular lazily when the snapshot is stale.
  *
  * Auth: Authorization: Bearer <CRON_SECRET> when CRON_SECRET is set.
  */
