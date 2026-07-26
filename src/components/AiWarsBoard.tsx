@@ -6,6 +6,7 @@ import type { CodingToolStarsBoard } from '../lib/coding-tool-stars'
 import type { PolymarketAiWars } from '../lib/polymarket'
 import { barWidths, parseMetricValue } from '../lib/rank-bars'
 import { AiWarsField } from './AiWarsField'
+import { AiWarsPerplexity } from './AiWarsPerplexity'
 import { AiWarsPolymarket } from './AiWarsPolymarket'
 import { AiWarsStars } from './AiWarsStars'
 import { SeriesLineChart } from './SeriesLineChart'
@@ -319,6 +320,8 @@ export function AiWarsBoard({
 
         <AiWarsStars board={codingStars} />
       </section>
+
+      <AiWarsPerplexity />
 
       <AiWarsPolymarket polymarket={polymarket} />
 
