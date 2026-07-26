@@ -7,6 +7,7 @@ import type { PolymarketAiWars } from '../lib/polymarket'
 import { barWidths, parseMetricValue } from '../lib/rank-bars'
 import { AiWarsField } from './AiWarsField'
 import { AiWarsPolymarket } from './AiWarsPolymarket'
+import { AiWarsStars } from './AiWarsStars'
 import { SeriesLineChart } from './SeriesLineChart'
 
 type Props = {
@@ -289,8 +290,8 @@ export function AiWarsBoard({
         <div className="ai-wars-section-label">
           <h2 id="ai-wars-agents-heading">Coding agents</h2>
           <p>
-            Subreddit weekly visitors as a community-heat proxy, plus live
-            GitHub stars for open coding tools.
+            Subreddit weekly visitors as a community-heat proxy, tracked from
+            July 2026.
           </p>
         </div>
 
@@ -316,17 +317,7 @@ export function AiWarsBoard({
           </div>
         ) : null}
 
-        {codingStars.entries.length ? (
-          <div className="ai-wars-stars">
-            <RankList
-              title="Open-source GitHub stars"
-              subtitle="Live stargazer counts for open coding agents and CLIs — not the same race as Reddit heat."
-              sourceUrl="https://github.com/topics/ai-coding-agent"
-              entries={codingStars.entries}
-              limit={12}
-            />
-          </div>
-        ) : null}
+        <AiWarsStars board={codingStars} />
       </section>
 
       <AiWarsPolymarket polymarket={polymarket} />

@@ -1,6 +1,6 @@
 /**
  * Live GitHub stargazer counts for open coding agents/tools.
- * Curated repo list + public GitHub API — not stored in Supabase.
+ * Curated repo list fetched at request time — not stored in Supabase.
  */
 
 import { formatCompactCount } from './rank-bars'
@@ -13,6 +13,7 @@ export type CodingToolStarsEntry = {
   stars: number
   repo: string
   url: string
+  surface: string
 }
 
 export type CodingToolStarsBoard = {
@@ -25,22 +26,48 @@ type CuratedRepo = {
   name: string
   owner: string
   repo: string
+  /** Where the tool mainly lives — shown as a small chip. */
+  surface: 'TUI' | 'CLI' | 'IDE' | 'Editor' | 'Web' | 'Agent' | 'Router' | 'Neovim'
 }
 
-/** Open coding agents / CLIs — stars fetched at request time. */
+/**
+ * Open coding agents / CLIs / IDE agents — competitors in the open harness race.
+ * Stars fetched live (ungh + optional GitHub token).
+ */
 const REPOS: CuratedRepo[] = [
-  { id: 'opencode', name: 'OpenCode', owner: 'anomalyco', repo: 'opencode' },
-  { id: 'codex', name: 'Codex', owner: 'openai', repo: 'codex' },
-  { id: 'gemini-cli', name: 'Gemini CLI', owner: 'google-gemini', repo: 'gemini-cli' },
-  { id: 'openhands', name: 'OpenHands', owner: 'OpenHands', repo: 'OpenHands' },
-  { id: 'cline', name: 'Cline', owner: 'cline', repo: 'cline' },
-  { id: 'goose', name: 'Goose', owner: 'aaif-goose', repo: 'goose' },
-  { id: 'aider', name: 'Aider', owner: 'Aider-AI', repo: 'aider' },
-  { id: 'continue', name: 'Continue', owner: 'continuedev', repo: 'continue' },
-  { id: 'void', name: 'Void', owner: 'voideditor', repo: 'void' },
-  { id: 'kilocode', name: 'Kilo Code', owner: 'Kilo-Org', repo: 'kilocode' },
-  { id: 'roo-code', name: 'Roo Code', owner: 'RooCodeInc', repo: 'Roo-Code' },
-  { id: 'grok-build', name: 'Grok Build', owner: 'xai-org', repo: 'grok-build' },
+  { id: 'opencode', name: 'OpenCode', owner: 'anomalyco', repo: 'opencode', surface: 'TUI' },
+  { id: 'gemini-cli', name: 'Gemini CLI', owner: 'google-gemini', repo: 'gemini-cli', surface: 'CLI' },
+  { id: 'codex', name: 'Codex', owner: 'openai', repo: 'codex', surface: 'CLI' },
+  { id: 'openhands', name: 'OpenHands', owner: 'OpenHands', repo: 'OpenHands', surface: 'Agent' },
+  {
+    id: 'open-interpreter',
+    name: 'Open Interpreter',
+    owner: 'openinterpreter',
+    repo: 'openinterpreter',
+    surface: 'TUI',
+  },
+  { id: 'cline', name: 'Cline', owner: 'cline', repo: 'cline', surface: 'IDE' },
+  { id: 'goose', name: 'Goose', owner: 'aaif-goose', repo: 'goose', surface: 'CLI' },
+  { id: 'aider', name: 'Aider', owner: 'Aider-AI', repo: 'aider', surface: 'CLI' },
+  {
+    id: 'claude-code-router',
+    name: 'Claude Code Router',
+    owner: 'musistudio',
+    repo: 'claude-code-router',
+    surface: 'Router',
+  },
+  { id: 'continue', name: 'Continue', owner: 'continuedev', repo: 'continue', surface: 'IDE' },
+  { id: 'tabby', name: 'Tabby', owner: 'TabbyML', repo: 'tabby', surface: 'IDE' },
+  { id: 'void', name: 'Void', owner: 'voideditor', repo: 'void', surface: 'Editor' },
+  { id: 'crush', name: 'Crush', owner: 'charmbracelet', repo: 'crush', surface: 'TUI' },
+  { id: 'kilocode', name: 'Kilo Code', owner: 'Kilo-Org', repo: 'kilocode', surface: 'IDE' },
+  { id: 'qwen-code', name: 'Qwen Code', owner: 'QwenLM', repo: 'qwen-code', surface: 'TUI' },
+  { id: 'roo-code', name: 'Roo Code', owner: 'RooCodeInc', repo: 'Roo-Code', surface: 'IDE' },
+  { id: 'grok-build', name: 'Grok Build', owner: 'xai-org', repo: 'grok-build', surface: 'TUI' },
+  { id: 'dyad', name: 'Dyad', owner: 'dyad-sh', repo: 'dyad', surface: 'Editor' },
+  { id: 'swe-agent', name: 'SWE-agent', owner: 'SWE-agent', repo: 'SWE-agent', surface: 'Agent' },
+  { id: 'bolt-diy', name: 'Bolt.diy', owner: 'stackblitz-labs', repo: 'bolt.diy', surface: 'Web' },
+  { id: 'avante', name: 'Avante', owner: 'yetone', repo: 'avante.nvim', surface: 'Neovim' },
 ]
 
 type GhRepo = {
@@ -66,8 +93,41 @@ function githubHeaders(): HeadersInit {
   return headers
 }
 
+/** Cached unofficial mirror — avoids burning unauthenticated GitHub rate limits. */
+async function fetchViaUngh(): Promise<Map<string, GhRepo>> {
+  const out = new Map<string, GhRepo>()
+  const results = await Promise.allSettled(
+    REPOS.map(async (r) => {
+      const res = await fetch(`https://ungh.cc/repos/${r.owner}/${r.repo}`, {
+        headers: { Accept: 'application/json', 'User-Agent': 'sonarmag-ai-wars' },
+        signal: AbortSignal.timeout(10_000),
+      })
+      if (!res.ok) throw new Error(`${r.id} ${res.status}`)
+      const data = (await res.json()) as {
+        repo?: { stars?: number; repo?: string }
+      }
+      const stars = data.repo?.stars
+      if (stars == null) throw new Error(`${r.id} no stars`)
+      const nameWithOwner = data.repo?.repo ?? `${r.owner}/${r.repo}`
+      return {
+        id: r.id,
+        repo: {
+          stargazerCount: stars,
+          nameWithOwner,
+          url: `https://github.com/${nameWithOwner}`,
+        } satisfies GhRepo,
+      }
+    }),
+  )
+
+  for (const result of results) {
+    if (result.status !== 'fulfilled') continue
+    out.set(result.value.id, result.value.repo)
+  }
+  return out
+}
+
 async function fetchViaGraphql(): Promise<Map<string, GhRepo> | null> {
-  // GraphQL requires auth; skip when no token.
   if (!githubToken()) return null
 
   const fields = REPOS.map(
@@ -107,49 +167,12 @@ async function fetchViaGraphql(): Promise<Map<string, GhRepo> | null> {
   return out.size ? out : null
 }
 
-async function fetchViaRest(): Promise<Map<string, GhRepo>> {
-  const out = new Map<string, GhRepo>()
-  const results = await Promise.allSettled(
-    REPOS.map(async (r) => {
-      const res = await fetch(
-        `https://api.github.com/repos/${r.owner}/${r.repo}`,
-        {
-          headers: githubHeaders(),
-          signal: AbortSignal.timeout(10_000),
-          redirect: 'follow',
-        },
-      )
-      if (!res.ok) throw new Error(`${r.id} ${res.status}`)
-      const data = (await res.json()) as {
-        stargazers_count?: number
-        full_name?: string
-        html_url?: string
-      }
-      if (data.stargazers_count == null) throw new Error(`${r.id} no stars`)
-      return {
-        id: r.id,
-        repo: {
-          stargazerCount: data.stargazers_count,
-          nameWithOwner: data.full_name ?? `${r.owner}/${r.repo}`,
-          url: data.html_url ?? `https://github.com/${r.owner}/${r.repo}`,
-        } satisfies GhRepo,
-      }
-    }),
-  )
-
-  for (const result of results) {
-    if (result.status !== 'fulfilled') continue
-    out.set(result.value.id, result.value.repo)
-  }
-  return out
-}
-
 /**
- * Ranked open coding-tool GitHub stars. Empty board if GitHub is unreachable.
+ * Ranked open coding-tool GitHub stars. Empty board if remotes are unreachable.
  */
 export async function fetchCodingToolStars(): Promise<CodingToolStarsBoard> {
   try {
-    const stars = (await fetchViaGraphql()) ?? (await fetchViaRest())
+    const stars = (await fetchViaGraphql()) ?? (await fetchViaUngh())
     if (!stars.size) return { asOf: null, entries: [] }
 
     const ranked = REPOS.map((r) => {
@@ -157,6 +180,7 @@ export async function fetchCodingToolStars(): Promise<CodingToolStarsBoard> {
       if (!row) return null
       return {
         name: r.name,
+        surface: r.surface,
         stars: row.stargazerCount,
         repo: row.nameWithOwner,
         url: row.url,
@@ -175,6 +199,7 @@ export async function fetchCodingToolStars(): Promise<CodingToolStarsBoard> {
         stars: r.stars,
         repo: r.repo,
         url: r.url,
+        surface: r.surface,
       })),
     }
   } catch (err) {
