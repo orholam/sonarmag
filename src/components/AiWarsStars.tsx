@@ -1,4 +1,5 @@
-import type { CodingToolStarsBoard } from '../lib/coding-tool-stars'
+import type { CodingToolStarsBoard, CodingToolStarsEntry } from '../lib/coding-tool-stars'
+import { STAR_SURFACE_ORDER } from '../lib/coding-tool-stars'
 import { formatCompactCount } from '../lib/rank-bars'
 
 function formatFetchedAt(iso: string | null): string | null {
@@ -18,8 +19,8 @@ function GitHubMark({ className }: { className?: string }) {
     <svg
       className={className}
       viewBox="0 0 16 16"
-      width="15"
-      height="15"
+      width="14"
+      height="14"
       aria-hidden="true"
       focusable="false"
     >
@@ -31,14 +32,41 @@ function GitHubMark({ className }: { className?: string }) {
   )
 }
 
+function groupBySurface(entries: CodingToolStarsEntry[]) {
+  const bySurface = new Map<string, CodingToolStarsEntry[]>()
+  for (const entry of entries) {
+    const list = bySurface.get(entry.surface) ?? []
+    list.push(entry)
+    bySurface.set(entry.surface, list)
+  }
+
+  const ordered: Array<{ surface: string; entries: CodingToolStarsEntry[] }> = []
+  for (const surface of STAR_SURFACE_ORDER) {
+    const group = bySurface.get(surface)
+    if (!group?.length) continue
+    ordered.push({
+      surface,
+      entries: [...group].sort((a, b) => b.stars - a.stars),
+    })
+    bySurface.delete(surface)
+  }
+  for (const [surface, group] of bySurface) {
+    ordered.push({
+      surface,
+      entries: [...group].sort((a, b) => b.stars - a.stars),
+    })
+  }
+  return ordered
+}
+
 /**
- * Hand-curated open coding tools, ranked by live GitHub stars.
- * Readable two-column table — not Arena rank chrome, not tiny pill soup.
+ * Hand-curated open coding tools as compact pills, grouped by surface type.
  */
 export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
   if (!board.entries.length) return null
 
   const fetched = formatFetchedAt(board.asOf)
+  const groups = groupBySurface(board.entries)
 
   return (
     <section
@@ -46,35 +74,41 @@ export function AiWarsStars({ board }: { board: CodingToolStarsBoard }) {
       aria-labelledby="ai-wars-starboard-heading"
     >
       <header className="ai-wars-starboard-head">
-        <div>
-          <h2 id="ai-wars-starboard-heading">
-            <GitHubMark className="ai-wars-starboard-gh" />
-            Open-source stars
-          </h2>
-          <p>
-            Hand-curated coding agents · live stargazer counts
-            {fetched ? ` · ${fetched}` : ''}
-          </p>
-        </div>
+        <h2 id="ai-wars-starboard-heading">
+          <GitHubMark className="ai-wars-starboard-gh" />
+          Open-source stars
+        </h2>
+        <p>
+          Hand-curated · live stargazers
+          {fetched ? ` · ${fetched}` : ''}
+        </p>
       </header>
 
-      <ol className="ai-wars-starboard-table">
-        {board.entries.map((entry) => (
-          <li key={entry.repo}>
-            <a href={entry.url} target="_blank" rel="noopener noreferrer">
-              <span className="ai-wars-starboard-main">
-                <span className="ai-wars-starboard-name">{entry.name}</span>
-                <span className="ai-wars-starboard-surface">{entry.surface}</span>
-              </span>
-              <span className="ai-wars-starboard-repo">{entry.repo}</span>
-              <span className="ai-wars-starboard-score">
-                <span aria-hidden="true">★</span>
-                {formatCompactCount(entry.stars)}
-              </span>
-            </a>
-          </li>
+      <div className="ai-wars-starboard-groups">
+        {groups.map((group) => (
+          <div key={group.surface} className="ai-wars-starboard-group">
+            <h3 className="ai-wars-starboard-group-label">{group.surface}</h3>
+            <ul className="ai-wars-starboard-pills">
+              {group.entries.map((entry) => (
+                <li key={entry.repo}>
+                  <a
+                    href={entry.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={entry.repo}
+                  >
+                    <span className="ai-wars-starboard-name">{entry.name}</span>
+                    <span className="ai-wars-starboard-score">
+                      <span aria-hidden="true">★</span>
+                      {formatCompactCount(entry.stars)}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ol>
+      </div>
     </section>
   )
 }

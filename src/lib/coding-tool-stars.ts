@@ -64,11 +64,31 @@ const REPOS: CuratedRepo[] = [
   { id: 'qwen-code', name: 'Qwen Code', owner: 'QwenLM', repo: 'qwen-code', surface: 'TUI' },
   { id: 'roo-code', name: 'Roo Code', owner: 'RooCodeInc', repo: 'Roo-Code', surface: 'IDE' },
   { id: 'grok-build', name: 'Grok Build', owner: 'xai-org', repo: 'grok-build', surface: 'TUI' },
+  { id: 'buzz', name: 'Buzz', owner: 'block', repo: 'buzz', surface: 'Agent' },
   { id: 'dyad', name: 'Dyad', owner: 'dyad-sh', repo: 'dyad', surface: 'Editor' },
   { id: 'swe-agent', name: 'SWE-agent', owner: 'SWE-agent', repo: 'SWE-agent', surface: 'Agent' },
   { id: 'bolt-diy', name: 'Bolt.diy', owner: 'stackblitz-labs', repo: 'bolt.diy', surface: 'Web' },
   { id: 'avante', name: 'Avante', owner: 'yetone', repo: 'avante.nvim', surface: 'Neovim' },
+  {
+    id: 'freebuff',
+    name: 'Freebuff',
+    owner: 'CodebuffAI',
+    repo: 'codebuff',
+    surface: 'CLI',
+  },
 ]
+
+/** Display order for surface groups on the starboard. */
+export const STAR_SURFACE_ORDER = [
+  'TUI',
+  'CLI',
+  'IDE',
+  'Editor',
+  'Agent',
+  'Web',
+  'Router',
+  'Neovim',
+] as const
 
 type GhRepo = {
   stargazerCount: number

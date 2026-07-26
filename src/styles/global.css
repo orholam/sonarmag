@@ -1812,28 +1812,31 @@ button.print-btn:hover {
   margin-top: 0.85rem;
 }
 
-/* —— Open-source stars: compact readable table —— */
+/* —— Open-source stars: pills grouped by surface —— */
 .ai-wars-starboard {
   margin-top: 1rem;
-  padding: 0.85rem 0.9rem 0.7rem;
+  padding: 0.7rem 0.8rem 0.75rem;
   background: var(--surface);
   border: 1px solid rgba(23, 23, 23, 0.08);
   border-radius: 8px;
 }
 
 .ai-wars-starboard-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.85rem;
   margin-bottom: 0.55rem;
-  padding-bottom: 0.55rem;
-  border-bottom: 1px solid rgba(23, 23, 23, 0.08);
 }
 
 .ai-wars-starboard-head h2 {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  margin: 0 0 0.2rem;
+  gap: 0.35rem;
+  margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -1848,101 +1851,85 @@ button.print-btn:hover {
 .ai-wars-starboard-head p {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.78rem;
-  line-height: 1.4;
+  font-size: 0.72rem;
+  line-height: 1.35;
   color: var(--muted);
 }
 
-.ai-wars-starboard-table {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.ai-wars-starboard-groups {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 1.25rem;
+  gap: 0.45rem;
 }
 
-.ai-wars-starboard-table li {
-  margin: 0;
-  border-bottom: 1px solid rgba(23, 23, 23, 0.06);
-}
-
-.ai-wars-starboard-table a {
+.ai-wars-starboard-group {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas:
-    'main score'
-    'repo score';
-  column-gap: 0.75rem;
-  row-gap: 0.12rem;
-  align-items: center;
-  padding: 0.42rem 0.1rem;
-  color: inherit;
-  text-decoration: none;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  gap: 0.45rem 0.65rem;
+  align-items: start;
 }
 
-.ai-wars-starboard-table a:hover .ai-wars-starboard-name {
-  color: var(--red);
-}
-
-.ai-wars-starboard-main {
-  grid-area: main;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-width: 0;
-}
-
-.ai-wars-starboard-name {
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ai-wars-starboard-surface {
-  flex-shrink: 0;
-  padding: 0.1rem 0.38rem;
-  border-radius: 999px;
-  background: rgba(23, 23, 23, 0.06);
+.ai-wars-starboard-group-label {
+  margin: 0.28rem 0 0;
   font-family: var(--font-sans);
   font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
-.ai-wars-starboard-repo {
-  grid-area: repo;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.68rem;
-  color: var(--muted);
+.ai-wars-starboard-pills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.ai-wars-starboard-pills li {
+  margin: 0;
+}
+
+.ai-wars-starboard-pills a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.55rem;
+  background: var(--surface-soft);
+  border: 1px solid rgba(23, 23, 23, 0.08);
+  border-radius: 999px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.ai-wars-starboard-pills a:hover {
+  background: #fff;
+  border-color: rgba(23, 23, 23, 0.22);
+}
+
+.ai-wars-starboard-name {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .ai-wars-starboard-score {
-  grid-area: score;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.2rem;
+  gap: 0.12rem;
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.74rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
   color: var(--ink);
-  white-space: nowrap;
 }
 
 .ai-wars-starboard-score span[aria-hidden='true'] {
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   color: var(--muted);
 }
 
@@ -2270,8 +2257,9 @@ a.ai-wars-rank-name:hover {
     font-size: 1.9rem;
   }
 
-  .ai-wars-starboard-table {
+  .ai-wars-starboard-group {
     grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
 }
 
