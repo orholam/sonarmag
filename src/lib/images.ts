@@ -22,7 +22,7 @@ export function articleImageKey(src: string | null | undefined): string | null {
 
 export function unsplashUrl(
   src: string,
-  opts: { width: number; quality?: number },
+  opts: { width: number; height?: number; quality?: number },
 ): string {
   try {
     const url = new URL(src)
@@ -32,11 +32,24 @@ export function unsplashUrl(
     url.searchParams.set('auto', 'format')
     url.searchParams.set('fit', 'crop')
     url.searchParams.set('w', String(opts.width))
+    if (opts.height) {
+      url.searchParams.set('h', String(opts.height))
+    }
     url.searchParams.set('q', String(opts.quality ?? 75))
     return url.toString()
   } catch {
     return src
   }
+}
+
+/** Article mid-body hero: wide crop so the figure stays short in the scroll. */
+export function articleHeroSrcSet(src: string): string {
+  return [800, 1200, 1600]
+    .map((width) => {
+      const height = Math.round(width / 2)
+      return `${unsplashUrl(src, { width, height })} ${width}w`
+    })
+    .join(', ')
 }
 
 export function heroSrcSet(src: string): string {

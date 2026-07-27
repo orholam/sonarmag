@@ -3658,15 +3658,20 @@ a.icon-chip {
 
 .article-figure {
   width: 100%;
-  max-width: 42rem;
-  margin: 1.75rem 0;
+  max-width: 38rem;
+  margin: 1.35rem 0 1.5rem;
+  aspect-ratio: 2 / 1;
+  max-height: min(22rem, 38vh);
+  overflow: hidden;
+  border-radius: var(--radius);
 }
 
 .article-figure img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  height: 100%;
   object-fit: cover;
-  border-radius: var(--radius);
+  object-position: center;
+  border-radius: inherit;
   filter: grayscale(1);
 }
 
