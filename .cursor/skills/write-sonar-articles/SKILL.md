@@ -135,7 +135,8 @@ For each article set:
 - **Excerpt as continuous card dek** — splash/opinion boards show the excerpt in two CSS columns as one flowing text (~70–110 words). Do not dump body paras into a side-by-side grid.
 - Excerpt, ticker, hero/thumb images + alts (see **Images** below)
 - `read_minutes` / `listen_minutes`, `published_label` (e.g. `Today`)
-- `paragraphs` jsonb (5–9 prose strings in manifesto voice; tweet objects if the brief includes X URLs)
+- `paragraphs` jsonb (Markdown strings + optional tweet objects; 5–9 short blocks for notes, longer multi-section Markdown for reported essays; tweet objects if the brief includes X URLs)
+- **Use the Markdown you have:** comparison / caps / tool roundups should ship real GFM tables (`| … |`), not prose pretending to be a grid. External links to primary sources and product pages where a reader would click; internal `/article/{slug}` links when earned (see below). Headings, lists, and blockquotes are fair game after the first two blocks.
 - Optional title `highlight_word` / `highlight_tone` (mark a phrase that already appears in the title)
 
 Fetch tweet text before embedding. Do not invent stats.

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
+import { ArticleMarkdown } from './ArticleMarkdown'
 import { TweetEmbed } from './TweetEmbed'
 import { heroSrcSet, unsplashUrl } from '../lib/images'
-import { renderInlineLinks } from '../lib/inline-links'
 import { categoryPath } from '../lib/seo'
 import { isTweetBlock, type Article, type ArticleBlock } from '../lib/types'
 
@@ -77,27 +77,11 @@ function renderTitle(article: Article): ReactNode {
   )
 }
 
-function renderProse(text: string, key: string) {
-  return (
-    <p key={key}>
-      {renderInlineLinks(text).map((part, index) =>
-        typeof part === 'string' ? (
-          part
-        ) : (
-          <a key={`${key}-a-${index}`} href={part.href}>
-            {part.label}
-          </a>
-        ),
-      )}
-    </p>
-  )
-}
-
 function renderBlock(block: ArticleBlock, key: string) {
   if (isTweetBlock(block)) {
     return <TweetEmbed key={key} tweet={block} />
   }
-  return renderProse(block, key)
+  return <ArticleMarkdown key={key} source={block} />
 }
 
 /** First two prose paragraphs before the figure; remaining blocks (incl. tweets) after. */

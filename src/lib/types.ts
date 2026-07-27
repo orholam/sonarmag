@@ -11,7 +11,11 @@ export type TweetBlock = {
   postedAt?: string
 }
 
-/** Body blocks stored in articles.paragraphs jsonb. */
+/**
+ * Body blocks stored in articles.paragraphs jsonb.
+ * Strings are Markdown (headings, lists, emphasis, links, blockquotes, GFM).
+ * Tweet objects stay structured embeds.
+ */
 export type ArticleBlock = string | TweetBlock
 
 export type Article = {
@@ -94,6 +98,11 @@ export function isTweetBlock(block: ArticleBlock): block is TweetBlock {
   return typeof block === 'object' && block !== null && block.type === 'tweet'
 }
 
+import { stripMarkdown } from './markdown'
+
 export function textBlocks(blocks: ArticleBlock[]): string[] {
-  return blocks.filter((block): block is string => typeof block === 'string')
+  return blocks
+    .filter((block): block is string => typeof block === 'string')
+    .map((block) => stripMarkdown(block))
+    .filter(Boolean)
 }

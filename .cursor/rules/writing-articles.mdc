@@ -30,7 +30,10 @@ You do **not** set `featured_slot` for splash layout anymore.
 - `author_id`, `category_id`
 - `hero_image`, `hero_alt`, `thumb_image` — follow manifesto §12a; **must not reuse** another article’s photo (Unsplash `photo-…` id). Same URL for hero+thumb on one row is fine. DB enforces uniqueness via `article_image_key()`. **`hero_alt` is required** whenever `hero_image` is set (concrete scene, not empty / vibe words).
 - `read_minutes`, `listen_minutes`, `published_at`, `published_label`
-- `paragraphs` jsonb blocks (strings and optional `{ type: "tweet", ... }`)
+- `paragraphs` jsonb blocks (Markdown **strings** and optional `{ type: "tweet", ... }`)
+  - Each string is Markdown (GFM): `**bold**`, `*italic*`, `[links](/path)`, `##`/`###` headings, lists, `>` blockquotes, `` `code` ``, `---`.
+  - Prefer one idea per block for the first two strings (they render above the hero figure). After that, blocks may include multi-paragraph Markdown with section headings.
+  - Tweet objects stay structured embeds; do not put tweet HTML in Markdown strings.
 - `is_highlighted` boolean
 - optional: `highlight_word` + `highlight_tone` (`red` \| `tan`) for title mark
 
