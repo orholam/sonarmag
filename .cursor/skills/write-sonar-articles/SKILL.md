@@ -96,9 +96,42 @@ Treat each `image_key` (usually `photo-{id}` for Unsplash) as reserved. Postgres
 
 ### 2. Draft
 
+#### Title mode (required, before drafting titles)
+
+Do **not** ask yourself to "vary titles" or paste Atlantic example lists into the draft step. LLMs collapse to one high-prior formula under that kind of instruction. Variety comes from an **external assignment**, then obeying it.
+
+Before writing either title, roll modes in the shell (do not invent the roll):
+
+```bash
+pick() {
+  # House formula is majority (~50%). Alternates are equal minority shares.
+  local bag=(actor-verb actor-verb actor-verb actor-verb how problem-with even question portrait)
+  echo "${bag[RANDOM % ${#bag[@]}]}"
+}
+MODE_A=$(pick); MODE_B=$(pick)
+# Pair must not share a mode — re-roll B until different
+while [ "$MODE_B" = "$MODE_A" ]; do MODE_B=$(pick); done
+printf 'A=%s B=%s\n' "$MODE_A" "$MODE_B"
+```
+
+Then write each title **only** in its assigned mode:
+
+| Mode | Shape (structure only — do not copy sample wording) |
+| --- | --- |
+| `actor-verb` | Named actor + charged verb + concrete object (the house formula) |
+| `how` | *How* + subject + lost/failed/became/learned + stakes |
+| `problem-with` | *The Problem With* / *The Truth About* + specific object |
+| `even` | *Even* + unlikely actor + can't/won't + concrete failure |
+| `question` | Real question with stakes (piece must attempt an answer) |
+| `portrait` | Short charged phrase or verdict-noun (no throat-clearing) |
+
+Quality bar is unchanged: manifesto title tests, bans, and title↔body contract still apply. A mode is a syntactic slot, not a free pass for vague buckets or slogan-oversells. If the rolled mode cannot name the case cleanly, re-roll **that article only** once; then ship.
+
+Record the two modes in the short publish note to the user (one line).
+
 For each article set:
 
-- **Title first** — pass the manifesto title test (specific case / verdict / real question; no colon-SEO, topic tags, or slogan-oversells of study claims). Clever tone without a clear referent fails.
+- **Title first** — under the rolled mode, pass the manifesto title test (specific case / verdict / real question; no colon-SEO, topic tags, or slogan-oversells of study claims). Clever tone without a clear referent fails.
 - **Excerpt as continuous card dek** — splash/opinion boards show the excerpt in two CSS columns as one flowing text (~70–110 words). Do not dump body paras into a side-by-side grid.
 - Excerpt, ticker, hero/thumb images + alts (see **Images** below)
 - `read_minutes` / `listen_minutes`, `published_label` (e.g. `Today`)
@@ -182,3 +215,5 @@ If `INDEXNOW_SUBMIT_SECRET` is unset locally, omit the Authorization header. Pre
 - Reusing a hero/thumb photo already attached to another article (or to the other piece in the pair)
 - Shipping a hero_image without a concrete non-empty hero_alt
 - Stuffing internal links, “related reading” footers, or linking without an earned referent
+- Asking the model to “add title variety” or stuffing more Atlantic examples into the draft step instead of rolling title modes
+- Ignoring a rolled title mode, or forcing every piece into `actor-verb` after the roll
