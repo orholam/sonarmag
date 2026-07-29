@@ -1,7 +1,21 @@
 import type { ReactNode } from 'react'
 import { heroSrcSet, thumbSrcSet, unsplashUrl } from '../lib/images'
 import { barWidths, parseMetricValue } from '../lib/rank-bars'
+import { SITE_NAME, SITE_URL } from '../lib/site'
 import { textBlocks, type Article, type HomepageData } from '../lib/types'
+
+const shareUrl = `${SITE_URL}/`
+const shareText = `${SITE_NAME} — Independent Journalism, Culture & Markets`
+const shareEncoded = {
+  url: encodeURIComponent(shareUrl),
+  text: encodeURIComponent(shareText),
+}
+const shareHref = {
+  telegram: `https://t.me/share/url?url=${shareEncoded.url}&text=${shareEncoded.text}`,
+  linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${shareEncoded.url}`,
+  facebook: `https://www.facebook.com/sharer/sharer.php?u=${shareEncoded.url}`,
+  x: `https://twitter.com/intent/tweet?url=${shareEncoded.url}&text=${shareEncoded.text}`,
+}
 
 /** Continuous card dek — one flowing block for CSS columns, never two clipped body paras. */
 function cardCopy(article: Article): string | null {
@@ -255,7 +269,13 @@ export function HomeBoard({
           </a>
 
           <div className="social-row">
-            <a className="social social-tg" href="#telegram" aria-label="Telegram">
+            <a
+              className="social social-tg"
+              href={shareHref.telegram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share on Telegram"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="currentColor"
@@ -263,15 +283,27 @@ export function HomeBoard({
                 />
               </svg>
             </a>
-            <a className="social social-yt" href="#youtube" aria-label="YouTube">
+            <a
+              className="social social-li"
+              href={shareHref.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share on LinkedIn"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="currentColor"
-                  d="M21.6 8.2a2.7 2.7 0 0 0-1.9-1.9C17.9 6 12 6 12 6s-5.9 0-7.7.3A2.7 2.7 0 0 0 2.4 8.2 28 28 0 0 0 2 12a28 28 0 0 0 .4 3.8 2.7 2.7 0 0 0 1.9 1.9C6.1 18 12 18 12 18s5.9 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-3.8ZM10 15.1V8.9L15.2 12 10 15.1Z"
+                  d="M6.5 9.5H3.7V20h2.8V9.5ZM5.1 4a1.65 1.65 0 1 0 0 3.3 1.65 1.65 0 0 0 0-3.3ZM20.3 20h-2.8v-5.6c0-1.5-.5-2.5-1.8-2.5-1 0-1.5.7-1.8 1.3-.1.2-.1.5-.1.8V20h-2.8s0-9.2 0-10.5h2.8v1.5c.4-.6 1.1-1.7 2.8-1.7 2 0 3.5 1.3 3.5 4.2V20Z"
                 />
               </svg>
             </a>
-            <a className="social social-fb" href="#facebook" aria-label="Facebook">
+            <a
+              className="social social-fb"
+              href={shareHref.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share on Facebook"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="currentColor"
@@ -279,7 +311,13 @@ export function HomeBoard({
                 />
               </svg>
             </a>
-            <a className="social social-x" href="#x" aria-label="X">
+            <a
+              className="social social-x"
+              href={shareHref.x}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share on X"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="currentColor"
