@@ -45,7 +45,7 @@ export function AiWarsChangelog({ board }: { board: ChangelogBoard }) {
       ? {
           id: 'changelog-weekly',
           title: 'Posts per week',
-          subtitle: `Public news / changelog · last ${board.weeks.length} Mon-start weeks`,
+          subtitle: `4-week rolling average · last ${board.weeks.length} complete weeks`,
           sourceUrl: '',
           asOf: board.asOf,
           dates: board.weeks,
@@ -54,10 +54,14 @@ export function AiWarsChangelog({ board }: { board: ChangelogBoard }) {
             id: s.companyId,
             name: s.company,
             color: s.color,
-            points: s.points.map((p) => ({
-              date: p.weekStart,
-              value: p.count,
-            })),
+            points: s.points
+              .filter(
+                (p): p is typeof p & { average: number } => p.average != null,
+              )
+              .map((p) => ({
+                date: p.weekStart,
+                value: Math.round(p.average * 10) / 10,
+              })),
           })),
         }
       : null
@@ -152,6 +156,8 @@ export function AiWarsChangelog({ board }: { board: ChangelogBoard }) {
           <p className="ai-wars-note">
             Comms / shipping proxy — OpenAI &amp; Anthropic newsrooms are louder
             than Cursor&apos;s product changelog. Not weighted by importance.
+            Each line starts once its source covers a full 4-week window, so
+            shorter feeds begin later rather than reading as zero.
           </p>
         </section>
       ) : null}

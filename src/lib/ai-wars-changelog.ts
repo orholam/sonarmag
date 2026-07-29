@@ -27,12 +27,16 @@ export type ChangelogCompany = {
 export type ChangelogWeekPoint = {
   weekStart: string
   count: number
+  /** Trailing ROLLING_WEEKS mean; null until the window is fully covered. */
+  average: number | null
 }
 
 export type ChangelogSeries = {
   companyId: string
   company: string
   color: string
+  /** Monday of the earliest week this source actually covers. */
+  coverageStart: string
   points: ChangelogWeekPoint[]
 }
 
@@ -121,6 +125,8 @@ const MAX_AGE_MS = 12 * 60 * 60 * 1000
 const KEEP_DAYS = 365
 /** Monday-start weeks shown on the posts-per-week chart. */
 const CHART_WEEKS = 52
+/** Trailing window for the smoothed posts-per-week line. */
+const ROLLING_WEEKS = 4
 const UA = 'SonarMag/1.0 (+https://sonarmag.com/ai-wars)'
 
 type DbPost = {
@@ -357,32 +363,55 @@ function boardFromPosts(posts: ChangelogPost[]): ChangelogBoard {
     })
     .sort((a, b) => b.posts7d - a.posts7d || b.posts30d - a.posts30d)
 
-  // Weekly series: up to CHART_WEEKS, trimmed to the oldest post we actually have.
+  // Completed Monday weeks only — the in-progress week always reads as a dip.
+  const lastComplete = new Date(`${mondayUtc(new Date())}T12:00:00Z`)
+  lastComplete.setUTCDate(lastComplete.getUTCDate() - 7)
   const oldestMs = Math.min(...posts.map((p) => Date.parse(p.publishedAt)))
   const oldestMonday = mondayUtc(new Date(oldestMs))
-  const newestMonday = mondayUtc(new Date())
   const weeks: string[] = []
   for (let i = CHART_WEEKS - 1; i >= 0; i--) {
-    const d = new Date(`${newestMonday}T12:00:00Z`)
+    const d = new Date(lastComplete)
     d.setUTCDate(d.getUTCDate() - i * 7)
     const w = d.toISOString().slice(0, 10)
     if (w >= oldestMonday) weeks.push(w)
   }
 
   const series: ChangelogSeries[] = companies.map((c) => {
+    const list = byCompany.get(c.companyId) ?? []
     const counts = new Map(weeks.map((w) => [w, 0]))
-    for (const p of byCompany.get(c.companyId) ?? []) {
+    for (const p of list) {
       const w = mondayUtc(new Date(p.publishedAt))
       if (counts.has(w)) counts.set(w, (counts.get(w) ?? 0) + 1)
     }
+
+    // Feeds truncate at different depths (Google's RSS holds ~20 items), so
+    // weeks before a source's first post are unknown, not zero.
+    const firstMs = Math.min(...list.map((p) => Date.parse(p.publishedAt)))
+    const coverageStart = Number.isFinite(firstMs)
+      ? mondayUtc(new Date(firstMs))
+      : weeks[0]
+
     return {
       companyId: c.companyId,
       company: c.company,
       color: c.color,
-      points: weeks.map((weekStart) => ({
-        weekStart,
-        count: counts.get(weekStart) ?? 0,
-      })),
+      coverageStart,
+      points: weeks.map((weekStart, i) => {
+        const window = weeks
+          .slice(Math.max(0, i - (ROLLING_WEEKS - 1)), i + 1)
+          .filter((w) => w >= coverageStart)
+        const covered =
+          window.length === ROLLING_WEEKS && weekStart >= coverageStart
+        const average = covered
+          ? window.reduce((sum, w) => sum + (counts.get(w) ?? 0), 0) /
+            window.length
+          : null
+        return {
+          weekStart,
+          count: counts.get(weekStart) ?? 0,
+          average,
+        }
+      }),
     }
   })
 
