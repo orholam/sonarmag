@@ -64,6 +64,7 @@ Article pair
 - [ ] Resolve authors + categories from Supabase
 - [ ] Draft A (highlighted) + Draft B
 - [ ] Write seo_title for both (search-facing; headline stays as drafted)
+- [ ] Cold-read both titles for one-pass comprehension
 - [ ] Pick unique hero images (not already on any article; A ≠ B) + concrete hero_alt each
 - [ ] Add 0–2 internal links each (only if earned)
 - [ ] Manifesto checklist pass on both (incl. §8a)
@@ -126,9 +127,41 @@ Then write each title **only** in its assigned mode:
 | `question` | Real question with stakes (piece must attempt an answer) |
 | `portrait` | Short charged phrase or verdict-noun (no throat-clearing) |
 
-Quality bar is unchanged: manifesto title tests, bans, and title↔body contract still apply. A mode is a syntactic slot, not a free pass for vague buckets or slogan-oversells. If the rolled mode cannot name the case cleanly, re-roll **that article only** once; then ship.
+Quality bar is unchanged: manifesto title tests, bans, and title↔body contract still apply. A mode is a syntactic slot, not a free pass for vague buckets or slogan-oversells. If the rolled mode cannot name the case cleanly, re-roll **that article only** once. If the second mode still fights clarity, use a plain `actor-verb` title. The random mode never outranks comprehension.
 
 Record the two modes in the short publish note to the user (one line).
+
+#### Cold-read title review (required before insert)
+
+Review `title` and `seo_title` only after both drafts are complete. Hide the body and
+read each title once, as a reader with no knowledge of the assignment.
+
+For each title, answer in plain language:
+
+1. **Who or what is this about?**
+2. **What happened, or what claim is the article making?**
+
+If either answer requires rereading, background knowledge, or guessing what an abstract
+noun modifies, rewrite the title. A sharp non-specialist should be able to paraphrase it
+after one pass.
+
+Reject these failure modes:
+
+- **Compressed modifier chains:** `Commerce Suspended Claude Without a Published
+  Threshold` makes the reader decode what “threshold” modifies and why its absence
+  matters. Prefer the concrete event: `A Commerce Department Order Took Claude Offline
+  Worldwide`.
+- **Institutional shorthand:** use `Commerce Department`, not `Commerce`, when the shorter
+  form could mean trade or shopping.
+- **Missing object or consequence:** name what was blocked, changed, released, ruled, or
+  measured.
+- **Insider language carrying the claim:** terms such as *threshold*, *alignment*,
+  *frontier*, or *inference* need a concrete object or consequence in the same title.
+- **Grammatically valid but semantically muddy:** a title that can be parsed two ways
+  fails even if every word is accurate.
+
+Do not defend a confusing title because it is clever, technically precise, or satisfies
+the rolled mode. Rewrite it.
 
 #### Search title (`seo_title`, required on both rows)
 
@@ -236,6 +269,7 @@ should not be made at all.
 - Homepage large card shows the highlighted piece (allow ~60s cache)
 - If you added internal links, spot-check that the anchors resolve
 - Browser tab / `<title>` shows `seo_title`, while the on-page `<h1>` still shows `title`
+- Article byline area shows the full calendar publication date, not only `Today` or another relative label
 - Footer rail renders three related cards, and the AI Wars card appears on AI coverage
 
 ### 5. IndexNow (required after publish)
@@ -270,3 +304,4 @@ If `INDEXNOW_SUBMIT_SECRET` is unset locally, omit the Authorization header. Pre
 - Setting `updated_at` manually, or re-saving a row to fake a freshness signal
 - Asking the model to “add title variety” or stuffing more Atlantic examples into the draft step instead of rolling title modes
 - Ignoring a rolled title mode, or forcing every piece into `actor-verb` after the roll
+- Publishing a title that a non-specialist cannot paraphrase after one read

@@ -83,6 +83,20 @@ function renderTitle(article: Article): ReactNode {
   )
 }
 
+function formatPublishedDate(iso: string): string {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) {
+    return iso
+  }
+
+  return date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
+}
+
 const LIVE_SPARK_PATH =
   'M3 22 L15 19 L24 21 L33 14 L43 16 L52 10 L61 12 L70 7 L79 9 L93 4'
 
@@ -197,7 +211,7 @@ export function ArticleView({
               <p className="article-author">{article.author}</p>
               {article.publishedAt ? (
                 <time className="article-date" dateTime={article.publishedAt}>
-                  {article.publishedLabel}
+                  Published {formatPublishedDate(article.publishedAt)}
                 </time>
               ) : (
                 <p className="article-date">{article.publishedLabel}</p>
