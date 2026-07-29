@@ -2165,9 +2165,9 @@ button.print-btn:hover {
 
 .ai-wars-changelog-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  grid-template-columns: minmax(0, 2.5fr) minmax(0, 1fr);
   gap: 0.85rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 .ai-wars-changelog-recent {
@@ -2175,6 +2175,7 @@ button.print-btn:hover {
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(23, 23, 23, 0.1);
   border-radius: 10px;
+  min-width: 0;
 }
 
 .ai-wars-changelog-headlines {

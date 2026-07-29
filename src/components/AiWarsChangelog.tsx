@@ -1,6 +1,5 @@
 import type { ChangelogBoard } from '../lib/ai-wars-changelog'
 import type { AiWarsChart } from '../lib/ai-wars-history'
-import { barWidths } from '../lib/rank-bars'
 import { SeriesLineChart } from './SeriesLineChart'
 
 function formatSnapshotDate(iso: string): string {
@@ -32,14 +31,6 @@ export function AiWarsChangelog({ board }: { board: ChangelogBoard }) {
     )
   }
 
-  const rows = board.entries.map((entry) => ({
-    entry,
-    metric: `${entry.posts7d}`,
-    meta: `${entry.posts30d} in 30d`,
-    value: entry.posts7d,
-  }))
-  const widths = barWidths(rows.map((r) => r.value))
-
   const chart: AiWarsChart | null =
     board.weeks.length && board.series.length
       ? {
@@ -69,48 +60,25 @@ export function AiWarsChangelog({ board }: { board: ChangelogBoard }) {
   return (
     <div className="ai-wars-changelog">
       <div className="ai-wars-changelog-grid">
-        <section className="ai-wars-rank">
-          <header className="ai-wars-rank-head">
-            <h3>Posts · last 7 days</h3>
-            <p>
-              Public RSS + news sitemaps
-              {board.asOf ? ` · through ${formatSnapshotDate(board.asOf)}` : ''}
-            </p>
-          </header>
-          <ol className="ai-wars-rank-list">
-            {rows.map((row, i) => (
-              <li key={row.entry.companyId}>
-                <span className="ai-wars-rank-num" aria-hidden="true">
-                  {String(row.entry.rank).padStart(2, '0')}
-                </span>
-                <div className="ai-wars-rank-body">
-                  <div className="ai-wars-rank-top">
-                    <span className="ai-wars-rank-name">{row.entry.name}</span>
-                    <span className="ai-wars-rank-metric">{row.metric}</span>
-                  </div>
-                  <div className="ai-wars-rank-bar" aria-hidden="true">
-                    <span
-                      className="ai-wars-rank-fill"
-                      style={{
-                        width: `${widths[i]}%`,
-                        background:
-                          board.companies.find(
-                            (c) => c.companyId === row.entry.companyId,
-                          )?.color,
-                      }}
-                    />
-                  </div>
-                  <span className="ai-wars-rank-meta">{row.meta}</span>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
+        {chart ? (
+          <section className="ai-wars-panel">
+            <header className="ai-wars-panel-head">
+              <div>
+                <h2>{chart.title}</h2>
+                <p>{chart.subtitle}</p>
+              </div>
+            </header>
+            <SeriesLineChart chart={chart} height={240} smooth />
+          </section>
+        ) : null}
 
         <section className="ai-wars-changelog-recent">
           <header className="ai-wars-rank-head">
             <h3>Latest headlines</h3>
-            <p>Most recent item per lab</p>
+            <p>
+              Most recent item per lab
+              {board.asOf ? ` · through ${formatSnapshotDate(board.asOf)}` : ''}
+            </p>
           </header>
           <ul className="ai-wars-changelog-headlines">
             {board.companies.map((c) => {
@@ -144,23 +112,12 @@ export function AiWarsChangelog({ board }: { board: ChangelogBoard }) {
         </section>
       </div>
 
-      {chart ? (
-        <section className="ai-wars-panel">
-          <header className="ai-wars-panel-head">
-            <div>
-              <h2>{chart.title}</h2>
-              <p>{chart.subtitle}</p>
-            </div>
-          </header>
-          <SeriesLineChart chart={chart} height={220} />
-          <p className="ai-wars-note">
-            Comms / shipping proxy — OpenAI &amp; Anthropic newsrooms are louder
-            than Cursor&apos;s product changelog. Not weighted by importance.
-            Each line starts once its source covers a full 4-week window, so
-            shorter feeds begin later rather than reading as zero.
-          </p>
-        </section>
-      ) : null}
+      <p className="ai-wars-note">
+        Comms / shipping proxy — OpenAI &amp; Anthropic newsrooms are louder than
+        Cursor&apos;s product changelog. Not weighted by importance. Lines are
+        curved because the value is a 4-week mean, not a weekly reading, and each
+        starts once its source covers a full window rather than reading as zero.
+      </p>
     </div>
   )
 }

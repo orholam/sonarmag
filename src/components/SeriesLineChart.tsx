@@ -27,6 +27,8 @@ type Props = {
   chart: AiWarsChart
   height?: number
   ariaLabel?: string
+  /** Curve the line — for smoothed/averaged series that aren't point-precise. */
+  smooth?: boolean
 }
 
 type TipState = {
@@ -35,7 +37,12 @@ type TipState = {
   rows: Array<{ id: string; name: string; color: string; value: number }>
 }
 
-export function SeriesLineChart({ chart, height = 280, ariaLabel }: Props) {
+export function SeriesLineChart({
+  chart,
+  height = 280,
+  ariaLabel,
+  smooth = false,
+}: Props) {
   const { dates, series, unit } = chart
   const wrapRef = useRef<HTMLDivElement>(null)
   const stickyDateRef = useRef<string | null>(null)
@@ -302,6 +309,7 @@ export function SeriesLineChart({ chart, height = 280, ariaLabel }: Props) {
               yFor={yFor}
               dimmed={Boolean(focusId && focusId !== s.id)}
               active={Boolean(focusId && focusId === s.id)}
+              smooth={smooth}
             />
           ))}
 
@@ -377,18 +385,60 @@ export function SeriesLineChart({ chart, height = 280, ariaLabel }: Props) {
   )
 }
 
+/**
+ * Monotone cubic (Fritsch–Carlson) path. Chosen over Catmull-Rom because it
+ * never overshoots the data — a smoothed count series must not dip below zero
+ * or invent peaks between weeks.
+ */
+function monotonePath(xs: number[], ys: number[]): string {
+  const n = xs.length
+  const slopes: number[] = []
+  for (let i = 0; i < n - 1; i++) {
+    const h = xs[i + 1] - xs[i]
+    slopes.push(h === 0 ? 0 : (ys[i + 1] - ys[i]) / h)
+  }
+
+  const tangents: number[] = Array.from({ length: n }, () => 0)
+  tangents[0] = slopes[0] ?? 0
+  tangents[n - 1] = slopes[n - 2] ?? 0
+  for (let i = 1; i < n - 1; i++) {
+    const prev = slopes[i - 1]
+    const next = slopes[i]
+    if (prev * next <= 0) {
+      tangents[i] = 0
+    } else {
+      const t = (prev + next) / 2
+      const limit = Math.min(Math.abs(3 * prev), Math.abs(3 * next))
+      tangents[i] = Math.sign(t) * Math.min(Math.abs(t), limit)
+    }
+  }
+
+  let d = `M${xs[0].toFixed(1)} ${ys[0].toFixed(1)}`
+  for (let i = 0; i < n - 1; i++) {
+    const h = xs[i + 1] - xs[i]
+    const c1x = xs[i] + h / 3
+    const c1y = ys[i] + (tangents[i] * h) / 3
+    const c2x = xs[i + 1] - h / 3
+    const c2y = ys[i + 1] - (tangents[i + 1] * h) / 3
+    d += ` C${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${xs[i + 1].toFixed(1)} ${ys[i + 1].toFixed(1)}`
+  }
+  return d
+}
+
 function SeriesPath({
   series,
   xFor,
   yFor,
   dimmed,
   active,
+  smooth = false,
 }: {
   series: ChartSeries
   xFor: (date: string) => number
   yFor: (value: number) => number
   dimmed: boolean
   active: boolean
+  smooth?: boolean
 }) {
   const pts = series.points
     .filter((p) => Number.isFinite(p.value))
@@ -396,16 +446,16 @@ function SeriesPath({
     .sort((a, b) => a.date.localeCompare(b.date))
   if (!pts.length) return null
 
-  const path =
-    pts.length === 1
-      ? null
-      : pts
-          .map((p, i) => {
-            const x = xFor(p.date)
-            const y = yFor(p.value)
-            return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`
-          })
+  let path: string | null = null
+  if (pts.length > 1) {
+    const xs = pts.map((p) => xFor(p.date))
+    const ys = pts.map((p) => yFor(p.value))
+    path = smooth
+      ? monotonePath(xs, ys)
+      : xs
+          .map((x, i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)} ${ys[i].toFixed(1)}`)
           .join(' ')
+  }
 
   const strokeWidth = active ? 2.75 : 2
   const opacity = dimmed ? 0.16 : 1
