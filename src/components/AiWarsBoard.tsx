@@ -350,9 +350,9 @@ export function AiWarsBoard({
         <div className="ai-wars-section-label">
           <h2 id="ai-wars-changelog-heading">Changelog velocity</h2>
           <p>
-            How often labs publish — scraped from public RSS feeds and
-            Anthropic&apos;s news sitemap. A shipping/comms proxy, not a quality
-            score.
+            How often labs publish — scraped from public RSS feeds and news
+            sitemaps (Anthropic, xAI, and others). A shipping/comms proxy, not a
+            quality score.
           </p>
         </div>
         <AiWarsChangelog board={changelog} />

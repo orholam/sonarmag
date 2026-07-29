@@ -158,7 +158,7 @@ begin
     raise exception 'posts must be a json array';
   end if;
 
-  if jsonb_array_length(p_posts) > 500 then
+  if jsonb_array_length(p_posts) > 2000 then
     raise exception 'posts too long';
   end if;
 

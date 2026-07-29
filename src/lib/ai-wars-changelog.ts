@@ -1,6 +1,6 @@
 /**
  * Changelog / public-news velocity for AI labs.
- * Scrapes RSS feeds + Anthropic sitemap; aggregates posts/7d and posts/30d.
+ * Scrapes RSS feeds + news sitemaps; aggregates posts/7d and posts/30d.
  */
 
 import { supabase } from './supabase'
@@ -56,8 +56,10 @@ type FeedSource = {
   companyId: string
   company: string
   color: string
-  kind: 'rss' | 'anthropic-sitemap'
+  kind: 'rss' | 'news-sitemap'
   url: string
+  /** For news-sitemap: match article locs (not the index page). */
+  locPattern?: RegExp
 }
 
 const SOURCES: FeedSource[] = [
@@ -72,8 +74,17 @@ const SOURCES: FeedSource[] = [
     companyId: 'anthropic',
     company: 'Anthropic',
     color: '#d97706',
-    kind: 'anthropic-sitemap',
+    kind: 'news-sitemap',
     url: 'https://www.anthropic.com/sitemap.xml',
+    locPattern: /^https:\/\/www\.anthropic\.com\/news\/[^/]+\/?$/,
+  },
+  {
+    companyId: 'xai',
+    company: 'xAI',
+    color: '#171717',
+    kind: 'news-sitemap',
+    url: 'https://x.ai/sitemap.xml',
+    locPattern: /^https:\/\/x\.ai\/news\/[^/]+\/?$/,
   },
   {
     companyId: 'google',
@@ -106,7 +117,10 @@ const SOURCES: FeedSource[] = [
 ]
 
 const MAX_AGE_MS = 12 * 60 * 60 * 1000
-const KEEP_DAYS = 90
+/** Keep a year so the weekly chart can run long. */
+const KEEP_DAYS = 365
+/** Monday-start weeks shown on the posts-per-week chart. */
+const CHART_WEEKS = 52
 const UA = 'SonarMag/1.0 (+https://sonarmag.com/ai-wars)'
 
 type DbPost = {
@@ -170,7 +184,7 @@ async function fetchText(url: string): Promise<string | null> {
         Accept: 'application/rss+xml, application/xml, text/xml, */*',
         'User-Agent': UA,
       },
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(20000),
       redirect: 'follow',
     })
     if (!res.ok) return null
@@ -198,7 +212,6 @@ function parseRssItems(
     const url = decodeXml(linkM[1])
     const published = parseRfc822(decodeXml(dateM[1]))
     if (!title || !url || !published || published < since) continue
-    // Skip channel title duplicates / empty
     if (title.toLowerCase() === `${source.company} blog`.toLowerCase()) continue
     out.push({
       id: postId(url),
@@ -213,7 +226,13 @@ function parseRssItems(
   return out
 }
 
-function parseAnthropicSitemap(xml: string, since: Date): ChangelogPost[] {
+function parseNewsSitemap(
+  xml: string,
+  source: FeedSource,
+  since: Date,
+): ChangelogPost[] {
+  const pattern = source.locPattern
+  if (!pattern) return []
   const out: ChangelogPost[] = []
   const blocks = xml.match(/<url>[\s\S]*?<\/url>/gi) ?? []
   for (const block of blocks) {
@@ -221,19 +240,18 @@ function parseAnthropicSitemap(xml: string, since: Date): ChangelogPost[] {
     const modM = block.match(/<lastmod>([\s\S]*?)<\/lastmod>/i)
     if (!locM || !modM) continue
     const url = decodeXml(locM[1])
-    if (!/^https:\/\/www\.anthropic\.com\/news\/[^/]+\/?$/.test(url)) continue
-    // Skip the index page if present
+    if (!pattern.test(url)) continue
     if (/\/news\/?$/.test(url)) continue
     const published = new Date(decodeXml(modM[1]))
     if (Number.isNaN(published.getTime()) || published < since) continue
     out.push({
       id: postId(url),
-      companyId: 'anthropic',
-      company: 'Anthropic',
+      companyId: source.companyId,
+      company: source.company,
       title: titleFromSlug(url),
       url,
       publishedAt: published.toISOString(),
-      source: 'https://www.anthropic.com/sitemap.xml',
+      source: source.url,
     })
   }
   return out
@@ -245,8 +263,8 @@ async function scrapePosts(): Promise<ChangelogPost[]> {
     SOURCES.map(async (source) => {
       const text = await fetchText(source.url)
       if (!text) return [] as ChangelogPost[]
-      if (source.kind === 'anthropic-sitemap') {
-        return parseAnthropicSitemap(text, since)
+      if (source.kind === 'news-sitemap') {
+        return parseNewsSitemap(text, source, since)
       }
       return parseRssItems(text, source, since)
     }),
@@ -260,11 +278,11 @@ async function scrapePosts(): Promise<ChangelogPost[]> {
 
 async function persistPosts(posts: ChangelogPost[]): Promise<void> {
   if (!posts.length) return
-  // Cap payload for the RPC guard (500).
   const sorted = [...posts].sort(
     (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
   )
-  const payload = sorted.slice(0, 480).map((p) => ({
+  // RPC allows 2000; keep a little headroom.
+  const payload = sorted.slice(0, 1900).map((p) => ({
     id: p.id,
     company_id: p.companyId,
     company: p.company,
@@ -339,13 +357,16 @@ function boardFromPosts(posts: ChangelogPost[]): ChangelogBoard {
     })
     .sort((a, b) => b.posts7d - a.posts7d || b.posts30d - a.posts30d)
 
-  // Weekly series for last 8 weeks (Mon-start buckets).
-  const weeks: string[] = []
+  // Weekly series: up to CHART_WEEKS, trimmed to the oldest post we actually have.
+  const oldestMs = Math.min(...posts.map((p) => Date.parse(p.publishedAt)))
+  const oldestMonday = mondayUtc(new Date(oldestMs))
   const newestMonday = mondayUtc(new Date())
-  for (let i = 7; i >= 0; i--) {
+  const weeks: string[] = []
+  for (let i = CHART_WEEKS - 1; i >= 0; i--) {
     const d = new Date(`${newestMonday}T12:00:00Z`)
     d.setUTCDate(d.getUTCDate() - i * 7)
-    weeks.push(d.toISOString().slice(0, 10))
+    const w = d.toISOString().slice(0, 10)
+    if (w >= oldestMonday) weeks.push(w)
   }
 
   const series: ChangelogSeries[] = companies.map((c) => {

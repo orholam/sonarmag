@@ -45,7 +45,7 @@ export function AiWarsChangelog({ board }: { board: ChangelogBoard }) {
       ? {
           id: 'changelog-weekly',
           title: 'Posts per week',
-          subtitle: 'Public news / changelog items · Mon-start weeks',
+          subtitle: `Public news / changelog · last ${board.weeks.length} Mon-start weeks`,
           sourceUrl: '',
           asOf: board.asOf,
           dates: board.weeks,
@@ -69,7 +69,7 @@ export function AiWarsChangelog({ board }: { board: ChangelogBoard }) {
           <header className="ai-wars-rank-head">
             <h3>Posts · last 7 days</h3>
             <p>
-              Public RSS + Anthropic sitemap
+              Public RSS + news sitemaps
               {board.asOf ? ` · through ${formatSnapshotDate(board.asOf)}` : ''}
             </p>
           </header>
