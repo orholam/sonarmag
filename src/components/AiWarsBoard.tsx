@@ -1,3 +1,5 @@
+import type { AppStoreRankBoard } from '../lib/ai-wars-app-store'
+import type { ChangelogBoard } from '../lib/ai-wars-changelog'
 import type { AiRaceData } from '../lib/ai-race'
 import type { AiWarsChart, AiWarsHistory } from '../lib/ai-wars-history'
 import type { AiWarsFieldBoard } from '../lib/ai-wars-field'
@@ -5,6 +7,8 @@ import type { CodingToolRedditBoard } from '../lib/coding-tool-reddit'
 import type { CodingToolStarsBoard } from '../lib/coding-tool-stars'
 import type { PolymarketAiWars } from '../lib/polymarket'
 import { barWidths, parseMetricValue } from '../lib/rank-bars'
+import { AiWarsAppStore } from './AiWarsAppStore'
+import { AiWarsChangelog } from './AiWarsChangelog'
 import { AiWarsField } from './AiWarsField'
 import { AiWarsPerplexity } from './AiWarsPerplexity'
 import { AiWarsPolymarket } from './AiWarsPolymarket'
@@ -18,6 +22,8 @@ type Props = {
   codingStars: CodingToolStarsBoard
   field: AiWarsFieldBoard
   polymarket: PolymarketAiWars
+  appStore: AppStoreRankBoard
+  changelog: ChangelogBoard
 }
 
 function formatSnapshotDate(iso: string): string {
@@ -254,6 +260,8 @@ export function AiWarsBoard({
   codingStars,
   field,
   polymarket,
+  appStore,
+  changelog,
 }: Props) {
   const arena = aiRace.boards.find((b) => b.id === 'arena') ?? null
   const openrouter = aiRace.boards.find((b) => b.id === 'openrouter') ?? null
@@ -319,6 +327,35 @@ export function AiWarsBoard({
         ) : null}
 
         <AiWarsStars board={codingStars} />
+      </section>
+
+      <section
+        className="ai-wars-section"
+        aria-labelledby="ai-wars-appstore-heading"
+      >
+        <div className="ai-wars-section-label">
+          <h2 id="ai-wars-appstore-heading">App Store rank tape</h2>
+          <p>
+            US free Productivity chart for the main AI consumer apps — a
+            consumer-heat signal that often diverges from Arena and API volume.
+          </p>
+        </div>
+        <AiWarsAppStore board={appStore} />
+      </section>
+
+      <section
+        className="ai-wars-section"
+        aria-labelledby="ai-wars-changelog-heading"
+      >
+        <div className="ai-wars-section-label">
+          <h2 id="ai-wars-changelog-heading">Changelog velocity</h2>
+          <p>
+            How often labs publish — scraped from public RSS feeds and
+            Anthropic&apos;s news sitemap. A shipping/comms proxy, not a quality
+            score.
+          </p>
+        </div>
+        <AiWarsChangelog board={changelog} />
       </section>
 
       <AiWarsPolymarket polymarket={polymarket} />

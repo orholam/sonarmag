@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { AiWarsBoard } from '../components/AiWarsBoard'
+import { fetchAppStoreRanks } from '../lib/ai-wars-app-store'
+import { fetchChangelogVelocity } from '../lib/ai-wars-changelog'
 import { fetchAiRaceData } from '../lib/ai-race'
 import { fetchAiWarsField, fieldByRegion } from '../lib/ai-wars-field'
 import { fetchAiWarsHistory } from '../lib/ai-wars-history'
@@ -22,15 +24,25 @@ Astro.response.headers.set(
   'public, s-maxage=60, stale-while-revalidate=300',
 )
 
-const [aiRace, history, codingTools, codingStars, field, polymarket] =
-  await Promise.all([
-    fetchAiRaceData(8),
-    fetchAiWarsHistory(),
-    fetchCodingToolReddit(),
-    fetchCodingToolStars(),
-    fetchAiWarsField(),
-    fetchPolymarketAiWars(),
-  ])
+const [
+  aiRace,
+  history,
+  codingTools,
+  codingStars,
+  field,
+  polymarket,
+  appStore,
+  changelog,
+] = await Promise.all([
+  fetchAiRaceData(8),
+  fetchAiWarsHistory(),
+  fetchCodingToolReddit(),
+  fetchCodingToolStars(),
+  fetchAiWarsField(),
+  fetchPolymarketAiWars(),
+  fetchAppStoreRanks(),
+  fetchChangelogVelocity(),
+])
 
 const usField = fieldByRegion(field.companies, 'us')
 const intlField = fieldByRegion(field.companies, 'international')
@@ -43,7 +55,7 @@ const pageTitleText = 'AI Wars: AI model & coding agent scoreboard'
 const pageDescription = [
   'Live scoreboard for the AI race: desk ranks of US and international labs,',
   'LMSYS Arena preference, OpenRouter API volume, coding-agent Reddit heat,',
-  'lab GitHub stars, and Polymarket odds.',
+  'lab GitHub stars, App Store Productivity ranks, changelog velocity, and Polymarket odds.',
   topUs && topIntl
     ? ` Current desk leaders: ${topUs} (US) and ${topIntl} (international).`
     : '',
@@ -65,7 +77,7 @@ const faqs = [
   {
     question: 'What is AI Wars?',
     answer:
-      'AI Wars is Sonar Mag’s permanent scoreboard for the AI industry. It combines desk assessments of major labs with live signals from LMSYS Chatbot Arena, OpenRouter volume, coding-agent Reddit communities, open-source GitHub stars, and Polymarket prediction markets.',
+      'AI Wars is Sonar Mag’s permanent scoreboard for the AI industry. It combines desk assessments of major labs with live signals from LMSYS Chatbot Arena, OpenRouter volume, coding-agent Reddit communities, open-source GitHub stars, US App Store Productivity ranks, public changelog velocity, and Polymarket prediction markets.',
   },
   {
     question: 'How are the lab rankings decided?',
@@ -75,7 +87,7 @@ const faqs = [
   {
     question: 'How often does AI Wars update?',
     answer:
-      'Arena, OpenRouter, Reddit visitor estimates, GitHub stars, and Polymarket odds refresh on page load with short CDN caching. Positioning and heat are a weekly desk pass: every company on the board gets its week’s news read carefully (product drops, funding, distribution deals, usage slips, open-weight releases), then scores, blurbs, and full analyses are updated where the footing actually moved. Each regional column shows when that side was last reviewed.',
+      'Arena, OpenRouter, Reddit visitor estimates, GitHub stars, App Store ranks, changelog feeds, and Polymarket odds refresh on page load with short CDN caching. Positioning and heat are a weekly desk pass: every company on the board gets its week’s news read carefully (product drops, funding, distribution deals, usage slips, open-weight releases), then scores, blurbs, and full analyses are updated where the footing actually moved. Each regional column shows when that side was last reviewed.',
   },
 ]
 
@@ -139,7 +151,8 @@ const analysisPath = (id: string) => absoluteUrl(`/ai-wars#analysis-${id}`)
         Who’s ahead in foundation models and coding agents, tracked across
         several signals that often diverge. Desk ranks for US and international
         labs sit above Arena preference, OpenRouter volume, Reddit heat for
-        coding tools, lab GitHub stars, and longer-horizon Polymarket odds.
+        coding tools, lab GitHub stars, App Store Productivity ranks, public
+        changelog velocity, and longer-horizon Polymarket odds.
       </p>
       <p class="ai-wars-dek ai-wars-dek-secondary">
         Scroll the charts for history. Open a lab card for the full analysis, or
@@ -155,6 +168,8 @@ const analysisPath = (id: string) => absoluteUrl(`/ai-wars#analysis-${id}`)
       codingStars={codingStars}
       field={field}
       polymarket={polymarket}
+      appStore={appStore}
+      changelog={changelog}
     />
 
     {

@@ -2152,6 +2152,70 @@ button.print-btn:hover {
   font-weight: 700;
 }
 
+.ai-wars-appstore,
+.ai-wars-changelog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.ai-wars-appstore-note {
+  margin: 0;
+}
+
+.ai-wars-changelog-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.ai-wars-changelog-recent {
+  padding: 0.85rem 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(23, 23, 23, 0.1);
+  border-radius: 10px;
+}
+
+.ai-wars-changelog-headlines {
+  list-style: none;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.ai-wars-changelog-headlines li {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+
+.ai-wars-changelog-headlines a {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.ai-wars-changelog-headlines a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ai-wars-changelog-headlines li > div > span {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  color: rgba(23, 23, 23, 0.55);
+}
+
 .ai-wars-share-bar {
   display: flex;
   width: 100%;
@@ -2552,7 +2616,8 @@ a.ai-wars-rank-name:hover {
   .ai-wars-field-grid,
   .ai-wars-analyses-grid,
   .ai-wars-toc,
-  .ai-wars-poly-grid {
+  .ai-wars-poly-grid,
+  .ai-wars-changelog-grid {
     grid-template-columns: 1fr;
   }
 
