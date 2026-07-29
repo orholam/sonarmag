@@ -60,7 +60,7 @@ type FeedSource = {
   companyId: string
   company: string
   color: string
-  kind: 'rss' | 'news-sitemap'
+  kind: 'rss' | 'news-sitemap' | 'meta-blog-index'
   url: string
   /** For news-sitemap: match article locs (not the index page). */
   locPattern?: RegExp
@@ -89,6 +89,13 @@ const SOURCES: FeedSource[] = [
     kind: 'news-sitemap',
     url: 'https://x.ai/sitemap.xml',
     locPattern: /^https:\/\/x\.ai\/news\/[^/]+\/?$/,
+  },
+  {
+    companyId: 'meta',
+    company: 'Meta',
+    color: '#0668e1',
+    kind: 'meta-blog-index',
+    url: 'https://ai.meta.com/blog/',
   },
   {
     companyId: 'google',
@@ -156,11 +163,16 @@ function postId(url: string): string {
 function decodeXml(s: string): string {
   return s
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) =>
+      String.fromCodePoint(Number.parseInt(hex, 16)),
+    )
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
     .trim()
 }
 
@@ -263,10 +275,85 @@ function parseNewsSitemap(
   return out
 }
 
-async function scrapePosts(): Promise<ChangelogPost[]> {
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
+const META_DATE = new RegExp(`(${MONTHS.join('|')})\\s+(\\d{1,2}),\\s+(20\\d{2})`)
+
+function stripTags(s: string): string {
+  return decodeXml(s.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim()
+}
+
+/**
+ * ai.meta.com/blog has no RSS or sitemap, and its index markup pairs cards with
+ * the wrong dates. Post pages carry a correct date + h1, so fetch those — but
+ * only for URLs we have not already stored, since a dated post never moves.
+ */
+async function scrapeMetaBlog(
+  source: FeedSource,
+  since: Date,
+  knownUrls: Set<string>,
+): Promise<ChangelogPost[]> {
+  const index = await fetchText(source.url)
+  if (!index) return []
+
+  const urls = [
+    ...new Set(
+      [...index.matchAll(/href="(https:\/\/ai\.meta\.com\/blog\/[^"#?]+\/)"/g)].map(
+        (m) => m[1],
+      ),
+    ),
+  ]
+  const fresh = urls.filter((u) => !knownUrls.has(u))
+  if (!fresh.length) return []
+
+  const posts = await Promise.all(
+    fresh.map(async (url) => {
+      const page = await fetchText(url)
+      if (!page) return null
+      const dateM = page.match(META_DATE)
+      const h1M = page.match(/<h1[^>]*>([\s\S]{0,300}?)<\/h1>/i)
+      if (!dateM) return null
+      const month = MONTHS.indexOf(dateM[1])
+      const published = new Date(
+        Date.UTC(Number(dateM[3]), month, Number(dateM[2])),
+      )
+      if (Number.isNaN(published.getTime()) || published < since) return null
+      const title = h1M ? stripTags(h1M[1]) : titleFromSlug(url)
+      if (!title) return null
+      return {
+        id: postId(url),
+        companyId: source.companyId,
+        company: source.company,
+        title,
+        url,
+        publishedAt: published.toISOString(),
+        source: source.url,
+      }
+    }),
+  )
+  return posts.filter((p): p is ChangelogPost => p != null)
+}
+
+async function scrapePosts(knownUrls: Set<string>): Promise<ChangelogPost[]> {
   const since = new Date(cutoffIso(KEEP_DAYS))
   const batches = await Promise.all(
     SOURCES.map(async (source) => {
+      if (source.kind === 'meta-blog-index') {
+        return scrapeMetaBlog(source, since, knownUrls)
+      }
       const text = await fetchText(source.url)
       if (!text) return [] as ChangelogPost[]
       if (source.kind === 'news-sitemap') {
@@ -443,7 +530,14 @@ export async function fetchChangelogVelocity(): Promise<ChangelogBoard> {
   const fetchedAt = await metaFetchedAt()
 
   if (!isFresh(fetchedAt)) {
-    const scraped = await scrapePosts()
+    const { data: known } = await supabase
+      .from('ai_wars_changelog_posts')
+      .select('url')
+      .like('url', 'https://ai.meta.com/blog/%')
+    const knownUrls = new Set(
+      ((known as Array<{ url: string }> | null) ?? []).map((r) => r.url),
+    )
+    const scraped = await scrapePosts(knownUrls)
     if (scraped.length) await persistPosts(scraped)
   }
 
@@ -454,7 +548,7 @@ export async function fetchChangelogVelocity(): Promise<ChangelogBoard> {
     .order('published_at', { ascending: false })
 
   if (error || !data?.length) {
-    const scraped = await scrapePosts()
+    const scraped = await scrapePosts(new Set())
     return boardFromPosts(scraped)
   }
 
