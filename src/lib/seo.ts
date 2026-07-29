@@ -57,7 +57,7 @@ export function articleJsonLd(article: Article) {
     description,
     image: article.heroImage ? [article.heroImage] : undefined,
     datePublished: article.publishedAt || undefined,
-    dateModified: article.publishedAt || undefined,
+    dateModified: article.updatedAt || article.publishedAt || undefined,
     author: {
       '@type': 'Person',
       name: article.author,
@@ -80,6 +80,15 @@ export function articleJsonLd(article: Article) {
     timeRequired: `PT${Math.max(1, article.readMinutes)}M`,
     url,
   }
+}
+
+const AI_WARS_TOPIC =
+  /\b(ai|artificial intelligence|openai|anthropic|claude|chatgpt|gemini|deepseek|mistral|hugging face|openrouter|frontier models?|ai agents?|coding agents?|llms?)\b/i
+
+export function isAiWarsCoverage(article: Article): boolean {
+  return AI_WARS_TOPIC.test(
+    [article.title, article.ticker, article.excerpt].filter(Boolean).join(' '),
+  )
 }
 
 export function breadcrumbJsonLd(

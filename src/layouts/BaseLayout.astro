@@ -21,6 +21,7 @@ type Props = {
   type?: 'website' | 'article'
   noIndex?: boolean
   publishedAt?: string | null
+  modifiedAt?: string | null
   author?: string | null
   section?: string | null
   jsonLd?: object | object[] | null
@@ -40,6 +41,7 @@ const {
   type = 'website',
   noIndex = false,
   publishedAt,
+  modifiedAt,
   author,
   section,
   jsonLd,
@@ -96,6 +98,9 @@ const lcpHref = lcpImage
     <meta property="og:image:alt" content={imageAltText} />
     {type === 'article' && publishedAt && (
       <meta property="article:published_time" content={publishedAt} />
+    )}
+    {type === 'article' && modifiedAt && (
+      <meta property="article:modified_time" content={modifiedAt} />
     )}
     {type === 'article' && author && (
       <meta property="article:author" content={author} />

@@ -8,6 +8,7 @@ import type {
   HomepageData,
   MarketTicker,
   PodcastEpisode,
+  RelatedStory,
   StaticPage,
   TweetBlock,
 } from './types'
@@ -19,10 +20,13 @@ type ArticleRow = {
   id: string
   slug: string
   title: string
+  seo_title: string | null
+  category_id: string | null
   highlight_word: string | null
   highlight_tone: 'red' | 'tan' | null
   published_label: string | null
   published_at: string
+  updated_at: string
   comments_count: number
   listen_minutes: number
   read_minutes: number
@@ -74,10 +78,13 @@ const articleSelect = `
   id,
   slug,
   title,
+  seo_title,
+  category_id,
   highlight_word,
   highlight_tone,
   published_label,
   published_at,
+  updated_at,
   comments_count,
   listen_minutes,
   read_minutes,
@@ -142,6 +149,8 @@ function mapArticle(row: ArticleRow): Article {
     id: row.id,
     slug: row.slug,
     title: row.title,
+    seoTitle: row.seo_title,
+    categoryId: row.category_id,
     highlight:
       row.highlight_word && row.highlight_tone
         ? { word: row.highlight_word, tone: row.highlight_tone }
@@ -164,6 +173,7 @@ function mapArticle(row: ArticleRow): Article {
     featuredSlot: row.featured_slot,
     popularRank: row.popular_rank,
     publishedAt: row.published_at,
+    updatedAt: row.updated_at,
   }
 }
 
@@ -254,6 +264,63 @@ export async function fetchArticleBySlug(slug: string): Promise<Article | null> 
   if (error) throw error
   if (!data) return null
   return mapArticle(data as unknown as ArticleRow)
+}
+
+export async function fetchRelatedStories(
+  article: Article,
+  limit = 3,
+): Promise<RelatedStory[]> {
+  const { data, error } = await supabase
+    .from('articles')
+    .select(`
+      slug,
+      title,
+      category_id,
+      published_label,
+      published_at,
+      hero_image,
+      hero_alt,
+      thumb_image,
+      categories ( name )
+    `)
+    .eq('status', 'published')
+    .neq('id', article.id)
+    .order('published_at', { ascending: false })
+    .limit(12)
+
+  if (error) throw error
+
+  type RelatedRow = {
+    slug: string
+    title: string
+    category_id: string | null
+    published_label: string | null
+    published_at: string
+    hero_image: string | null
+    hero_alt: string | null
+    thumb_image: string | null
+    categories: CategoryEmbed | CategoryEmbed[] | null
+  }
+
+  return ((data ?? []) as unknown as RelatedRow[])
+    .sort((a, b) => {
+      const aSameCategory = a.category_id === article.categoryId ? 1 : 0
+      const bSameCategory = b.category_id === article.categoryId ? 1 : 0
+      if (aSameCategory !== bSameCategory) {
+        return bSameCategory - aSameCategory
+      }
+      return Date.parse(b.published_at) - Date.parse(a.published_at)
+    })
+    .slice(0, limit)
+    .map((row) => ({
+      slug: row.slug,
+      title: row.title,
+      category: one(row.categories)?.name ?? '',
+      publishedLabel: row.published_label ?? '',
+      heroImage: row.hero_image ?? '',
+      heroAlt: row.hero_alt ?? '',
+      thumbImage: row.thumb_image,
+    }))
 }
 
 export async function fetchStaticPage(slug: string): Promise<StaticPage | null> {

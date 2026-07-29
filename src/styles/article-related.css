@@ -1,0 +1,117 @@
+.article-related {
+  max-width: 38rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink);
+}
+
+.article-ai-wars-link {
+  display: block;
+  margin-bottom: 2rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid rgba(23, 23, 23, 0.2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.article-ai-wars-link > span,
+.article-related-card > span {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.article-ai-wars-link > span {
+  color: var(--red);
+}
+
+.article-ai-wars-link strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.article-ai-wars-link p {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #4d4d4d;
+}
+
+.article-ai-wars-link:hover strong,
+.article-related-card:hover h3 {
+  color: var(--red);
+}
+
+.article-related > h2 {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.article-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.article-related-card {
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.article-related-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 8 / 5;
+  margin-bottom: 0.75rem;
+  border-radius: calc(var(--radius) * 0.7);
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+.article-related-card > span {
+  color: #666;
+}
+
+.article-related-card h3 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.article-related-card > p {
+  margin: 0.45rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: #666;
+}
+
+@media (max-width: 640px) {
+  .article-related-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .article-related-card {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    column-gap: 0.85rem;
+    align-items: start;
+  }
+
+  .article-related-card img {
+    grid-row: 1 / span 3;
+    margin: 0;
+  }
+}

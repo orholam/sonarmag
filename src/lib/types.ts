@@ -22,6 +22,9 @@ export type Article = {
   id: string
   slug: string
   title: string
+  /** Search/browser title only. The visible headline remains `title`. */
+  seoTitle?: string | null
+  categoryId?: string | null
   highlight?: {
     word: string
     tone: 'red' | 'tan'
@@ -45,6 +48,17 @@ export type Article = {
   featuredSlot?: 'hero' | 'secondary' | 'opinion' | null
   popularRank?: number | null
   publishedAt?: string
+  updatedAt?: string
+}
+
+export type RelatedStory = {
+  slug: string
+  title: string
+  category: string
+  publishedLabel: string
+  heroImage: string
+  heroAlt: string
+  thumbImage?: string | null
 }
 
 export type Comment = {

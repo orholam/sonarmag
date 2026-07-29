@@ -3,7 +3,13 @@ import { ArticleMarkdown } from './ArticleMarkdown'
 import { TweetEmbed } from './TweetEmbed'
 import { articleHeroSrcSet, unsplashUrl } from '../lib/images'
 import { categoryPath } from '../lib/seo'
-import { isTweetBlock, type Article, type ArticleBlock } from '../lib/types'
+import {
+  isTweetBlock,
+  type Article,
+  type ArticleBlock,
+  type RelatedStory,
+} from '../lib/types'
+import '../styles/article-related.css'
 
 function IconPlay() {
   return (
@@ -107,9 +113,15 @@ function splitBody(blocks: ArticleBlock[]): {
 
 type ArticleViewProps = {
   article: Article
+  relatedStories?: RelatedStory[]
+  showAiWars?: boolean
 }
 
-export function ArticleView({ article }: ArticleViewProps) {
+export function ArticleView({
+  article,
+  relatedStories = [],
+  showAiWars = false,
+}: ArticleViewProps) {
   const { intro, rest } = splitBody(article.paragraphs)
   const sectionHref = categoryPath(article.category)
 
@@ -199,6 +211,53 @@ export function ArticleView({ article }: ArticleViewProps) {
             {rest.map((block, index) => renderBlock(block, `rest-${index}`))}
           </div>
         </div>
+
+        {(showAiWars || relatedStories.length > 0) && (
+          <section className="article-related" aria-label="More from Sonar Mag">
+            {showAiWars && (
+              <a className="article-ai-wars-link" href="/ai-wars">
+                <span>Live scoreboard</span>
+                <strong>Follow the AI race on AI Wars</strong>
+                <p>
+                  Lab rankings, model preference, API volume, coding-agent heat,
+                  open-source stars, and prediction markets.
+                </p>
+              </a>
+            )}
+
+            {relatedStories.length > 0 && (
+              <>
+                <h2>Related stories</h2>
+                <div className="article-related-grid">
+                  {relatedStories.map((story) => {
+                    const image = story.thumbImage || story.heroImage
+                    return (
+                      <a
+                        className="article-related-card"
+                        href={`/article/${story.slug}`}
+                        key={story.slug}
+                      >
+                        {image && (
+                          <img
+                            src={unsplashUrl(image, { width: 480, height: 300, quality: 70 })}
+                            alt={story.heroAlt || story.title}
+                            width={480}
+                            height={300}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        )}
+                        <span>{story.category}</span>
+                        <h3>{story.title}</h3>
+                        {story.publishedLabel && <p>{story.publishedLabel}</p>}
+                      </a>
+                    )
+                  })}
+                </div>
+              </>
+            )}
+          </section>
+        )}
       </div>
     </article>
   )
