@@ -16,7 +16,6 @@
   text-decoration: none;
 }
 
-.article-ai-wars-link > span,
 .article-related-card > span {
   display: block;
   margin-bottom: 0.35rem;
@@ -27,8 +26,104 @@
   text-transform: uppercase;
 }
 
-.article-ai-wars-link > span {
+.article-ai-wars-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.article-ai-wars-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--red);
+}
+
+.article-live-dot {
+  position: relative;
+  display: block;
+  width: 0.45rem;
+  height: 0.45rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--red);
+  animation: article-live-blink 2.4s ease-in-out infinite;
+}
+
+.article-live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--red);
+  animation: article-live-halo 2.4s ease-out infinite;
+}
+
+.article-live-spark {
+  width: 5.5rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+}
+
+.article-live-spark-base {
+  stroke: rgba(23, 23, 23, 0.18);
+}
+
+.article-live-spark-trace {
+  stroke: var(--red);
+  stroke-dasharray: 100;
+  animation: article-live-trace 3.6s ease-in-out infinite;
+}
+
+.article-live-spark-head {
+  fill: var(--red);
+  animation: article-live-blink 2.4s ease-in-out infinite;
+}
+
+@keyframes article-live-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes article-live-halo {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  70%,
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+/* Draws in, holds, then fades so the loop restart is not a visible snap. */
+@keyframes article-live-trace {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 1;
+  }
+  55%,
+  90% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
 }
 
 .article-ai-wars-link strong {
@@ -113,5 +208,21 @@
   .article-related-card img {
     grid-row: 1 / span 3;
     margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-live-dot,
+  .article-live-spark-trace,
+  .article-live-spark-head {
+    animation: none;
+  }
+
+  .article-live-spark-trace {
+    stroke-dashoffset: 0;
+  }
+
+  .article-live-dot::after {
+    display: none;
   }
 }

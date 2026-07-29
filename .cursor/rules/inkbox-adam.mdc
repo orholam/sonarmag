@@ -26,12 +26,14 @@ When a task needs an **email address**, **email verification**, magic links, or 
 
 ## Hard rule: outbound email pacing
 
-**There must be a ≥20 second delay between each outbound email send.**
+**There must be a ≥60 second delay between each outbound email send.**
 
 - Applies to every path: Inkbox MCP (`inkbox_send_email`), CLI (`inkbox email send`), and any SDK/API wrapper.
-- After each successful send, wait at least **20 seconds** before the next send (e.g. `sleep 20`).
-- Do **not** batch-fire, parallelize, or otherwise send multiple emails in the same second/burst.
+- After each successful send, wait at least **60 seconds** before the next send (e.g. `sleep 60`). This is mandatory, not optional pacing.
+- Do **not** batch-fire, parallelize, or otherwise send multiple emails in the same second/burst. One send → wait → next send.
+- On rate-limit / 429 / “too many requests”: stop sending, wait at least **5 minutes**, then retry at most once; if it fails again, abort the remaining queue and report.
 - Single one-off emails are fine; the delay is required whenever sending **more than one** in a session/task.
+- Cloud Automations do **not** load this file — any scheduled agent that sends mail must include this same pacing block in its prompt.
 
 ## Reference harness
 

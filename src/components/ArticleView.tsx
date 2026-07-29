@@ -83,6 +83,35 @@ function renderTitle(article: Article): ReactNode {
   )
 }
 
+const LIVE_SPARK_PATH =
+  'M3 22 L15 19 L24 21 L33 14 L43 16 L52 10 L61 12 L70 7 L79 9 L93 4'
+
+function LiveSparkline() {
+  return (
+    <svg className="article-live-spark" viewBox="0 0 96 28" aria-hidden="true">
+      <path
+        className="article-live-spark-base"
+        d={LIVE_SPARK_PATH}
+        pathLength={100}
+        fill="none"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        className="article-live-spark-trace"
+        d={LIVE_SPARK_PATH}
+        pathLength={100}
+        fill="none"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle className="article-live-spark-head" cx="93" cy="4" r="2.4" />
+    </svg>
+  )
+}
+
 function renderBlock(block: ArticleBlock, key: string) {
   if (isTweetBlock(block)) {
     return <TweetEmbed key={key} tweet={block} />
@@ -216,7 +245,13 @@ export function ArticleView({
           <section className="article-related" aria-label="More from Sonar Mag">
             {showAiWars && (
               <a className="article-ai-wars-link" href="/ai-wars">
-                <span>Live scoreboard</span>
+                <span className="article-ai-wars-top">
+                  <span className="article-ai-wars-eyebrow">
+                    <i className="article-live-dot" aria-hidden="true" />
+                    Live scoreboard
+                  </span>
+                  <LiveSparkline />
+                </span>
                 <strong>Follow the AI race on AI Wars</strong>
                 <p>
                   Lab rankings, model preference, API volume, coding-agent heat,

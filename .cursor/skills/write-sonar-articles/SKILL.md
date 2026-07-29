@@ -63,6 +63,7 @@ Article pair
 - [ ] If no topics: research tech×philosophy news (fresh pegs) + pick 2 angles
 - [ ] Resolve authors + categories from Supabase
 - [ ] Draft A (highlighted) + Draft B
+- [ ] Write seo_title for both (search-facing; headline stays as drafted)
 - [ ] Pick unique hero images (not already on any article; A ≠ B) + concrete hero_alt each
 - [ ] Add 0–2 internal links each (only if earned)
 - [ ] Manifesto checklist pass on both (incl. §8a)
@@ -129,9 +130,31 @@ Quality bar is unchanged: manifesto title tests, bans, and title↔body contract
 
 Record the two modes in the short publish note to the user (one line).
 
+#### Search title (`seo_title`, required on both rows)
+
+`title` is the headline a reader sees on the page and the boards. `seo_title` is a
+separate column used **only** for `<title>`, `og:title`, and `twitter:title`. It never
+renders on the page, so the rolled title mode above stays intact — do not flatten a good
+headline to please a crawler, and do not skip `seo_title` because the headline "already
+works."
+
+Write it as the plain-language version of the same claim:
+
+- **Front-load the searchable entity** — the lab, company, court, agency, or product a
+  person would actually type. `Delaware Proposes Liability Rules for AI-Run Companies`,
+  not `The Liability Box`.
+- **Say what happened** in the same breath. A named actor with no event is a dead title.
+- **Length:** aim 45–58 characters. `pageTitle()` appends ` — Sonar Mag`, so anything
+  longer pushes the brand out of the search snippet. DB check rejects over 120.
+- **No brand suffix, no colon-SEO tails, no keyword lists.** `Waymo vs. Apollo Go in the
+  Self-Driving Race` is fine; `Self-Driving Cars: Waymo, Apollo Go, Robotaxi News` is not.
+- Same factual contract as the headline: it must describe the piece you actually wrote.
+  Do not smuggle a stronger claim into the search title than the body supports.
+
 For each article set:
 
 - **Title first** — under the rolled mode, pass the manifesto title test (specific case / verdict / real question; no colon-SEO, topic tags, or slogan-oversells of study claims). Clever tone without a clear referent fails.
+- **`seo_title`** — the search-facing rewrite of that headline (see above)
 - **Excerpt as continuous card dek** — splash/opinion boards show the excerpt in two CSS columns as one flowing text (~70–110 words). Do not dump body paras into a side-by-side grid.
 - Excerpt, ticker, hero/thumb images + alts (see **Images** below)
 - `read_minutes` / `listen_minutes`, `published_label` (e.g. `Today`)
@@ -145,7 +168,20 @@ Before insert, run §8a: strip em-dash pairs, *not X but Y*, and *actually*-as-e
 
 ### Internal links (minimal)
 
-Body paragraphs support markdown-style links: `[anchor text](/article/slug)`.
+**What the page already does for you.** Every article renders a footer rail below the
+body, with no authoring work:
+
+- **Related stories** — three cards, picked from the 12 most recent published articles,
+  same category first then newest. Nothing to set; it follows from `category_id`,
+  `published_at`, and the hero/thumb fields you already fill in.
+- **AI Wars card** — a "Live scoreboard" link to `/ai-wars` that appears automatically
+  when `title`, `ticker`, or `excerpt` matches AI coverage (see `isAiWarsCoverage()` in
+  `src/lib/seo.ts`). Never hand-write a generic "check out our AI Wars scoreboard"
+  closer; it will duplicate the card. Linking `/ai-wars` mid-body is still fine when a
+  specific standing or signal supports the sentence.
+
+So the only links you author are in-body ones, and they exist to sharpen a sentence — not
+to build a related-content section that already exists.
 
 Use them sparingly:
 
@@ -184,11 +220,23 @@ Insert two rows into `public.articles` with `status = 'published'`. Set **only o
 
 Do not set `featured_slot` for layout.
 
+**Never write `updated_at`.** A trigger maintains it, and it feeds `dateModified` in the
+article schema plus `article:modified_time`. On insert it matches `published_at`; later it
+moves only when an editorial column actually changes, so analytics writes (`popular_rank`,
+`comments_count`) leave it alone. Setting it by hand — or re-saving a row with identical
+values to "refresh" it — fakes a freshness signal.
+
+If you go back and fix a published row, edit only the columns that are wrong. A real copy
+correction should bump `updated_at`; a cosmetic touch-up you would not tell a reader about
+should not be made at all.
+
 ### 4. Verify
 
 - Open `/article/{slug}` for both
 - Homepage large card shows the highlighted piece (allow ~60s cache)
 - If you added internal links, spot-check that the anchors resolve
+- Browser tab / `<title>` shows `seo_title`, while the on-page `<h1>` still shows `title`
+- Footer rail renders three related cards, and the AI Wars card appears on AI coverage
 
 ### 5. IndexNow (required after publish)
 
@@ -216,5 +264,9 @@ If `INDEXNOW_SUBMIT_SECRET` is unset locally, omit the Authorization header. Pre
 - Reusing a hero/thumb photo already attached to another article (or to the other piece in the pair)
 - Shipping a hero_image without a concrete non-empty hero_alt
 - Stuffing internal links, “related reading” footers, or linking without an earned referent
+- Leaving `seo_title` null, or pasting the headline into it unchanged
+- Bending the visible headline toward search terms because `seo_title` exists to do that job
+- Hand-writing an “our AI Wars scoreboard” closer that duplicates the automatic card
+- Setting `updated_at` manually, or re-saving a row to fake a freshness signal
 - Asking the model to “add title variety” or stuffing more Atlantic examples into the draft step instead of rolling title modes
 - Ignoring a rolled title mode, or forcing every piece into `actor-verb` after the roll

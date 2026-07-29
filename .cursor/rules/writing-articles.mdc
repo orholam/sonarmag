@@ -27,6 +27,7 @@ You do **not** set `featured_slot` for splash layout anymore.
 - `slug` (unique), `title`, `excerpt`, `ticker`
   - `excerpt` is the homepage card dek: one continuous ~70–110 word block (CSS columns). Never rely on body paragraphs for card layout.
   - Titles must pass the manifesto clarity test: clever tone without a clear case still fails; study titles must not slogan-oversell.
+- `seo_title` — search/browser title only (`<title>`, `og:title`); the on-page `<h1>` stays `title`. Front-load the entity a person would search, say what happened, aim 45–58 chars (`— Sonar Mag` is appended; DB caps at 120). Do not bend `title` toward keywords now that this exists.
 - `author_id`, `category_id`
 - `hero_image`, `hero_alt`, `thumb_image` — follow manifesto §12a; **must not reuse** another article’s photo (Unsplash `photo-…` id). Same URL for hero+thumb on one row is fine. DB enforces uniqueness via `article_image_key()`. **`hero_alt` is required** whenever `hero_image` is set (concrete scene, not empty / vibe words).
 - `read_minutes`, `listen_minutes`, `published_at`, `published_label`
@@ -36,6 +37,11 @@ You do **not** set `featured_slot` for splash layout anymore.
   - Tweet objects stay structured embeds; do not put tweet HTML in Markdown strings.
 - `is_highlighted` boolean
 - optional: `highlight_word` + `highlight_tone` (`red` \| `tan`) for title mark
+- **Do not set `updated_at`** — a trigger maintains it and it feeds `dateModified` / `article:modified_time`. It moves only when an editorial column really changes, so `popular_rank` and `comments_count` syncs leave it alone. Re-saving a row to fake freshness is not allowed.
+
+## Article footer (automatic)
+
+Every article renders a related rail with no authoring work: three cards from the 12 newest published articles (same category first, then recency), plus a "Live scoreboard" card linking `/ai-wars` when the title/ticker/excerpt reads as AI coverage. Do not hand-write "related reading" or generic AI Wars closers.
 
 ## Tweet embeds
 
