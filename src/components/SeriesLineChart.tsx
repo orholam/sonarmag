@@ -29,6 +29,38 @@ type Props = {
   ariaLabel?: string
   /** Curve the line — for smoothed/averaged series that aren't point-precise. */
   smooth?: boolean
+  /**
+   * Show week-over-week score change pills in the legend (+3 / −1).
+   * Uses the last two points on each series (score delta, not rank).
+   */
+  deltaPills?: boolean
+}
+
+/** Latest score minus prior snapshot; null if fewer than two points. */
+export function seriesScoreDelta(series: ChartSeries): number | null {
+  const pts = series.points
+    .filter((p) => Number.isFinite(p.value))
+    .slice()
+    .sort((a, b) => a.date.localeCompare(b.date))
+  if (pts.length < 2) return null
+  return Math.round(pts[pts.length - 1].value - pts[pts.length - 2].value)
+}
+
+function formatScoreDelta(
+  delta: number,
+  unit: AiWarsChart['unit'],
+): string {
+  if (delta === 0) return '0'
+  const sign = delta > 0 ? '+' : '−'
+  const abs = Math.abs(delta)
+  if (unit === 'score' || unit === 'elo') {
+    return `${sign}${Math.round(abs)}`
+  }
+  if (unit === 'share') {
+    return `${sign}${abs.toFixed(abs >= 10 ? 0 : 1)}`
+  }
+  // count / tokens — compact absolute change
+  return `${sign}${formatChartValue(abs, unit)}`
 }
 
 type TipState = {
@@ -42,6 +74,7 @@ export function SeriesLineChart({
   height = 280,
   ariaLabel,
   smooth = false,
+  deltaPills = false,
 }: Props) {
   const { dates, series, unit } = chart
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -362,6 +395,15 @@ export function SeriesLineChart({
       <ul className="ai-wars-legend" aria-label="Series legend">
         {series.map((s) => {
           const off = hidden.has(s.id)
+          const delta = deltaPills ? seriesScoreDelta(s) : null
+          const deltaTone =
+            delta == null
+              ? null
+              : delta > 0
+                ? 'is-up'
+                : delta < 0
+                  ? 'is-down'
+                  : 'is-flat'
           return (
             <li key={s.id}>
               <button
@@ -375,6 +417,23 @@ export function SeriesLineChart({
               >
                 <span className="ai-wars-swatch" style={{ background: s.color }} />
                 <span className="ai-wars-legend-name">{s.name}</span>
+                {delta != null && deltaTone ? (
+                  <span
+                    className={`ai-wars-score-delta ${deltaTone}`}
+                    title={
+                      unit === 'score'
+                        ? 'Week-over-week positioning score change'
+                        : 'Week-over-week change'
+                    }
+                    aria-label={
+                      delta === 0
+                        ? 'Unchanged week over week'
+                        : `Changed ${formatScoreDelta(delta, unit)} week over week`
+                    }
+                  >
+                    {formatScoreDelta(delta, unit)}
+                  </span>
+                ) : null}
               </button>
             </li>
           )

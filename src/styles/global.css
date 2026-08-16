@@ -1438,6 +1438,11 @@ button.print-btn:hover {
   align-items: center;
   gap: 0.4rem;
   min-width: 0;
+  flex-wrap: wrap;
+}
+
+.ai-wars-company-title .ai-wars-score-delta {
+  flex-shrink: 0;
 }
 
 .ai-wars-ow-dot {
@@ -1618,6 +1623,125 @@ button.print-btn:hover {
   font-size: 0.76rem;
   line-height: 1.45;
   color: #4a4a4a;
+}
+
+.ai-wars-company-blurb {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.ai-wars-week-move {
+  margin: 0 0 0.55rem;
+  padding: 0.45rem 0.5rem;
+  background: rgba(23, 23, 23, 0.03);
+  border-radius: 6px;
+}
+
+.ai-wars-week-move-label {
+  margin: 0 0 0.15rem;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ai-wars-week-move-body {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.ai-wars-week-move-body:last-of-type {
+  margin-bottom: 0.15rem;
+}
+
+.ai-wars-cite-ref {
+  font-family: var(--font-sans);
+  font-size: 0.68em;
+  font-weight: 700;
+  line-height: 0;
+}
+
+.ai-wars-cite-ref a {
+  color: var(--red);
+  text-decoration: none;
+  padding: 0 0.08em;
+}
+
+.ai-wars-cite-ref a:hover {
+  text-decoration: underline;
+}
+
+.ai-wars-citations {
+  list-style: none;
+  margin: 0.65rem 0 0;
+  padding: 0.55rem 0 0;
+  border-top: 1px solid rgba(23, 23, 23, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  counter-reset: ai-cite;
+}
+
+.ai-wars-citations li {
+  margin: 0;
+  padding-left: 1.35rem;
+  position: relative;
+  counter-increment: ai-cite;
+}
+
+.ai-wars-citations li::before {
+  content: counter(ai-cite);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.ai-wars-citations a {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(23, 23, 23, 0.25);
+  text-underline-offset: 2px;
+}
+
+.ai-wars-citations a:hover {
+  text-decoration-color: var(--ink);
+}
+
+.ai-wars-cite-kind {
+  margin-right: 0.28rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.ai-wars-cite-note {
+  margin: 0.18rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: #4a4a4a;
+}
+
+.ai-wars-dialog .ai-wars-week-move {
+  margin: 0 0 0.85rem;
+}
+
+.ai-wars-analysis .ai-wars-week-move {
+  margin: 0.65rem 0 0.85rem;
 }
 
 .ai-wars-company-scores {
@@ -1836,6 +1960,35 @@ button.print-btn:hover {
   font-weight: 600;
 }
 
+.ai-wars-score-delta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  padding: 0.08rem 0.32rem;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.ai-wars-score-delta.is-up {
+  color: #1a6b3c;
+  background: rgba(47, 125, 74, 0.14);
+}
+
+.ai-wars-score-delta.is-down {
+  color: #9f1239;
+  background: rgba(225, 29, 46, 0.12);
+}
+
+.ai-wars-score-delta.is-flat {
+  color: #6b6b6b;
+  background: rgba(23, 23, 23, 0.06);
+}
+
 .ai-wars-swatch {
   width: 0.55rem;
   height: 0.55rem;
@@ -1859,6 +2012,148 @@ button.print-btn:hover {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.85rem;
+}
+
+.ai-wars-visitor-rows {
+  margin-top: 0.85rem;
+  padding: 0.75rem 0.85rem 0.65rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(23, 23, 23, 0.07);
+  border-radius: 10px;
+}
+
+.ai-wars-visitor-rows-head {
+  margin-bottom: 0.55rem;
+}
+
+.ai-wars-visitor-rows-head h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.ai-wars-visitor-rows-head p {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.ai-wars-visitor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ai-wars-visitor-list li {
+  border-top: 1px solid rgba(23, 23, 23, 0.06);
+}
+
+.ai-wars-visitor-list li:first-child {
+  border-top: 0;
+}
+
+.ai-wars-visitor-row {
+  display: grid;
+  grid-template-columns: 0.55rem minmax(0, 1fr) 120px auto;
+  align-items: center;
+  gap: 0.55rem 0.65rem;
+  padding: 0.4rem 0;
+}
+
+.ai-wars-visitor-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  min-width: 0;
+}
+
+.ai-wars-visitor-name {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.ai-wars-visitor-sub {
+  font-family: var(--font-sans);
+  font-size: 0.64rem;
+  color: var(--muted);
+}
+
+.ai-wars-visitor-spark {
+  display: block;
+  width: 120px;
+  height: 28px;
+  overflow: visible;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.ai-wars-visitor-stats {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  min-width: 4.5rem;
+}
+
+.ai-wars-visitor-latest {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.ai-wars-visitor-hover-date {
+  font-style: normal;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.ai-wars-visitor-rows .ai-wars-note {
+  margin-top: 0.45rem;
+}
+
+@media (max-width: 640px) {
+  .ai-wars-visitor-row {
+    grid-template-columns: 0.55rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'swatch meta stats'
+      'swatch spark spark';
+  }
+
+  .ai-wars-visitor-row > .ai-wars-swatch {
+    grid-area: swatch;
+  }
+
+  .ai-wars-visitor-meta {
+    grid-area: meta;
+  }
+
+  .ai-wars-visitor-spark {
+    grid-area: spark;
+    width: 100%;
+  }
+
+  .ai-wars-visitor-stats {
+    grid-area: stats;
+  }
+}
+
+.ai-wars-agents-charts {
+  margin-top: 0.85rem;
 }
 
 .ai-wars-agents-chart {

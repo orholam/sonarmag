@@ -1,16 +1,146 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import {
   fieldByRegion,
   fieldUpdatedAt,
   formatFieldUpdatedAt,
+  formatPositioningDelta,
   logoDevUrl,
   positioningChartForRegion,
+  positioningScoreDelta,
   type AiWarsFieldBoard,
+  type FieldCitation,
   type FieldPositioningSnapshot,
   type FieldCompany,
   type RankedFieldCompany,
 } from '../lib/ai-wars-field'
 import { SeriesLineChart } from './SeriesLineChart'
+
+const CITATION_KIND_LABEL: Record<FieldCitation['kind'], string> = {
+  news: 'News',
+  opinion: 'Opinion',
+  data: 'Data',
+  vendor: 'Vendor',
+}
+
+function ScoreDeltaPill({ delta }: { delta: number | null }) {
+  if (delta == null) return null
+  const tone = delta > 0 ? 'is-up' : delta < 0 ? 'is-down' : 'is-flat'
+  return (
+    <span
+      className={`ai-wars-score-delta ${tone}`}
+      title="Week-over-week positioning score change"
+      aria-label={
+        delta === 0
+          ? 'Score unchanged week over week'
+          : `Score ${delta > 0 ? 'up' : 'down'} ${Math.abs(delta)} week over week`
+      }
+    >
+      {formatPositioningDelta(delta)}
+    </span>
+  )
+}
+
+function renderInlineCites(
+  text: string,
+  citations: FieldCitation[],
+): ReactNode[] {
+  const nodes: ReactNode[] = []
+  const re = /\[(\d+)\]/g
+  let last = 0
+  let match: RegExpExecArray | null
+  let key = 0
+  while ((match = re.exec(text))) {
+    if (match.index > last) nodes.push(text.slice(last, match.index))
+    const n = Number(match[1])
+    const cite = citations[n - 1]
+    if (!cite) {
+      nodes.push(match[0])
+    } else {
+      const title = cite.note ? `${cite.label} — ${cite.note}` : cite.label
+      nodes.push(
+        <sup key={`cite-${n}-${key++}`} className="ai-wars-cite-ref">
+          <a
+            href={cite.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={title}
+          >
+            {n}
+          </a>
+        </sup>,
+      )
+    }
+    last = match.index + match[0].length
+  }
+  if (last < text.length) nodes.push(text.slice(last))
+  return nodes
+}
+
+/** Split on blank lines; turn [1] [2] into superscript source links. */
+export function CitedText({
+  text,
+  citations,
+  className,
+}: {
+  text: string
+  citations: FieldCitation[]
+  className?: string
+}) {
+  const paragraphs = text
+    .split(/\n\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+  if (!paragraphs.length) return null
+  return (
+    <>
+      {paragraphs.map((para, i) => (
+        <p key={i} className={className}>
+          {renderInlineCites(para, citations)}
+        </p>
+      ))}
+    </>
+  )
+}
+
+/** Full week-move + numbered sources — dialog and desk-analyses only. */
+export function AnalysisWeekMove({
+  weekMove,
+  citations,
+}: {
+  weekMove: string
+  citations: FieldCitation[]
+}) {
+  if (!weekMove && !citations.length) return null
+  return (
+    <div className="ai-wars-week-move">
+      {weekMove ? (
+        <>
+          <p className="ai-wars-week-move-label">Why the score moved</p>
+          <CitedText
+            text={weekMove}
+            citations={citations}
+            className="ai-wars-week-move-body"
+          />
+        </>
+      ) : null}
+      {citations.length ? (
+        <ol className="ai-wars-citations">
+          {citations.map((c) => (
+            <li key={`${c.url}-${c.label}`}>
+              <a href={c.url} target="_blank" rel="noopener noreferrer">
+                <span className="ai-wars-cite-kind">
+                  {CITATION_KIND_LABEL[c.kind]}
+                </span>
+                {c.label}
+              </a>
+              {c.note ? <p className="ai-wars-cite-note">{c.note}</p> : null}
+            </li>
+          ))}
+        </ol>
+      ) : null}
+    </div>
+  )
+}
 
 function ScoreMeter({ label, value }: { label: string; value: number }) {
   const clamped = Math.max(0, Math.min(100, Math.round(value)))
@@ -32,9 +162,11 @@ function ScoreMeter({ label, value }: { label: string; value: number }) {
 
 function CompanyCard({
   company,
+  scoreDelta,
   onOpen,
 }: {
   company: RankedFieldCompany
+  scoreDelta: number | null
   onOpen: (company: RankedFieldCompany) => void
 }) {
   const logo = logoDevUrl(company.domain, { size: 56 })
@@ -85,10 +217,11 @@ function CompanyCard({
               }
             />
             {company.name}
+            <ScoreDeltaPill delta={scoreDelta} />
           </h3>
           <span className="ai-wars-company-open">Read analysis</span>
         </div>
-        <p>{company.blurb}</p>
+        <p className="ai-wars-company-blurb">{company.blurb}</p>
         <div className="ai-wars-company-scores">
           <ScoreMeter label="Positioning" value={company.scores.positioning} />
           <ScoreMeter label="Heat" value={company.scores.heat} />
@@ -202,9 +335,18 @@ function CompanyDialog({
           <ScoreMeter label="Heat" value={company.scores.heat} />
         </div>
 
+        <AnalysisWeekMove
+          weekMove={company.weekMove}
+          citations={company.citations}
+        />
+
         <div className="ai-wars-dialog-body">
           {company.analysis.map((para) => (
-            <p key={para.slice(0, 48)}>{para}</p>
+            <CitedText
+              key={para.slice(0, 48)}
+              text={para}
+              citations={company.citations}
+            />
           ))}
         </div>
       </div>
@@ -263,7 +405,11 @@ function RegionColumn({
       <ol className="ai-wars-field-list">
         {companies.map((company) => (
           <li key={company.id}>
-            <CompanyCard company={company} onOpen={onOpen} />
+            <CompanyCard
+              company={company}
+              scoreDelta={positioningScoreDelta(company.id, history)}
+              onOpen={onOpen}
+            />
           </li>
         ))}
       </ol>

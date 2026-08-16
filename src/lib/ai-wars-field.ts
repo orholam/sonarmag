@@ -11,6 +11,16 @@ export type FieldScores = {
   heat: number
 }
 
+export type FieldCitationKind = 'news' | 'opinion' | 'data' | 'vendor'
+
+export type FieldCitation = {
+  label: string
+  url: string
+  kind: FieldCitationKind
+  /** What the desk took from this source and how it affected the score. */
+  note: string
+}
+
 export type FieldCompany = {
   id: string
   name: string
@@ -22,6 +32,10 @@ export type FieldCompany = {
   openWeight: boolean
   /** One-line card dek. */
   blurb: string
+  /** What changed vs last desk week and why scores moved (or held). */
+  weekMove: string
+  /** Sources that justified this week’s desk update. */
+  citations: FieldCitation[]
   /** Full desk analysis (≈3 paragraphs) backing the scores. */
   analysis: [string, string, string]
   scores: FieldScores
@@ -53,6 +67,8 @@ type CompanyRow = {
   hq: string
   open_weight: boolean
   blurb: string
+  week_move: string | null
+  citations: unknown
   analysis: unknown
   positioning: number
   heat: number
@@ -89,6 +105,30 @@ function parseAnalysis(raw: unknown): [string, string, string] | null {
   return [raw[0], raw[1], raw[2]]
 }
 
+const CITATION_KINDS = new Set<FieldCitationKind>([
+  'news',
+  'opinion',
+  'data',
+  'vendor',
+])
+
+function parseCitations(raw: unknown): FieldCitation[] {
+  if (!Array.isArray(raw)) return []
+  const out: FieldCitation[] = []
+  for (const item of raw) {
+    if (!item || typeof item !== 'object') continue
+    const row = item as Record<string, unknown>
+    const label = typeof row.label === 'string' ? row.label.trim() : ''
+    const url = typeof row.url === 'string' ? row.url.trim() : ''
+    const kindRaw = typeof row.kind === 'string' ? row.kind.trim() : ''
+    const note = typeof row.note === 'string' ? row.note.trim() : ''
+    if (!label || !url) continue
+    if (!CITATION_KINDS.has(kindRaw as FieldCitationKind)) continue
+    out.push({ label, url, kind: kindRaw as FieldCitationKind, note })
+  }
+  return out
+}
+
 function mapCompany(row: CompanyRow): FieldCompany | null {
   if (row.region !== 'us' && row.region !== 'international') return null
   const analysis = parseAnalysis(row.analysis)
@@ -101,6 +141,8 @@ function mapCompany(row: CompanyRow): FieldCompany | null {
     hq: row.hq,
     openWeight: Boolean(row.open_weight),
     blurb: row.blurb,
+    weekMove: (row.week_move ?? '').trim(),
+    citations: parseCitations(row.citations),
     analysis,
     scores: {
       positioning: clampScore(row.positioning),
@@ -135,7 +177,7 @@ export async function fetchAiWarsField(): Promise<AiWarsFieldBoard> {
     supabase
       .from('ai_wars_companies')
       .select(
-        'id, name, region, domain, hq, open_weight, blurb, analysis, positioning, heat, updated_at',
+        'id, name, region, domain, hq, open_weight, blurb, week_move, citations, analysis, positioning, heat, updated_at',
       )
       .order('sort_hint', { ascending: true }),
     supabase
@@ -186,6 +228,26 @@ export function fieldByRegion(
     return a.name.localeCompare(b.name)
   })
   return sorted.map((company, i) => ({ ...company, rank: i + 1 }))
+}
+
+/** Week-over-week positioning score change from the last two desk snapshots. */
+export function positioningScoreDelta(
+  companyId: string,
+  history: FieldPositioningSnapshot[],
+): number | null {
+  const snaps = history
+    .filter((s) => s.positioning[companyId] != null)
+    .slice()
+    .sort((a, b) => a.measuredOn.localeCompare(b.measuredOn))
+  if (snaps.length < 2) return null
+  const latest = snaps[snaps.length - 1].positioning[companyId]!
+  const prior = snaps[snaps.length - 2].positioning[companyId]!
+  return Math.round(latest - prior)
+}
+
+export function formatPositioningDelta(delta: number): string {
+  if (delta > 0) return `+${delta}`
+  return String(delta)
 }
 
 /** Latest desk edit among companies in a region (ISO), or null. */

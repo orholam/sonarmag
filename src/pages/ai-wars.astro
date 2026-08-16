@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { AiWarsBoard } from '../components/AiWarsBoard'
+import { AnalysisWeekMove, CitedText } from '../components/AiWarsField'
 import { fetchAppStoreRanks } from '../lib/ai-wars-app-store'
 import { fetchChangelogVelocity } from '../lib/ai-wars-changelog'
 import { fetchAiRaceData } from '../lib/ai-race'
@@ -242,8 +243,15 @@ const analysisPath = (id: string) => absoluteUrl(`/ai-wars#analysis-${id}`)
                       <h4>{company.name}</h4>
                       <p class="ai-wars-analysis-blurb">{company.blurb}</p>
                     </header>
+                    <AnalysisWeekMove
+                      weekMove={company.weekMove}
+                      citations={company.citations}
+                    />
                     {company.analysis.map((para) => (
-                      <p>{para}</p>
+                      <CitedText
+                        text={para}
+                        citations={company.citations}
+                      />
                     ))}
                   </article>
                 ))
@@ -268,8 +276,15 @@ const analysisPath = (id: string) => absoluteUrl(`/ai-wars#analysis-${id}`)
                       <h4>{company.name}</h4>
                       <p class="ai-wars-analysis-blurb">{company.blurb}</p>
                     </header>
+                    <AnalysisWeekMove
+                      weekMove={company.weekMove}
+                      citations={company.citations}
+                    />
                     {company.analysis.map((para) => (
-                      <p>{para}</p>
+                      <CitedText
+                        text={para}
+                        citations={company.citations}
+                      />
                     ))}
                   </article>
                 ))

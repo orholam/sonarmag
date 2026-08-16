@@ -14,6 +14,7 @@ import { AiWarsPerplexity } from './AiWarsPerplexity'
 import { AiWarsPolymarket } from './AiWarsPolymarket'
 import { AiWarsStars } from './AiWarsStars'
 import { SeriesLineChart } from './SeriesLineChart'
+import { VisitorSparklines } from './VisitorSparklines'
 
 type Props = {
   aiRace: AiRaceData
@@ -135,10 +136,12 @@ function ChartBlock({
   chart,
   footnote,
   height,
+  deltaPills = false,
 }: {
   chart: AiWarsChart
   footnote?: string
   height?: number
+  deltaPills?: boolean
 }) {
   return (
     <section className="ai-wars-panel">
@@ -159,7 +162,7 @@ function ChartBlock({
           <span className="ai-wars-asof">{formatSnapshotDate(chart.asOf)}</span>
         ) : null}
       </header>
-      <SeriesLineChart chart={chart} height={height} />
+      <SeriesLineChart chart={chart} height={height} deltaPills={deltaPills} />
       {footnote ? <p className="ai-wars-note">{footnote}</p> : null}
     </section>
   )
@@ -269,28 +272,6 @@ export function AiWarsBoard({
     codingTools.series.map((s) => [s.name, s.color] as const),
   )
 
-  const codingChart: AiWarsChart | null =
-    codingTools.series.length && codingTools.dates.length
-      ? {
-          id: 'coding-weekly-visitors',
-          title: 'Coding-agent weekly visitors',
-          subtitle: 'Subreddit weekly visitors',
-          sourceUrl: '',
-          asOf: codingTools.asOf,
-          dates: codingTools.dates,
-          unit: 'count',
-          series: codingTools.series.map((s) => ({
-            id: s.toolId,
-            name: s.name,
-            color: s.color,
-            points: s.points.map((p) => ({
-              date: p.measuredOn,
-              value: p.weeklyVisitors,
-            })),
-          })),
-        }
-      : null
-
   return (
     <div className="ai-wars">
       <AiWarsField field={field} />
@@ -300,7 +281,8 @@ export function AiWarsBoard({
           <h2 id="ai-wars-agents-heading">Coding agents</h2>
           <p>
             Subreddit weekly visitors as a community-heat proxy, tracked from
-            July 2026.
+            July 2026. Share bar shows absolute mix; sparklines use per-tool
+            scales so every line’s week-to-week shape is readable.
           </p>
         </div>
 
@@ -316,14 +298,8 @@ export function AiWarsBoard({
           </p>
         )}
 
-        {codingChart ? (
-          <div className="ai-wars-agents-chart">
-            <ChartBlock
-              chart={codingChart}
-              height={220}
-              footnote="Desk-tracked estimates. Heat signal only, not seats or revenue."
-            />
-          </div>
+        {codingTools.series.length ? (
+          <VisitorSparklines board={codingTools} />
         ) : null}
 
         <AiWarsStars board={codingStars} />
