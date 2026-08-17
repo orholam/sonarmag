@@ -354,10 +354,9 @@ export async function fetchSitemapEntries(): Promise<
     supabase.from('pages').select('slug, updated_at').order('slug'),
   ])
 
+  const skip = new Set(['/latest', '/popular'])
   const entries: Array<{ loc: string; lastmod?: string }> = [
     { loc: '/' },
-    { loc: '/latest' },
-    { loc: '/popular' },
     { loc: '/ai-wars' },
   ]
 
@@ -371,13 +370,20 @@ export async function fetchSitemapEntries(): Promise<
   }
 
   for (const page of pages ?? []) {
+    const loc = `/${page.slug}`
+    if (skip.has(loc)) continue
     entries.push({
-      loc: `/${page.slug}`,
+      loc,
       lastmod: (page.updated_at || '').toString().slice(0, 10),
     })
   }
 
-  return entries
+  const seen = new Set<string>()
+  return entries.filter((entry) => {
+    if (skip.has(entry.loc) || seen.has(entry.loc)) return false
+    seen.add(entry.loc)
+    return true
+  })
 }
 
 export async function fetchRssArticles(limit = 30): Promise<Article[]> {

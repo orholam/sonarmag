@@ -32,7 +32,7 @@ Sonar Mag is an independent online publication. We publish essays, reporting, an
 
 ## Start here
 - [Homepage](${SITE_URL}/)
-- [AI Wars](${SITE_URL}/ai-wars) - live AI lab scoreboard (Arena, OpenRouter, coding agents, GitHub stars, Polymarket) plus desk analyses
+- [AI Wars](${SITE_URL}/ai-wars) - live scoreboard of OpenAI vs Anthropic and the labs (Arena, OpenRouter, coding agents) plus desk analyses
 - [About](${SITE_URL}/about)
 - [Subscribe / newsletter](${SITE_URL}/#subscribe)
 - [Sitemap](${SITE_URL}/sitemap.xml)

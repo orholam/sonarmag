@@ -52,15 +52,14 @@ const topUs = usField[0]?.name ?? null
 const topIntl = intlField[0]?.name ?? null
 const topAgent = codingTools.entries[0]?.name ?? null
 
-const pageTitleText = 'AI Wars: AI model & coding agent scoreboard'
+const pageTitleText = 'AI Wars live scoreboard of OpenAI vs Anthropic'
 const pageDescription = [
-  'Live scoreboard for the AI race: desk ranks of US and international labs,',
-  'LMSYS Arena preference, OpenRouter API volume, coding-agent Reddit heat,',
-  'lab GitHub stars, App Store Productivity ranks, changelog velocity, and Polymarket odds.',
+  'Who is ahead among OpenAI, Anthropic, Google, and xAI?',
+  'Live desk ranks, Arena scores, OpenRouter volume, and coding-agent heat.',
   topUs && topIntl
-    ? ` Current desk leaders: ${topUs} (US) and ${topIntl} (international).`
+    ? `Current leaders: ${topUs} (US) and ${topIntl} (international).`
     : '',
-  topAgent ? ` Coding-agent heat leader: ${topAgent}.` : '',
+  topAgent ? `Coding-agent heat: ${topAgent}.` : '',
 ]
   .filter(Boolean)
   .join(' ')

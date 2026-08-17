@@ -18,6 +18,7 @@ const popular = await fetchPopularPageData(10)
   description="Most-read Sonar Mag stories from the last seven days."
   path="/popular"
   type="website"
+  robots="noindex, follow"
   jsonLd={[
     breadcrumbJsonLd([
       { name: 'Home', path: '/' },

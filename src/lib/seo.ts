@@ -1,6 +1,29 @@
 import { absoluteUrl, DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from './site'
 import { textBlocks, type Article } from './types'
 
+/** SERP / Open Graph description. Homepage cards keep the full excerpt. */
+const META_DESCRIPTION_MAX = 160
+
+export function searchDescription(
+  text: string | null | undefined,
+  fallback = DEFAULT_DESCRIPTION,
+): string {
+  const raw = (text ?? '').replace(/\s+/g, ' ').trim()
+  if (!raw) return fallback
+  if (raw.length <= META_DESCRIPTION_MAX) return raw
+
+  const prefix = raw.slice(0, META_DESCRIPTION_MAX)
+  const sentence = prefix.match(/^(.+?[.!?])(?:\s|$)/)
+  if (sentence && sentence[1].length >= 90) return sentence[1]
+
+  const lastSpace = prefix.lastIndexOf(' ')
+  const clipped = (lastSpace > 80 ? prefix.slice(0, lastSpace) : prefix).replace(
+    /[,:;]+$/,
+    '',
+  )
+  return `${clipped}…`
+}
+
 export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
@@ -47,8 +70,9 @@ export function faqJsonLd(
 
 export function articleJsonLd(article: Article) {
   const url = absoluteUrl(`/article/${article.slug}`)
-  const description =
-    article.excerpt?.trim() || textBlocks(article.paragraphs)[0] || DEFAULT_DESCRIPTION
+  const description = searchDescription(
+    article.excerpt?.trim() || textBlocks(article.paragraphs)[0],
+  )
 
   return {
     '@context': 'https://schema.org',

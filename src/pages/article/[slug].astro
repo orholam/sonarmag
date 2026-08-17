@@ -12,6 +12,7 @@ import {
   breadcrumbJsonLd,
   categoryPath,
   isAiWarsCoverage,
+  searchDescription,
 } from '../../lib/seo'
 import { textBlocks } from '../../lib/types'
 
@@ -56,7 +57,9 @@ if (!article) {
 ) : (
   <BaseLayout
     title={article.seoTitle || article.title}
-    description={article.excerpt || textBlocks(article.paragraphs)[0] || undefined}
+    description={searchDescription(
+      article.excerpt || textBlocks(article.paragraphs)[0],
+    )}
     path={`/article/${article.slug}`}
     image={article.heroImage}
     imageAlt={article.heroAlt}

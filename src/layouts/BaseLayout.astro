@@ -20,6 +20,8 @@ type Props = {
   image?: string | null
   type?: 'website' | 'article'
   noIndex?: boolean
+  /** Overrides the default robots content. Use `noindex, follow` for thin listings. */
+  robots?: string
   publishedAt?: string | null
   modifiedAt?: string | null
   author?: string | null
@@ -40,6 +42,7 @@ const {
   image,
   type = 'website',
   noIndex = false,
+  robots,
   publishedAt,
   modifiedAt,
   author,
@@ -55,6 +58,7 @@ const canonical = absoluteUrl(path)
 const imageUrl = absoluteUrl(image || DEFAULT_OG_IMAGE)
 const imageAltText = imageAlt?.trim() || fullTitle
 const desc = description.trim() || DEFAULT_DESCRIPTION
+const robotsContent = robots ?? (noIndex ? 'noindex, nofollow' : 'index, follow')
 const ogType = type === 'article' ? 'article' : 'website'
 const lcpHref = lcpImage
   ? unsplashUrl(lcpImage, { width: type === 'article' ? 1200 : 1400, quality: 72 })
@@ -70,7 +74,7 @@ const lcpHref = lcpImage
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     <meta name="author" content={author?.trim() || SITE_NAME} />
-    <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
+    <meta name="robots" content={robotsContent} />
     {path === '/' && (
       <>
         <meta

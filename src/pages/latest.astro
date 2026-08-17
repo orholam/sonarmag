@@ -19,6 +19,7 @@ const articles = await fetchLatestArticles(100)
   description="All Sonar Mag stories, newest first."
   path="/latest"
   type="website"
+  robots="noindex, follow"
   jsonLd={[
     breadcrumbJsonLd([
       { name: 'Home', path: '/' },
