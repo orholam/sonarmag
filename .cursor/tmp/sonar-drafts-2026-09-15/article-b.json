@@ -1,0 +1,28 @@
+{
+  "slug": "the-problem-with-microsofts-humanist-ai-code",
+  "title": "The Problem With Microsoft's Humanist AI Code",
+  "seo_title": "Microsoft's Humanist AI Code Keeps Control In-House",
+  "excerpt": "On September 14, Microsoft AI posted a draft Humanist AI Code of Conduct for a six-week public comment window. Mustafa Suleyman’s lab says MAI models must stay subordinate, never resist shutdown, and obey Absolute Constraints no operator can override. The document is careful, long, and still unused for training. That is the tell. A company that writes the chain of command, the redaction rules, and the consultation calendar still owns the kill switch. Containment on company letterhead is not the same as public authority over the pace of agents.",
+  "ticker": "Business — Containment — Microsoft AI",
+  "author_id": "22222222-2222-2222-2222-222222222004",
+  "category_id": "11111111-1111-1111-1111-111111111002",
+  "hero_image": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1600&q=80",
+  "thumb_image": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=80",
+  "hero_alt": "Warm light bulbs hanging in front of a long aisle of packed library bookshelves fading into shadow",
+  "read_minutes": 6,
+  "listen_minutes": 5,
+  "published_label": "Today",
+  "published_at": "2026-09-15T15:20:05+00:00",
+  "status": "published",
+  "is_highlighted": false,
+  "highlight_word": "Humanist AI Code",
+  "highlight_tone": "tan",
+  "paragraphs": [
+    "Microsoft AI published a draft [Code of Conduct for MAI models](https://microsoft.ai/code-of-conduct/) on September 14 and invited six weeks of comments. The preface is clear enough: people matter more than AI; the systems should stay tools; they should never resist interruption, correction, or shutdown. Absolute Constraints cover weapons of mass harm, child safety, offensive cyber help, and large-scale manipulation. Operators and users cannot override those lines.",
+    "Call it humanist if you like. The harder question is who holds the pen that draws the line, and who can force a rewrite when the pen slips.",
+    "## A hierarchy that begins at Redmond\n\nThe code invents a Chain of Command: the Code itself, then operator policies, then user preferences. That is a serious attempt to keep outside content from hijacking an agent mid-task. It also means Microsoft’s document sits above everyone who rents the model. Enterprise customers may configure defaults. They do not get to delete Absolute Constraints. They also do not get a statute. They get a consultation form.\n\nSecurityWeek’s September 15 readout stresses the cyber rules: no working exploit code, no intrusion playbooks, defensive work still allowed when authorized. Fine as product policy. Thin as public governance. A constraint that lives inside one lab’s training manual can be revised, delayed, or scoped by the same lab when 2027 models arrive.",
+    "## The draft admits it is not yet binding\n\nMicrosoft says the text is “still under development” and “not being used to train our models today.” A revised version later this year is meant to guide 2027 development. So the loudest containment announcement of the week is, by the company’s own calendar, aspirational paper.\n\nThat matters because the week is crowded with adjacent promises. Anthropic’s Amodei asked frontier labs to [pace capability gains](https://darioamodei.com/post/we-must-pace-the-frontier) and host embedded evaluators. OpenAI matched the evaluator idea. Microsoft answered with humanist language and Absolute Constraints. The public hears a chorus of restraint. The contracts still run on company time.",
+    "## Containment without an outside referee\n\nSonar has already watched kill-switch theater elsewhere: [even OpenAI’s kill switch still needs a human](/article/even-openais-kill-switch-still-needs-a-human). Microsoft’s code goes further on the page. It rejects legal personhood for models, rejects welfare claims for AIs, and warns against imitating consciousness as a containment hazard. Those are useful philosophical stakes. They do not create an inspector with a badge.\n\nCompare that to Maria Ressa’s Oslo demand the next day: make firms liable for damage, then legislate, then build public-interest platforms. Her clock runs on citizenship. Microsoft’s clock runs on a comment period. One is a political claim about agency. The other is a product bible that still begins with “please tell us what you think.”",
+    "## What a code can do, and what it cannot\n\nA public draft can discipline internal teams, scare bad enterprise asks, and give researchers a text to audit against. Those are real goods. The problem with Microsoft’s Humanist AI Code is the category error it invites: treating a lab-authored hierarchy as a substitute for democratic control of agentic systems.\n\nIf the Absolute Constraints hold, good. If they move when a quarterly roadmap needs more autonomy, the consultation thread will not be the body that notices first. For that you need auditors who do not report to the brand writing the north star, and laws that survive a reorg. A kill switch kept in-house is still a house product."
+  ]
+}
