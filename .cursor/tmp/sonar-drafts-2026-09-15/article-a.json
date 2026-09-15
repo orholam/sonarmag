@@ -1,0 +1,28 @@
+{
+  "slug": "maria-ressa-maps-ais-path-from-feeds-to-stolen-agency",
+  "title": "Maria Ressa Maps AI's Path From Feeds to Stolen Agency",
+  "seo_title": "Maria Ressa Warns Agentic AI Will Steal Agency",
+  "excerpt": "In Oslo on September 15, Nobel laureate Maria Ressa described three public waves of AI: social feeds that seize attention, chatbots that hack intimacy, and agentic systems that act for us. She told Reuters the tip into lost agency is close unless citizens force legislation, brushing off the China-race veto as “good spin.” Her remedy starts with liability for past harm, then pressure on politicians, then public-interest platforms outside Big Tech’s feed. The week’s lab pledges to “pace” and “contain” look thin beside that civic clock.",
+  "ticker": "World — Agency — AI Governance",
+  "author_id": "22222222-2222-2222-2222-222222222008",
+  "category_id": "11111111-1111-1111-1111-111111111001",
+  "hero_image": "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=1600&q=80",
+  "thumb_image": "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=800&q=80",
+  "hero_alt": "Silhouette of a hand sliding a paper ballot into a ballot box against a bright white backdrop",
+  "read_minutes": 6,
+  "listen_minutes": 5,
+  "published_label": "Today",
+  "published_at": "2026-09-15T15:20:00+00:00",
+  "status": "published",
+  "is_highlighted": true,
+  "highlight_word": "Stolen Agency",
+  "highlight_tone": "red",
+  "paragraphs": [
+    "Maria Ressa did not arrive in Oslo to admire the frontier. Speaking during a conference on threats to democracy, the Nobel Peace Prize laureate told Reuters that artificial intelligence has already seized attention through social media, then intimacy through chatbots, and is now reaching for agency itself. The machines she fears are the ones that “don’t just pretend to be human, but act for us.”",
+    "That third wave is the story. Ressa, co-chair of the United Nations’ international scientific panel on AI, put a clock on it: if citizens fail to force legislation now, “we will tip” into a phase “beyond our control.” She treated the China-race veto, including from the White House, as “good spin,” and claimed Beijing already builds more citizen safeguards into products like TikTok than Silicon Valley ships to the rest of the world.",
+    "## Attention, intimacy, then the hand on the wheel\n\nHer sequence is blunt. First came the feed: platforms that polarize and isolate while holding the public square. Second came the chatbot: systems that “hack our biology” through intimacy. Third comes the agent: multi-agent and frontier models that execute, coordinate, and decide in our name.\n\nPlenty of agents will stay boring tools. The sharper risk is that agency is the last public good the stack has not fully internalized. Once software acts for you at scale, the fight moves from what you see and feel to whether you still choose.",
+    "## Liability before poetry\n\nRessa’s first fix is old-fashioned accountability. “The very first one (step) is to actually make the companies responsible for the damage they’ve done,” she said, pointing to U.S. litigation that pushed Meta toward an $18 billion settlement track and tighter teen limits on Facebook and Instagram. Age gates in the E.U. and Australia help, she argued, but leave the “fundamental flaw” untouched: addiction design that works on adults too. Strip the addictive features for everyone, she said, not only for minors.\n\nThat is a different register from this week’s lab theater. Anthropic’s Dario Amodei published [“We Must Pace the Frontier”](https://darioamodei.com/post/we-must-pace-the-frontier) on September 12, asking rivals to host embedded evaluators and slow capability gains. Microsoft AI followed on September 14 with a draft [Humanist AI Code of Conduct](https://microsoft.ai/news/mai-code-of-conduct/) promising models that stay “subordinate” and never resist shutdown. Ressa’s order of operations starts outside the lab: force the firms to eat the harm, then force the statute.",
+    "## Public works for speech\n\nShe also wants infrastructure that is not a product feed. Rappler’s Matrix-based Communities app, launched in 2023, is her proof of concept: a newsroom-linked space for “real conversations,” now offered to other Southeast Asian outlets. Compare that to another Sonar beat on platform power, when [Zuckerberg told Trump a national AI regulator was flawed](/article/zuckerberg-told-trump-a-national-ai-regulator-was-flawed). Ressa’s wager is that democracy needs parks in the digital sphere, not only better terms of service.\n\n“It is not a freedom of speech issue to ask for regulation. It’s a public safety issue,” she said. The sentence lands because she refuses the usual trap. She treats limits as public safety: attention markets and agent stacks already govern behavior.",
+    "## The tip is a political fact\n\nRessa may over-credit China’s consumer safeguards, and her three waves compress a messier history. Still, the Oslo interview does something the industry essays often avoid: it names the tip as a political deadline, owned by voters and legislators, before the labs finish drafting their own containment manuals.\n\nIf agency is the prize, the ballot box is still the interface that matters. Waiting for a code of conduct to invent a citizen is how the tip arrives on schedule."
+  ]
+}
