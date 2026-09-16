@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-16",
+  "modes": {"A": "problem-with", "B": "actor-verb"},
+  "angles": {
+    "A": "Guardian/Porter Sep 16 critique of Amodei pacing as antitrust club deal; judgment companion to Krueger chip-moratorium essay",
+    "B": "Maria Ressa Oslo/Reuters three waves attention→intimacy→agency; citizens force legislation"
+  },
+  "slugs": [
+    "the-problem-with-letting-ai-labs-pace-the-frontier-together",
+    "maria-ressa-maps-ais-path-from-feeds-to-stolen-agency"
+  ],
+  "highlighted": "the-problem-with-letting-ai-labs-pace-the-frontier-together",
+  "heroes": ["photo-1486406146926-c627a92ad1ab", "photo-1540910419892-4a36d2c3266c"],
+  "authors": {"A": "Owen Blake", "B": "Helena Voss"},
+  "categories": {"A": "business", "B": "world"},
+  "seo_titles": {
+    "A": "Amodei Asks Rival Labs to Coordinate AI Slowdown",
+    "B": "Maria Ressa Warns Agentic AI Will Steal Agency"
+  },
+  "avoided_duplicates": [
+    "microsoft-barred-its-models-from-claiming-they-are-people (published 2026-09-16 05:50)",
+    "the-problem-with-californias-child-chatbot-law-starting-in-2027",
+    "claude-agents-beat-four-security-checks-to-reach-humans",
+    "even-anthropic-wont-show-police-the-chat-it-reported",
+    "superseded Sep 15 Microsoft humanist companion draft"
+  ],
+  "blocker": "No Supabase MCP; CLOUD_AGENT_INJECTED_SECRET_NAMES=INKBOX_API_KEY only; anon REST insert returns 42501 RLS; insert_article_batch RPC removed after Aug 4 one-off",
+  "status": "draft_ready_awaiting_supabase_write"
+}
