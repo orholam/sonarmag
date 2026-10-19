@@ -1,3 +1,4 @@
+import type { AiWarsChart } from './ai-wars-history'
 import { formatCompactCount } from './rank-bars'
 import { supabase } from './supabase'
 
@@ -37,11 +38,16 @@ export type CodingToolDauBoard = CodingToolRedditBoard
 const TOOL_COLORS: Record<string, string> = {
   'claude-code': '#e11d2e',
   codex: '#171717',
+  'opencode-cli': '#0d9488',
+  opencode: '#2f7d4a',
+  antigravity: '#4285f4',
   cursor: '#0f7a8a',
   'github-copilot': '#1f5fbf',
-  opencode: '#2f7d4a',
   windsurf: '#c47a00',
   cline: '#8b4513',
+  grokbot: '#1a1a1a',
+  'openai-codex': '#6d28d9',
+  'muse-agent': '#db2777',
 }
 
 const FALLBACK_COLORS = [
@@ -131,6 +137,30 @@ export async function fetchCodingToolReddit(): Promise<CodingToolRedditBoard> {
     })),
     series,
     dates,
+  }
+}
+
+/** Shared-scale line chart: every tool on one axis. */
+export function codingToolsChart(board: CodingToolRedditBoard): AiWarsChart | null {
+  if (!board.series.length || !board.dates.length) return null
+  return {
+    id: 'coding-reddit-visitors',
+    title: 'Weekly visitors, shared scale',
+    subtitle:
+      'All tools on one axis, so the leaders set the range and smaller communities sit near the baseline.',
+    sourceUrl: '',
+    asOf: board.asOf,
+    dates: board.dates,
+    series: board.series.map((s) => ({
+      id: s.toolId,
+      name: s.name,
+      color: s.color,
+      points: s.points.map((p) => ({
+        date: p.measuredOn,
+        value: p.weeklyVisitors,
+      })),
+    })),
+    unit: 'count',
   }
 }
 

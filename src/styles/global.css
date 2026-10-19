@@ -1897,6 +1897,8 @@ button.print-btn:hover {
   display: flex;
   flex-direction: column;
   gap: 0.28rem;
+  max-height: min(68vh, 22rem);
+  overflow: auto;
 }
 
 .ai-wars-tooltip li {

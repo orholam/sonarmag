@@ -3,7 +3,10 @@ import type { ChangelogBoard } from '../lib/ai-wars-changelog'
 import type { AiRaceData } from '../lib/ai-race'
 import type { AiWarsChart, AiWarsHistory } from '../lib/ai-wars-history'
 import type { AiWarsFieldBoard } from '../lib/ai-wars-field'
-import type { CodingToolRedditBoard } from '../lib/coding-tool-reddit'
+import {
+  codingToolsChart,
+  type CodingToolRedditBoard,
+} from '../lib/coding-tool-reddit'
 import type { CodingToolStarsBoard } from '../lib/coding-tool-stars'
 import type { PolymarketAiWars } from '../lib/polymarket'
 import { barWidths, parseMetricValue } from '../lib/rank-bars'
@@ -271,6 +274,7 @@ export function AiWarsBoard({
   const colorByName = new Map(
     codingTools.series.map((s) => [s.name, s.color] as const),
   )
+  const visitorChart = codingToolsChart(codingTools)
 
   return (
     <div className="ai-wars">
@@ -281,8 +285,8 @@ export function AiWarsBoard({
           <h2 id="ai-wars-agents-heading">Coding agents</h2>
           <p>
             Subreddit weekly visitors as a community-heat proxy, tracked from
-            July 2026. Share bar shows absolute mix; sparklines use per-tool
-            scales so every line’s week-to-week shape is readable.
+            July 2026. The shared-scale chart shows absolute size. Sparklines
+            use per-tool scales so every line’s week-to-week shape is readable.
           </p>
         </div>
 
@@ -297,6 +301,15 @@ export function AiWarsBoard({
             Coding-tool weekly visitors not loaded yet.
           </p>
         )}
+
+        {visitorChart ? (
+          <ChartBlock
+            chart={visitorChart}
+            height={320}
+            deltaPills
+            footnote="Desk-tracked Reddit weekly visitors. Same scale for every tool."
+          />
+        ) : null}
 
         {codingTools.series.length ? (
           <VisitorSparklines board={codingTools} />
