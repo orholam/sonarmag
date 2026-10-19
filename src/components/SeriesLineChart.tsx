@@ -34,6 +34,10 @@ type Props = {
    * Uses the last two points on each series (score delta, not rank).
    */
   deltaPills?: boolean
+  /** Log10 axis. Use when one series would otherwise flatten the rest. */
+  scale?: 'linear' | 'log'
+  /** Name each line at its latest point, nudged so labels do not stack. */
+  endLabels?: boolean
 }
 
 /** Latest score minus prior snapshot; null if fewer than two points. */
@@ -69,12 +73,76 @@ type TipState = {
   rows: Array<{ id: string; name: string; color: string; value: number }>
 }
 
+function log10(value: number): number {
+  return Math.log10(Math.max(value, 1))
+}
+
+/** 1–2–5 ticks that fall inside a positive range. */
+function logAxisTicks(min: number, max: number): number[] {
+  const lo = Math.floor(log10(min))
+  const hi = Math.ceil(log10(max))
+  const multipliers = [1, 2, 5]
+  const ticks: number[] = []
+  for (let exp = lo; exp <= hi; exp++) {
+    for (const m of multipliers) {
+      const value = m * 10 ** exp
+      if (value >= min && value <= max) ticks.push(value)
+    }
+  }
+  if (ticks.length > 6) return ticks.filter((_, i) => i % 2 === 0)
+  return ticks
+}
+
+function latestValue(series: ChartSeries): number {
+  const pts = series.points.filter((p) => Number.isFinite(p.value))
+  if (!pts.length) return 0
+  return pts.reduce((best, p) => (p.date > best.date ? p : best)).value
+}
+
+type EndLabel = {
+  id: string
+  name: string
+  color: string
+  x: number
+  y: number
+  labelY: number
+}
+
+function layoutEndLabels(
+  items: Array<Omit<EndLabel, 'labelY'>>,
+  top: number,
+  bottom: number,
+  gap = 16,
+): EndLabel[] {
+  const sorted = items.slice().sort((a, b) => a.y - b.y)
+  if (!sorted.length) return []
+  const ys = sorted.map((item) => item.y)
+  for (let i = 1; i < ys.length; i++) {
+    if (ys[i] < ys[i - 1] + gap) ys[i] = ys[i - 1] + gap
+  }
+  const overflow = ys[ys.length - 1] - bottom
+  if (overflow > 0) {
+    for (let i = 0; i < ys.length; i++) ys[i] -= overflow
+  }
+  if (ys[0] < top) {
+    const shift = top - ys[0]
+    for (let i = 0; i < ys.length; i++) ys[i] += shift
+  }
+  if (ys[ys.length - 1] - ys[0] > bottom - top && ys.length > 1) {
+    const step = (bottom - top) / (ys.length - 1)
+    for (let i = 0; i < ys.length; i++) ys[i] = top + i * step
+  }
+  return sorted.map((item, i) => ({ ...item, labelY: ys[i] }))
+}
+
 export function SeriesLineChart({
   chart,
   height = 280,
   ariaLabel,
   smooth = false,
   deltaPills = false,
+  scale = 'linear',
+  endLabels = false,
 }: Props) {
   const { dates, series, unit } = chart
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -86,7 +154,7 @@ export function SeriesLineChart({
   const [hidden, setHidden] = useState<Set<string>>(() => new Set())
 
   const width = 860
-  const pad = { top: 14, right: 14, bottom: 32, left: 50 }
+  const pad = { top: 16, right: endLabels ? 124 : 14, bottom: 32, left: 52 }
   const innerW = width - pad.left - pad.right
   const innerH = height - pad.top - pad.bottom
 
@@ -98,24 +166,33 @@ export function SeriesLineChart({
   const geometry = useMemo(() => {
     const allValues = visible.flatMap((s) => s.points.map((p) => p.value))
     if (!allValues.length) {
-      return { yMin: 0, yMax: 1, xFor: () => pad.left, yFor: () => pad.top }
+      return {
+        yMin: 0,
+        yMax: 1,
+        xFor: () => pad.left,
+        yFor: () => pad.top,
+        log: false,
+      }
     }
     const rawMin = Math.min(...allValues)
     const rawMax = Math.max(...allValues)
+    const log = scale === 'log' && rawMin > 0 && rawMax > 0
     const padY =
       unit === 'elo' || unit === 'score'
         ? Math.max((rawMax - rawMin) * 0.2, unit === 'score' ? 4 : 6)
         : rawMax * 0.06
-    const yMin =
-      unit === 'score'
+    const yMin = log
+      ? 10 ** (log10(rawMin) - 0.08)
+      : unit === 'score'
         ? Math.max(0, rawMin - padY)
         : unit === 'elo'
           ? Math.max(0, rawMin - padY)
           : unit === 'share'
             ? 0
             : 0
-    const yMax =
-      unit === 'score'
+    const yMax = log
+      ? 10 ** (log10(rawMax) + 0.08)
+      : unit === 'score'
         ? Math.min(100, rawMax + padY) || 1
         : (unit === 'elo' ? rawMax + padY : rawMax + padY) || 1
 
@@ -125,14 +202,48 @@ export function SeriesLineChart({
       const idx = i >= 0 ? i : 0
       return pad.left + (idx / Math.max(dates.length - 1, 1)) * innerW
     }
-    const yFor = (value: number) =>
-      pad.top + innerH - ((value - yMin) / (yMax - yMin)) * innerH
+    const yFor = (value: number) => {
+      if (log) {
+        const t = (log10(value) - log10(yMin)) / (log10(yMax) - log10(yMin))
+        return pad.top + innerH - t * innerH
+      }
+      return pad.top + innerH - ((value - yMin) / (yMax - yMin)) * innerH
+    }
 
-    return { yMin, yMax, xFor, yFor }
-  }, [visible, dates, unit, innerW, innerH, pad.left, pad.top])
+    return { yMin, yMax, xFor, yFor, log }
+  }, [visible, dates, unit, scale, innerW, innerH, pad.left, pad.top])
 
-  const { yMin, yMax, xFor, yFor } = geometry
-  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((t) => yMin + (yMax - yMin) * t)
+  const { yMin, yMax, xFor, yFor, log } = geometry
+  const yTicks = log
+    ? logAxisTicks(yMin, yMax)
+    : [0, 0.25, 0.5, 0.75, 1].map((t) => yMin + (yMax - yMin) * t)
+
+  const plotted = useMemo(
+    () => visible.slice().sort((a, b) => latestValue(b) - latestValue(a)),
+    [visible],
+  )
+
+  const labels = useMemo(() => {
+    if (!endLabels) return []
+    const items = plotted.flatMap((s) => {
+      const pts = s.points
+        .filter((p) => Number.isFinite(p.value))
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date))
+      const last = pts[pts.length - 1]
+      if (!last) return []
+      return [
+        {
+          id: s.id,
+          name: s.name,
+          color: s.color,
+          x: xFor(last.date),
+          y: yFor(last.value),
+        },
+      ]
+    })
+    return layoutEndLabels(items, pad.top + 6, height - pad.bottom - 4)
+  }, [endLabels, plotted, xFor, yFor, pad.top, pad.bottom, height])
   const labelEvery = Math.max(1, Math.ceil(dates.length / 7))
   const dense = dates.length > 40
 
@@ -334,7 +445,7 @@ export function SeriesLineChart({
             ) : null,
           )}
 
-          {visible.map((s) => (
+          {plotted.map((s) => (
             <SeriesPath
               key={s.id}
               series={s}
@@ -345,6 +456,36 @@ export function SeriesLineChart({
               smooth={smooth}
             />
           ))}
+
+          {labels.map((label) => {
+            const dimmed = Boolean(focusId && focusId !== label.id)
+            const shifted = Math.abs(label.labelY - label.y) > 5
+            return (
+              <g key={`end-${label.id}`} opacity={dimmed ? 0.2 : 1}>
+                {shifted ? (
+                  <line
+                    x1={label.x}
+                    y1={label.y}
+                    x2={width - pad.right + 2}
+                    y2={label.labelY}
+                    stroke={label.color}
+                    strokeWidth={1}
+                    strokeOpacity={0.45}
+                  />
+                ) : null}
+                <circle cx={label.x} cy={label.y} r={2.4} fill={label.color} />
+                <text
+                  x={width - pad.right + 8}
+                  y={label.labelY}
+                  dominantBaseline="middle"
+                  className="ai-wars-end-label"
+                  fill={label.color}
+                >
+                  {label.name}
+                </text>
+              </g>
+            )
+          })}
 
           {tip ? (
             <line

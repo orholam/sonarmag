@@ -45,7 +45,7 @@ const TOOL_COLORS: Record<string, string> = {
   'github-copilot': '#1f5fbf',
   windsurf: '#c47a00',
   cline: '#8b4513',
-  grokbot: '#1a1a1a',
+  grokbot: '#0369a1',
   'openai-codex': '#6d28d9',
   'muse-agent': '#db2777',
 }
@@ -140,26 +140,75 @@ export async function fetchCodingToolReddit(): Promise<CodingToolRedditBoard> {
   }
 }
 
-/** Shared-scale line chart: every tool on one axis. */
+/** Subreddits that belong to one product, summed on the combined chart. */
+const COMBINED_GROUPS: Array<{
+  id: string
+  name: string
+  toolIds: string[]
+}> = [
+  { id: 'codex', name: 'Codex', toolIds: ['codex', 'openai-codex'] },
+  { id: 'opencode', name: 'OpenCode', toolIds: ['opencode', 'opencode-cli'] },
+]
+
+/** Combined chart: one line per product, subreddit totals added together. */
 export function codingToolsChart(board: CodingToolRedditBoard): AiWarsChart | null {
   if (!board.series.length || !board.dates.length) return null
-  return {
-    id: 'coding-reddit-visitors',
-    title: 'Weekly visitors, shared scale',
-    subtitle:
-      'All tools on one axis, so the leaders set the range and smaller communities sit near the baseline.',
-    sourceUrl: '',
-    asOf: board.asOf,
-    dates: board.dates,
-    series: board.series.map((s) => ({
-      id: s.toolId,
-      name: s.name,
-      color: s.color,
-      points: s.points.map((p) => ({
+
+  const consumed = new Set<string>()
+  const series: AiWarsChart['series'] = []
+
+  for (const group of COMBINED_GROUPS) {
+    const members = board.series.filter((s) => group.toolIds.includes(s.toolId))
+    if (!members.length) continue
+    for (const member of members) consumed.add(member.toolId)
+    const byDate = new Map<string, number>()
+    for (const member of members) {
+      for (const point of member.points) {
+        byDate.set(
+          point.measuredOn,
+          (byDate.get(point.measuredOn) ?? 0) + point.weeklyVisitors,
+        )
+      }
+    }
+    const lead = members.find((s) => s.toolId === group.toolIds[0]) ?? members[0]
+    series.push({
+      id: group.id,
+      name: group.name,
+      color: lead.color,
+      points: [...byDate.entries()]
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([date, value]) => ({ date, value })),
+    })
+  }
+
+  for (const row of board.series) {
+    if (consumed.has(row.toolId)) continue
+    series.push({
+      id: row.toolId,
+      name: row.name,
+      color: row.color,
+      points: row.points.map((p) => ({
         date: p.measuredOn,
         value: p.weeklyVisitors,
       })),
-    })),
+    })
+  }
+
+  series.sort((a, b) => {
+    const av = a.points[a.points.length - 1]?.value ?? 0
+    const bv = b.points[b.points.length - 1]?.value ?? 0
+    return bv - av
+  })
+
+  return {
+    id: 'coding-reddit-visitors',
+    title: 'Weekly visitors, combined',
+    subtitle:
+      'Log scale. Codex adds r/CodexAI and r/OpenAICodex. OpenCode adds r/opencode and r/opencodeCLI.',
+    sourceUrl: '',
+    asOf: board.asOf,
+    dates: board.dates,
+    series,
     unit: 'count',
   }
 }

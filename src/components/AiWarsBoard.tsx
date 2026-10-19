@@ -140,11 +140,15 @@ function ChartBlock({
   footnote,
   height,
   deltaPills = false,
+  scale = 'linear',
+  endLabels = false,
 }: {
   chart: AiWarsChart
   footnote?: string
   height?: number
   deltaPills?: boolean
+  scale?: 'linear' | 'log'
+  endLabels?: boolean
 }) {
   return (
     <section className="ai-wars-panel">
@@ -165,7 +169,13 @@ function ChartBlock({
           <span className="ai-wars-asof">{formatSnapshotDate(chart.asOf)}</span>
         ) : null}
       </header>
-      <SeriesLineChart chart={chart} height={height} deltaPills={deltaPills} />
+      <SeriesLineChart
+        chart={chart}
+        height={height}
+        deltaPills={deltaPills}
+        scale={scale}
+        endLabels={endLabels}
+      />
       {footnote ? <p className="ai-wars-note">{footnote}</p> : null}
     </section>
   )
@@ -285,8 +295,9 @@ export function AiWarsBoard({
           <h2 id="ai-wars-agents-heading">Coding agents</h2>
           <p>
             Subreddit weekly visitors as a community-heat proxy, tracked from
-            July 2026. The shared-scale chart shows absolute size. Sparklines
-            use per-tool scales so every line’s week-to-week shape is readable.
+            July 2026. Sparklines use a scale per tool. The chart below them
+            adds subreddits for the same product and plots every line on one
+            log scale.
           </p>
         </div>
 
@@ -302,17 +313,18 @@ export function AiWarsBoard({
           </p>
         )}
 
+        {codingTools.series.length ? (
+          <VisitorSparklines board={codingTools} />
+        ) : null}
+
         {visitorChart ? (
           <ChartBlock
             chart={visitorChart}
-            height={320}
-            deltaPills
-            footnote="Desk-tracked Reddit weekly visitors. Same scale for every tool."
+            height={380}
+            scale="log"
+            endLabels
+            footnote="Desk-tracked Reddit weekly visitors. Codex and OpenCode each sum their subreddits."
           />
-        ) : null}
-
-        {codingTools.series.length ? (
-          <VisitorSparklines board={codingTools} />
         ) : null}
 
         <AiWarsStars board={codingStars} />
