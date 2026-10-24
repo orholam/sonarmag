@@ -158,6 +158,7 @@ const COMBINED_GROUPS: Array<{
     name: 'Antigravity',
     toolIds: ['antigravity', 'antigravity-google'],
   },
+  { id: 'windsurf', name: 'Windsurf', toolIds: ['windsurf', 'devin'] },
 ]
 
 /**
@@ -232,7 +233,7 @@ export function codingToolsChart(board: CodingToolRedditBoard): AiWarsChart | nu
     id: 'coding-reddit-visitors',
     title: 'Weekly visitors, combined',
     subtitle:
-      'Log scale. A combined line starts the first week every subreddit in the group has a reading. Codex adds r/CodexAI and r/OpenAICodex. OpenCode adds r/opencode and r/opencodeCLI. Antigravity adds r/google_antigravity and r/antigravitygoogle.',
+      'Log scale. A combined line starts the first week every subreddit in the group has a reading. Codex adds r/CodexAI and r/OpenAICodex. OpenCode adds r/opencode and r/opencodeCLI. Antigravity adds r/google_antigravity and r/antigravitygoogle. Windsurf adds r/Windsurf and r/devinai.',
     sourceUrl: '',
     asOf: board.asOf,
     dates: board.dates,

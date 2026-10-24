@@ -324,7 +324,7 @@ export function AiWarsBoard({
             height={380}
             scale="log"
             endLabels
-            footnote="Desk-tracked Reddit weekly visitors. Codex, OpenCode, and Antigravity each sum their subreddits from the week all of them are tracked."
+            footnote="Desk-tracked Reddit weekly visitors. Codex, OpenCode, Antigravity, and Windsurf each sum their subreddits from the week all of them are tracked."
           />
         ) : null}
 
