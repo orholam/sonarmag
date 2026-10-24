@@ -103,6 +103,7 @@ type EndLabel = {
   id: string
   name: string
   color: string
+  value: number
   x: number
   y: number
   labelY: number
@@ -154,7 +155,12 @@ export function SeriesLineChart({
   const [hidden, setHidden] = useState<Set<string>>(() => new Set())
 
   const width = 860
-  const pad = { top: 16, right: endLabels ? 124 : 14, bottom: 32, left: 52 }
+  const pad = {
+    top: 16,
+    right: endLabels ? (unit === 'share' ? 176 : 124) : 14,
+    bottom: 32,
+    left: 52,
+  }
   const innerW = width - pad.left - pad.right
   const innerH = height - pad.top - pad.bottom
 
@@ -237,6 +243,7 @@ export function SeriesLineChart({
           id: s.id,
           name: s.name,
           color: s.color,
+          value: last.value,
           x: xFor(last.date),
           y: yFor(last.value),
         },
@@ -482,6 +489,11 @@ export function SeriesLineChart({
                   fill={label.color}
                 >
                   {label.name}
+                  {unit === 'share' ? (
+                    <tspan className="ai-wars-end-label-value" dx="7">
+                      {label.value.toFixed(1)}%
+                    </tspan>
+                  ) : null}
                 </text>
               </g>
             )

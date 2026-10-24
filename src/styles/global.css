@@ -1867,6 +1867,11 @@ button.print-btn:hover {
   font-weight: 600;
 }
 
+.ai-wars-end-label-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
 .ai-wars-crosshair {
   stroke: rgba(23, 23, 23, 0.28);
   stroke-width: 1;
