@@ -48,6 +48,9 @@ const TOOL_COLORS: Record<string, string> = {
   grokbot: '#0369a1',
   'openai-codex': '#6d28d9',
   'muse-agent': '#db2777',
+  'hermes-agent': '#b45309',
+  devin: '#334155',
+  'antigravity-google': '#188038',
 }
 
 const FALLBACK_COLORS = [
@@ -111,6 +114,8 @@ export async function fetchCodingToolReddit(): Promise<CodingToolRedditBoard> {
       }
       byTool.set(row.tool_id, series)
     }
+    series.name = row.name
+    series.subreddit = row.subreddit
     series.points.push({
       measuredOn: row.measured_on,
       weeklyVisitors: row.weekly_visitors,
@@ -148,7 +153,37 @@ const COMBINED_GROUPS: Array<{
 }> = [
   { id: 'codex', name: 'Codex', toolIds: ['codex', 'openai-codex'] },
   { id: 'opencode', name: 'OpenCode', toolIds: ['opencode', 'opencode-cli'] },
+  {
+    id: 'antigravity',
+    name: 'Antigravity',
+    toolIds: ['antigravity', 'antigravity-google'],
+  },
 ]
+
+/**
+ * Dates where every member has a reading, summed.
+ * A later-added subreddit drops the earlier weeks of the others.
+ */
+function pointsWhereAllPresent(
+  members: CodingToolSeries[],
+): Array<{ date: string; value: number }> {
+  const sums = new Map<string, { total: number; seen: number }>()
+  for (const member of members) {
+    const seenOn = new Set<string>()
+    for (const point of member.points) {
+      if (seenOn.has(point.measuredOn)) continue
+      seenOn.add(point.measuredOn)
+      const row = sums.get(point.measuredOn) ?? { total: 0, seen: 0 }
+      row.total += point.weeklyVisitors
+      row.seen += 1
+      sums.set(point.measuredOn, row)
+    }
+  }
+  return [...sums.entries()]
+    .filter(([, row]) => row.seen === members.length)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([date, row]) => ({ date, value: row.total }))
+}
 
 /** Combined chart: one line per product, subreddit totals added together. */
 export function codingToolsChart(board: CodingToolRedditBoard): AiWarsChart | null {
@@ -158,26 +193,19 @@ export function codingToolsChart(board: CodingToolRedditBoard): AiWarsChart | nu
   const series: AiWarsChart['series'] = []
 
   for (const group of COMBINED_GROUPS) {
-    const members = board.series.filter((s) => group.toolIds.includes(s.toolId))
-    if (!members.length) continue
+    const members = group.toolIds
+      .map((id) => board.series.find((s) => s.toolId === id))
+      .filter((s): s is CodingToolSeries => Boolean(s))
+    if (members.length !== group.toolIds.length) continue
+    const points = pointsWhereAllPresent(members)
+    if (!points.length) continue
     for (const member of members) consumed.add(member.toolId)
-    const byDate = new Map<string, number>()
-    for (const member of members) {
-      for (const point of member.points) {
-        byDate.set(
-          point.measuredOn,
-          (byDate.get(point.measuredOn) ?? 0) + point.weeklyVisitors,
-        )
-      }
-    }
     const lead = members.find((s) => s.toolId === group.toolIds[0]) ?? members[0]
     series.push({
       id: group.id,
       name: group.name,
       color: lead.color,
-      points: [...byDate.entries()]
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([date, value]) => ({ date, value })),
+      points,
     })
   }
 
@@ -204,7 +232,7 @@ export function codingToolsChart(board: CodingToolRedditBoard): AiWarsChart | nu
     id: 'coding-reddit-visitors',
     title: 'Weekly visitors, combined',
     subtitle:
-      'Log scale. Codex adds r/CodexAI and r/OpenAICodex. OpenCode adds r/opencode and r/opencodeCLI.',
+      'Log scale. A combined line starts the first week every subreddit in the group has a reading. Codex adds r/CodexAI and r/OpenAICodex. OpenCode adds r/opencode and r/opencodeCLI. Antigravity adds r/google_antigravity and r/antigravitygoogle.',
     sourceUrl: '',
     asOf: board.asOf,
     dates: board.dates,

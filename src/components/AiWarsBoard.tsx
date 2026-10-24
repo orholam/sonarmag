@@ -297,7 +297,8 @@ export function AiWarsBoard({
             Subreddit weekly visitors as a community-heat proxy, tracked from
             July 2026. Sparklines use a scale per tool. The chart below them
             adds subreddits for the same product and plots every line on one
-            log scale.
+            log scale. A combined line starts once every subreddit in that
+            product is being tracked.
           </p>
         </div>
 
@@ -323,7 +324,7 @@ export function AiWarsBoard({
             height={380}
             scale="log"
             endLabels
-            footnote="Desk-tracked Reddit weekly visitors. Codex and OpenCode each sum their subreddits."
+            footnote="Desk-tracked Reddit weekly visitors. Codex, OpenCode, and Antigravity each sum their subreddits from the week all of them are tracked."
           />
         ) : null}
 
