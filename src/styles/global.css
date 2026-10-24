@@ -1973,6 +1973,12 @@ button.print-btn:hover {
   font-weight: 600;
 }
 
+.ai-wars-legend-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  color: var(--muted);
+}
+
 .ai-wars-score-delta {
   display: inline-flex;
   align-items: center;

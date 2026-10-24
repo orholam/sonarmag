@@ -360,7 +360,7 @@ export function codingToolsShareChart(
     id: 'coding-reddit-share',
     title: 'Weekly visitor share',
     subtitle:
-      'Percent of tracked weekly visitors. The line starts once every subreddit that opened at 50k or more is included. A later subreddit under 50k does not move that start. Codex, OpenCode, Antigravity, and Windsurf use the same sums as the chart above.',
+      'One hundred percent of tracked weekly visitors, stacked from the smallest share at the bottom to the largest at the top. Bands trade places when one passes another. Codex, OpenCode, Antigravity, and Windsurf use the same sums as the chart above.',
     sourceUrl: '',
     asOf: board.asOf,
     dates,

@@ -18,6 +18,7 @@ import { AiWarsPerplexity } from './AiWarsPerplexity'
 import { AiWarsPolymarket } from './AiWarsPolymarket'
 import { AiWarsStars } from './AiWarsStars'
 import { SeriesLineChart } from './SeriesLineChart'
+import { ShareStackChart } from './ShareStackChart'
 import { VisitorSparklines } from './VisitorSparklines'
 
 type Props = {
@@ -143,6 +144,7 @@ function ChartBlock({
   deltaPills = false,
   scale = 'linear',
   endLabels = false,
+  stack = false,
 }: {
   chart: AiWarsChart
   footnote?: string
@@ -150,6 +152,8 @@ function ChartBlock({
   deltaPills?: boolean
   scale?: 'linear' | 'log'
   endLabels?: boolean
+  /** Fill the plot as a 100% stack, reordered when shares pass. */
+  stack?: boolean
 }) {
   return (
     <section className="ai-wars-panel">
@@ -170,13 +174,17 @@ function ChartBlock({
           <span className="ai-wars-asof">{formatSnapshotDate(chart.asOf)}</span>
         ) : null}
       </header>
-      <SeriesLineChart
-        chart={chart}
-        height={height}
-        deltaPills={deltaPills}
-        scale={scale}
-        endLabels={endLabels}
-      />
+      {stack ? (
+        <ShareStackChart chart={chart} height={height} />
+      ) : (
+        <SeriesLineChart
+          chart={chart}
+          height={height}
+          deltaPills={deltaPills}
+          scale={scale}
+          endLabels={endLabels}
+        />
+      )}
       {footnote ? <p className="ai-wars-note">{footnote}</p> : null}
     </section>
   )
@@ -334,8 +342,8 @@ export function AiWarsBoard({
           <ChartBlock
             chart={shareChart}
             height={380}
-            endLabels
-            footnote="Share of the desk’s tracked subreddits that week. History waits for every subreddit that opened at 50k or more. Smaller additions stay in the total without resetting the line."
+            stack
+            footnote="Stacked from the smallest share at the bottom to the largest at the top. A band switches place when its share passes another. History waits for every subreddit that opened at 50k or more. Smaller additions stay in the total without resetting the line."
           />
         ) : null}
 
