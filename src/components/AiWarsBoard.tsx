@@ -5,6 +5,7 @@ import type { AiWarsChart, AiWarsHistory } from '../lib/ai-wars-history'
 import type { AiWarsFieldBoard } from '../lib/ai-wars-field'
 import {
   codingToolsChart,
+  codingToolsShareChart,
   type CodingToolRedditBoard,
 } from '../lib/coding-tool-reddit'
 import type { CodingToolStarsBoard } from '../lib/coding-tool-stars'
@@ -285,6 +286,7 @@ export function AiWarsBoard({
     codingTools.series.map((s) => [s.name, s.color] as const),
   )
   const visitorChart = codingToolsChart(codingTools)
+  const shareChart = codingToolsShareChart(codingTools)
 
   return (
     <div className="ai-wars">
@@ -325,6 +327,15 @@ export function AiWarsBoard({
             scale="log"
             endLabels
             footnote="Desk-tracked Reddit weekly visitors. Codex, OpenCode, Antigravity, and Windsurf each sum their subreddits from the week all of them are tracked."
+          />
+        ) : null}
+
+        {shareChart ? (
+          <ChartBlock
+            chart={shareChart}
+            height={380}
+            endLabels
+            footnote="Share of the desk’s tracked subreddits that week. History waits for every subreddit that opened at 50k or more. Smaller additions stay in the total without resetting the line."
           />
         ) : null}
 
