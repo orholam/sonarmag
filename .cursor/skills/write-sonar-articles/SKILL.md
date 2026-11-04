@@ -37,13 +37,16 @@ If the user invokes this skill without naming subjects, **do not invent evergree
 3. Use web search (and primary sources when possible). Cross-check numbers. Skip anything you cannot date or attribute.
 4. **Avoid duplicates:** `select slug, title, published_at from articles order by published_at desc limit 20` and do not rehash a case Sonar just covered. Keep that list handy for **internal links** (below).
 5. Shortlist **3–5** candidate stories. Pick **two** that share a territory but need different jobs (e.g. news ledger + judgment companion), or two adjacent tech×philosophy fights from the same week.
-6. Tell the user the two chosen angles in one sentence each **before or as you publish** (no long pitch deck). If the user already said "just write," proceed without waiting.
+6. **Pair diversity check (hard):** before drafting, name the **primary actor** of each pick (company, lab, court, legislature, product, person). The two picks must **not share the same primary actor**. Same-week lawsuits against one lab are one story cluster, not a pair. Adjacent angles on one case belong in *one* piece, or wait for a user brief that asks for that split.
+7. **Same-day major peg check (hard):** before locking the shortlist, explicitly search for the day's / week's **product launches, DevDays, keynotes, model releases, and platform unveilings** (not only lawsuits, injunctions, and filings). If a major public event landed in the last ~48 hours and fits tech×philosophy, it must be on the shortlist. Skipping it for a thinner legal/regulatory double requires a one-line reason in the publish note (and is almost never correct).
+8. Tell the user the two chosen angles in one sentence each **before or as you publish** (no long pitch deck). If the user already said "just write," proceed without waiting.
 
 ### Freshness rules
 
 - Hard prefer stories with a **datable news peg** this week or last.
 - Reject "timeless" prompts (*What is consciousness?*, *Is technology good?*) unless tied to a concrete new artifact (a paper, a bill, a model release, a ruling).
 - If the only hits are stale, widen the search once (adjacent beats, international desks), then pick the freshest defensible pegs. Do not pad with old culture-war reheats.
+- Do not overweight the litigation/regulatory cluster. A day with both a keynote and a lawsuit usually wants the keynote (or keynote + a *different* beat), not two captions of the same company's legal trouble.
 
 ### Opinion sprinkle
 
@@ -61,6 +64,8 @@ Copy and track:
 Article pair
 - [ ] Read anti-slop manifesto
 - [ ] If no topics: research tech×philosophy news (fresh pegs) + pick 2 angles
+- [ ] Same-day major peg check (launches / DevDays / keynotes on the shortlist)
+- [ ] Pair diversity: two different primary actors (not two OpenAI lawsuits, etc.)
 - [ ] Resolve authors + categories from Supabase
 - [ ] Draft A (highlighted) + Draft B
 - [ ] Write seo_title for both (search-facing; headline stays as drafted)
@@ -240,6 +245,12 @@ Same Unsplash (or equivalent) URL pattern for `hero_image` and `thumb_image` on 
 - Never leave `hero_alt` null/blank. Never use the article title as a lazy stand-in unless it literally describes the photo.
 - Thumbnails reuse the same `hero_alt` in the UI — write it for both contexts.
 
+**Splash (`is_highlighted`) image + title constraints:**
+
+- Hero must be **mid- or high-key**. Squint: if the upper half is charcoal concrete, night CCTV, or deep shadow, reject and re-pick. Black serif titles sit on that crop.
+- Splash `title` should land in **~2–3 lines** at ~12–13ch (dinner-table short). Four-line stacks climb out of the wash.
+- `highlight_word` on splash: **1–3 short words** only. Do not mark a long trailing clause red.
+
 **No reused photos across articles:**
 
 - Extract the Unsplash id from the path (`photo-…`). That id must not appear in the taken-images query above, and the two new pieces must not share an id with each other.
@@ -293,8 +304,14 @@ If `INDEXNOW_SUBMIT_SECRET` is unset locally, omit the Authorization header. Pre
 - Redeploying the app to "publish" copy — rows are enough
 - Topicless runs that skip research and invent evergreen philosophy
 - Topicless runs that chase pure gadget news with no idea at stake (or pure theory with no news peg)
+- **Two pieces with the same primary actor** (e.g. both OpenAI lawsuits) when the brief did not ask for that split
+- **Missing a same-day DevDay / keynote / major product launch** while publishing thinner same-cluster legal notes instead
+- Over-weighting filings and injunctions because they are easy to cite, while ignoring the week's biggest public product peg
+- Preferring dry procedural policy notes (watchlist guidance, enforcement checklists, agency process docs) over a live product/agency peg with a human stake
 - Re-covering a slug/case already on the board without a new development
 - Defaulting to stock people, empty offices, or laptop flat-lays when a more specific image exists (see manifesto §12a)
+- Splash heroes that are low-key/dark (CCTV night, black concrete) under black title type
+- Splash titles that wrap to four-plus lines, or `highlight_word` phrases longer than three words
 - Reusing a hero/thumb photo already attached to another article (or to the other piece in the pair)
 - Shipping a hero_image without a concrete non-empty hero_alt
 - Stuffing internal links, “related reading” footers, or linking without an earned referent

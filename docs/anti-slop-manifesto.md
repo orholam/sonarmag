@@ -454,6 +454,15 @@ These are **defaults and deprioritizations**, not absolute bans. Use a human, an
 - Do not invent photojournalism. Better a slightly abstract but specific object than a fake "reporter in the field" render.
 - **Do not reuse photos across articles.** The Unsplash `photo-…` id (ignoring query params) must be unique site-wide. Hero and thumb on the *same* story may match.
 
+### Splash heroes (homepage feature card)
+
+The large `is_highlighted` card stacks a black serif title over the hero. The CSS scrim helps, but it cannot rescue a near-black photo.
+
+- Prefer **mid- or high-key** frames for splash: daylight, pale walls, bright product surfaces, readable screens. Deprioritize charcoal concrete, night CCTV, deep shadow architecture, and other low-luminance fields.
+- Squint test: if the top half of the crop is mostly black/near-black, pick another photo before publish.
+- Splash titles should stay **short enough to read in ~2–3 lines** at the card’s narrow measure (`~12–13ch`). Long stacked headlines climb out of the wash into the photo.
+- `highlight_word` on splash: **1–3 short words**, not a four-word clause that paints half the title red and forces awkward wraps.
+
 ---
 
 ## 13. Hard bans (body) — expanded
@@ -597,4 +606,5 @@ When stuck, force the title into one of the pattern rows in §2 before drafting 
 - **2026-07-20** — Card chrome: excerpt is one continuous ~70–110 word dek for CSS columns; ban dumping two body paragraphs into a grid with independent clamps. Titles must not slogan-oversell study claims (*Half of Muscle Aging Is Optional*). Science voice: no billboard rhetoric, no omics laundry lists, keep claims inside the measurement, prioritize readability.
 - **2026-07-20** — §8a LLM tells: default ban em dashes (especially paired parentheticals); ban *not X, but Y* / *not X, but actually Y*; ban *actually* as fake emphasis and related model tics. Add checklist item 12.
 - **2026-07-21** — §12a Images: deprioritize (not ban) casting-call stock people, and also generic offices / computers / laptop flat-lays; prefer case-specific objects, places, and documentary frames. Checklist item 13.
+- **2026-11-04** — §12a splash heroes: mid/high-key photos only for `is_highlighted`; short splash titles; `highlight_word` capped at 1–3 words. Homepage feature scrim strengthened so black title type cannot sit on raw dark photo. Topic selection: skip dry procedural policy notes (watchlist guidance, enforcement checklists) when a live product/agency peg exists the same week.
 
