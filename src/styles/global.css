@@ -2155,6 +2155,149 @@ button.print-btn:hover {
   margin-top: 0.45rem;
 }
 
+.ai-wars-visitor-share {
+  margin-top: 0.85rem;
+}
+
+.ai-wars-share-lanes {
+  list-style: none;
+  margin: 0.15rem 0 0;
+  padding: 0;
+}
+
+.ai-wars-share-lanes > li {
+  border-top: 1px solid rgba(23, 23, 23, 0.06);
+}
+
+.ai-wars-share-lanes > li:first-child {
+  border-top: 0;
+}
+
+.ai-wars-share-lane {
+  display: grid;
+  cursor: crosshair;
+  grid-template-columns: 0.55rem minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    'swatch name pct delta'
+    'bar bar bar bar'
+    'spark spark spark spark';
+  column-gap: 0.55rem;
+  row-gap: 0.28rem;
+  align-items: center;
+  padding: 0.5rem 0 0.15rem;
+}
+
+.ai-wars-share-lane-swatch {
+  grid-area: swatch;
+}
+
+.ai-wars-share-lane-name {
+  grid-area: name;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ai-wars-share-lane-bar {
+  grid-area: bar;
+  height: 0.55rem;
+  border-radius: 99px;
+  background: rgba(23, 23, 23, 0.06);
+  overflow: hidden;
+}
+
+.ai-wars-share-lane-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.ai-wars-share-lane-pct {
+  grid-area: pct;
+  justify-self: end;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.ai-wars-share-lane-delta {
+  grid-area: delta;
+  justify-self: end;
+  min-width: 3.15rem;
+}
+
+.ai-wars-share-lane-spark {
+  grid-area: spark;
+  position: relative;
+  height: 40px;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.ai-wars-share-lane-spark svg {
+  display: block;
+  width: 100%;
+  height: 40px;
+  overflow: visible;
+}
+
+.ai-wars-share-lane-cursor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(23, 23, 23, 0.28);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.ai-wars-share-lane-dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  box-shadow: 0 0 0 1px rgba(23, 23, 23, 0.15);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.ai-wars-share-axis {
+  position: relative;
+  height: 0.95rem;
+  margin: 0.05rem 0 0;
+}
+
+.ai-wars-share-axis span {
+  position: absolute;
+  top: 0;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  line-height: 1;
+  color: #8a8a8a;
+  white-space: nowrap;
+}
+
+.ai-wars-share-axis span.is-mid {
+  transform: translateX(-50%);
+}
+
+.ai-wars-share-axis span.is-end {
+  transform: translateX(-100%);
+}
+
+.ai-wars-visitor-share .ai-wars-note {
+  margin-top: 0.35rem;
+}
+
 @media (max-width: 640px) {
   .ai-wars-visitor-row {
     grid-template-columns: 0.55rem minmax(0, 1fr) auto;

@@ -162,66 +162,58 @@ const COMBINED_GROUPS: Array<{
   { id: 'windsurf', name: 'Windsurf', toolIds: ['windsurf', 'devin'] },
 ]
 
-/** A subreddit this small, when first tracked, does not reset share history. */
-const SHARE_GATE_VISITORS = 50_000
-
 function firstPoint(series: CodingToolSeries) {
   return series.points.reduce((earliest, point) =>
     point.measuredOn < earliest.measuredOn ? point : earliest,
   )
 }
 
-/** True when the subreddit's first reading was under 50k weekly visitors. */
-function addedUnderShareGate(series: CodingToolSeries): boolean {
-  return firstPoint(series).weeklyVisitors < SHARE_GATE_VISITORS
-}
-
-/**
- * Sum members on dates the required ones all have a reading.
- * `materialOnly` treats a later subreddit under 50k as optional: it is added
- * when present, and it does not drop the earlier weeks.
- */
+/** Sum members on dates every one of them has a reading. */
 function summedPoints(
   members: CodingToolSeries[],
-  materialOnly: boolean,
 ): Array<{ date: string; value: number }> {
-  const earliest = members.reduce((a, b) =>
-    firstPoint(a).measuredOn <= firstPoint(b).measuredOn ? a : b,
-  )
-  const required = materialOnly
-    ? members.filter(
-        (member) => member === earliest || !addedUnderShareGate(member),
-      )
-    : members
-  const gate = required.length > 0 ? required : members
   const sums = new Map<string, { total: number; seen: number }>()
   for (const member of members) {
     const seenOn = new Set<string>()
-    const gates = gate.includes(member)
     for (const point of member.points) {
       if (seenOn.has(point.measuredOn)) continue
       seenOn.add(point.measuredOn)
       const row = sums.get(point.measuredOn) ?? { total: 0, seen: 0 }
       row.total += point.weeklyVisitors
-      if (gates) row.seen += 1
+      row.seen += 1
       sums.set(point.measuredOn, row)
     }
   }
   return [...sums.entries()]
-    .filter(([, row]) => row.seen === gate.length)
+    .filter(([, row]) => row.seen === members.length)
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([date, row]) => ({ date, value: row.total }))
 }
 
-/** First week every subreddit that opened at 50k+ has a reading. */
-function shareHistoryStart(board: CodingToolRedditBoard): string | null {
-  let start: string | null = null
-  for (const series of board.series) {
-    if (!series.points.length || addedUnderShareGate(series)) continue
-    const opened = firstPoint(series).measuredOn
-    if (!start || opened > start) start = opened
+/**
+ * Share history for a combined product. Weeks start with the earliest
+ * subreddit. A later subreddit is added on the weeks it has a reading,
+ * and it does not drop the earlier weeks.
+ */
+function anchoredSum(
+  members: CodingToolSeries[],
+): Array<{ date: string; value: number }> {
+  const anchor = members.reduce((a, b) =>
+    firstPoint(a).measuredOn <= firstPoint(b).measuredOn ? a : b,
+  )
+  const anchorDates = new Set(anchor.points.map((point) => point.measuredOn))
+  const sums = new Map<string, number>()
+  for (const member of members) {
+    const seenOn = new Set<string>()
+    for (const point of member.points) {
+      if (!anchorDates.has(point.measuredOn) || seenOn.has(point.measuredOn)) continue
+      seenOn.add(point.measuredOn)
+      sums.set(point.measuredOn, (sums.get(point.measuredOn) ?? 0) + point.weeklyVisitors)
+    }
   }
-  return start
+  return [...sums.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([date, value]) => ({ date, value }))
 }
 
 /** Combined chart: one line per product, subreddit totals added together. */
@@ -236,7 +228,7 @@ export function codingToolsChart(board: CodingToolRedditBoard): AiWarsChart | nu
       .map((id) => board.series.find((s) => s.toolId === id))
       .filter((s): s is CodingToolSeries => Boolean(s))
     if (members.length !== group.toolIds.length) continue
-    const points = summedPoints(members, false)
+    const points = summedPoints(members)
     if (!points.length) continue
     for (const member of members) consumed.add(member.toolId)
     const lead = members.find((s) => s.toolId === group.toolIds[0]) ?? members[0]
@@ -281,17 +273,15 @@ export function codingToolsChart(board: CodingToolRedditBoard): AiWarsChart | nu
 }
 
 /**
- * Same combined products as the visitor chart, as a percent of that week's
- * tracked total. History starts once every subreddit that opened at 50k or
- * more is in the set. A later subreddit under 50k does not move that start,
- * and it does not erase the earlier weeks of its product.
+ * Same combined products as the visitor chart, as a percent of the
+ * communities tracked that week. History runs from the first reading.
+ * A second subreddit joins its product the week it appears.
  */
 export function codingToolsShareChart(
   board: CodingToolRedditBoard,
 ): AiWarsChart | null {
   if (!board.series.length || !board.dates.length) return null
 
-  const start = shareHistoryStart(board)
   const consumed = new Set<string>()
   const counts: AiWarsChart['series'] = []
 
@@ -300,9 +290,7 @@ export function codingToolsShareChart(
       .map((id) => board.series.find((s) => s.toolId === id))
       .filter((s): s is CodingToolSeries => Boolean(s))
     if (members.length !== group.toolIds.length) continue
-    const points = summedPoints(members, true).filter(
-      (point) => !start || point.date >= start,
-    )
+    const points = anchoredSum(members)
     if (!points.length) continue
     for (const member of members) consumed.add(member.toolId)
     const lead = members.find((s) => s.toolId === group.toolIds[0]) ?? members[0]
@@ -316,12 +304,10 @@ export function codingToolsShareChart(
 
   for (const row of board.series) {
     if (consumed.has(row.toolId)) continue
-    const points = row.points
-      .filter((point) => !start || point.measuredOn >= start)
-      .map((point) => ({
-        date: point.measuredOn,
-        value: point.weeklyVisitors,
-      }))
+    const points = row.points.map((point) => ({
+      date: point.measuredOn,
+      value: point.weeklyVisitors,
+    }))
     if (!points.length) continue
     counts.push({
       id: row.toolId,
@@ -354,14 +340,14 @@ export function codingToolsShareChart(
       return bv - av
     })
 
-  const dates = board.dates.filter((date) => !start || date >= start)
+  const dates = [...totals.keys()].sort()
   if (!series.length || !dates.length) return null
 
   return {
     id: 'coding-reddit-share',
     title: 'Weekly visitor share',
     subtitle:
-      'One hundred percent of tracked weekly visitors, stacked from the smallest share at the bottom to the largest at the top. Bands trade places when one passes another. Codex, OpenCode, Antigravity, and Windsurf use the same sums as the chart above.',
+      'Share of the communities tracked that week. Bar length is that share. Each line uses its own scale so the rise or drop stays visible.',
     sourceUrl: '',
     asOf: board.asOf,
     dates,
