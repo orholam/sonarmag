@@ -347,7 +347,7 @@ export function codingToolsShareChart(
     id: 'coding-reddit-share',
     title: 'Weekly visitor share',
     subtitle:
-      'Share of the communities tracked that week. Bar length is that share. Each line uses its own scale so the rise or drop stays visible.',
+      'Share of the communities tracked that week. The largest share sits on top.',
     sourceUrl: '',
     asOf: board.asOf,
     dates,
