@@ -51,6 +51,7 @@ const TOOL_COLORS: Record<string, string> = {
   'hermes-agent': '#b45309',
   devin: '#334155',
   'antigravity-google': '#188038',
+  'claude-duet': '#c2410c',
 }
 
 const FALLBACK_COLORS = [
