@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-10",
+  "modes": {
+    "A": "portrait",
+    "B": "how"
+  },
+  "highlighted": "anthropics-mythos-pass",
+  "companion": "how-adobes-creative-agent-keeps-working-after-you-leave",
+  "primary_actors": {
+    "A": "Anthropic",
+    "B": "Adobe"
+  },
+  "pegs": {
+    "A": "Anthropic Claude Fable 5.2 / Mythos 5.2 (Nov 9) — same weights, verification pass",
+    "B": "Adobe MAX Firefly Creative Agent + always-on preview (Nov 10)"
+  },
+  "same_day_major_peg_check": "Anthropic model launch Nov 9 + Adobe MAX Nov 10 both shortlisted; pair uses both with different primary actors",
+  "shortlist_rejected": [
+    "Meta Muse Ember (adjacent agent-cost story; thinner philosophy than Adobe authorship)",
+    "Google TPU 8tx / 8i Max (infra; weak idea stake)",
+    "NVIDIA GR00T 2 (robotics embodiment; held)",
+    "UK Home Office biometrics framework Nov 4 (strong dignity peg; skipped so pair keeps same-day product launches)",
+    "Irish Oireachtas deepfake criminal sanctions (regulatory; secondary)"
+  ],
+  "heroes": {
+    "A": "photo-1513542789411-b6a5d4f31634",
+    "B": "photo-1513364776144-60967b0f800f"
+  },
+  "blocker": "SUPABASE_SERVICE_ROLE_KEY missing; anon RLS blocks inserts; no Supabase MCP"
+}
