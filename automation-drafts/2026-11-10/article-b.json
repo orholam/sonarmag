@@ -1,0 +1,28 @@
+{
+  "slug": "how-adobes-creative-agent-keeps-working-after-you-leave",
+  "title": "How Adobe's Creative Agent Keeps Working After You Leave",
+  "seo_title": "Adobe Creative Agent Runs After You Step Away",
+  "excerpt": "At Adobe MAX in Miami Beach on November 10, Adobe expanded the Creative Agent across Firefly and previewed always-on agents that keep organizing assets, checking quality, and preparing channel versions while the customer steps away. Plan Mode lets you approve a plan first. Brand preferences can lock once and stick. The marketing line is that creators stay in the director's chair. The product demo is an agent that keeps directing after the chair is empty.",
+  "ticker": "Business — Adobe — Agents",
+  "author_id": "22222222-2222-2222-2222-222222222009",
+  "category_id": "11111111-1111-1111-1111-111111111002",
+  "hero_image": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1600&q=80",
+  "hero_alt": "Paintbrushes tipped with wet red paint beside an orange-red stroke on white paper",
+  "thumb_image": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80",
+  "read_minutes": 6,
+  "listen_minutes": 8,
+  "published_label": "Today",
+  "published_at": "2026-11-10T15:14:00+00:00",
+  "is_highlighted": false,
+  "highlight_word": null,
+  "highlight_tone": null,
+  "status": "published",
+  "title_mode": "how",
+  "paragraphs": [
+    "Adobe's MAX keynote in Miami Beach on November 10 sold a familiar comfort: creators remain in the director's chair. Then the product list explained how little that chair has to be occupied.",
+    "The [Adobe Firefly expansion](https://news.adobe.com/news/2026/11/adobe-firefly-expands) puts the Creative Agent across Firefly's AI Assistant, boards, and multimedia editors, with Plan Mode, brand preferences, model auto-select, and a preview of always-on agents that keep working after you leave.",
+    "## Control theater with a clock\n\nPlan Mode is the polite version of agency. You review, edit, and approve the agent's plan before it starts, or you let it run alone. Preferences for formats, colors, brand guidelines, characters, and products can be set once and applied across projects. Model Selector lets you pick a partner model or leave Auto-Select to choose for the output.\n\nNone of that is silly. Batch retouching and social cutdowns are tedious. Forest Key, Adobe's Firefly and Agentic AI vice president, framed the agent as a partner \"where your taste, style and vision lead.\" Incoming CEO Anil Chakravarthy used the keynote to push the same agent deeper into Creative Cloud.\n\nThe harder sentence is in the always-on preview. Adobe says these agents can organize incoming assets, check quality, and prepare content for different channels in the background, \"even when the customer steps away.\" Direction becomes a standing order. Taste becomes a preference file.",
+    "## Authorship as orchestration\n\nFirefly also packs third-party models from partners including ByteDance, Google, Kling, OpenAI, and ElevenLabs next to Adobe's own tools. Firefly Graph, in beta, lets creators build repeatable workflows that chain those models with Adobe product tools. Firefly Builder, in private beta, turns a prompt into an interactive prototype that you then poke on the canvas.\n\nThe creator's job migrates from making the frame to supervising the pipeline. That can raise craft when the human spends the recovered hours on judgment. It can also turn \"unique style\" into a saved preset the agent reapplies while you are at lunch.\n\nAdobe is not alone in this bet. Sonar already watched [OpenAI make always-on agents the product](/article/how-openai-made-always-on-agents-the-product). Adobe's version wraps the same absentee labor in creative-industry language: director's chair, craft, taste. The chair still empties. The work continues.",
+    "## The judgment\n\nAdobe MAX needed a story that does not sound like replacement. Plan Mode and preference locks are that story, and they are real controls. Always-on agents are the tell. A director who must approve every cut is supervising. A director whose agent keeps shipping channel variants overnight is delegating authorship to a schedule.\n\nCreative work has always included assistants. The new fact is an assistant that Adobe will sell as your taste while it runs without your eyes. If the output still needs your hand, the chair metaphor holds. If the queue clears while you are gone, the metaphor is marketing. Adobe built both switches. Which one customers leave on will decide whether Firefly is a studio with a partner or a studio that keeps the lights on after everyone goes home."
+  ]
+}
